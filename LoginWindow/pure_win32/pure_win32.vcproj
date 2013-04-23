@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="LoginWindow"
-	ProjectGUID="{0990BFBB-1C71-41C0-837D-5B60BE7D2089}"
-	RootNamespace="LoginWindow"
+	Name="pure_win32"
+	ProjectGUID="{458F811D-1089-4627-B7EC-4AA56C166B4E}"
+	RootNamespace="pure_win32"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
 	>
@@ -117,7 +117,7 @@
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
-				UsePrecompiledHeader="0"
+				UsePrecompiledHeader="2"
 				WarningLevel="3"
 				DebugInformationFormat="3"
 			/>
@@ -171,11 +171,7 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\LoginWindow.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\mywindow.CPP"
+				RelativePath=".\pure_win32.cpp"
 				>
 			</File>
 			<File
@@ -183,6 +179,14 @@
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -197,15 +201,19 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\MyWindow.h"
+				RelativePath=".\pure_win32.h"
 				>
 			</File>
 			<File
-				RelativePath=".\resource.h"
+				RelativePath=".\Resource.h"
 				>
 			</File>
 			<File
 				RelativePath=".\stdafx.h"
+				>
+			</File>
+			<File
+				RelativePath=".\targetver.h"
 				>
 			</File>
 		</Filter>
@@ -215,10 +223,22 @@
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
 			<File
-				RelativePath=".\LoginWindow.rc"
+				RelativePath=".\pure_win32.ico"
+				>
+			</File>
+			<File
+				RelativePath=".\pure_win32.rc"
+				>
+			</File>
+			<File
+				RelativePath=".\small.ico"
 				>
 			</File>
 		</Filter>
+		<File
+			RelativePath=".\ReadMe.txt"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>

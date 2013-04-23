@@ -1,5 +1,7 @@
 #pragma once
 
+
+
 #include <atlbase.h>
 #include <atlapp.h>
 extern CAppModule _Module;
@@ -9,8 +11,9 @@ extern CAppModule _Module;
 #include <atlctrls.h>
 #include <atlctrlx.h>
 #include <atlimage.h>
+#include <atlstr.h>
 
-
+#include "resource.h"
 typedef CWinTraits<WS_CHILD | WS_VISIBLE | WS_HSCROLL | WS_VSCROLL | ES_READONLY | ES_AUTOHSCROLL | ES_AUTOVSCROLL | ES_MULTILINE> CMyEditTraits;
 
 class CWizEditBase
