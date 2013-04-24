@@ -30,9 +30,27 @@ public:
 		MESSAGE_HANDLER(WM_DESTROY, OnDestroyWindow)
 		MESSAGE_HANDLER(WM_MOUSEMOVE, OnMouseMove)
 		MESSAGE_HANDLER(WM_COMMAND, OnCommand)
-		MESSAGE_HANDLER(WM_ERASEBKGND, OnEraseBkgnd)
+	//	MESSAGE_HANDLER(WM_ERASEBKGND, OnEraseBkgnd)
+		MESSAGE_HANDLER(WM_CTLCOLORBTN, OnColorBtn)
+		MESSAGE_HANDLER(WM_PAINT, OnPaint)
 		// REFLECT_NOTIFICATIONS()
 	END_MSG_MAP()
+	LRESULT OnPaint(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
+	{
+		HDC dc = GetWindowDC();
+		
+		
+		
+		m_il.SetBkColor(RGB(255, 255, 255));
+		m_il.Draw(dc, 0, 100, 100, ILD_TRANSPARENT);
+		
+		return 0;
+	}
+	LRESULT OnColorBtn(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
+	{
+
+		return 0;
+	}
 	LRESULT OnEraseBkgnd(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 	{
 		HDC dc = (HDC)(wParam);
@@ -43,6 +61,9 @@ public:
 			GetClientRect(&rc);
 			::FillRect(dc, &rc, hBr);
 		}
+	//	SetBkMode(dc, TRANSPARENT);
+	//	m_il.Draw(dc, 0, 10, 10, ILD_TRANSPARENT);
+		
 		return 0;
 	}
 	LRESULT OnCommand(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
@@ -70,8 +91,19 @@ public:
 		//
 		DrawMaxBox();
 		//
+		// DrawOwner_DrawButton();
+		//
 		CenterWindow();
 
+		CImage timg;
+		timg.Load(_T("./image/main_bar.bmp"));
+
+
+		m_il.Create(timg.GetWidth() / 17, timg.GetHeight(), ILC_COLOR32 | ILC_MASK, 0, 0);
+		
+		m_il.Add(timg);
+		
+		
 		return 0;
 	}
 	LRESULT OnDestroyWindow(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
@@ -108,7 +140,7 @@ protected:
 		int nWidth = img.GetWidth() / 3;
 		int nHeight = img.GetHeight();
 		CImageList il;
-		il.Create(nWidth, nHeight, ILC_COLOR32, 3, 0);
+		il.Create(nWidth, nHeight, ILC_COLOR32 | ILC_MASK, 0, 0);
 		il.Add(img);
 		
 		CRect rc;
@@ -117,7 +149,7 @@ protected:
 		rc.right = 720;
 		rc.bottom = 30;
 
-		m_btnMinBox.Create(m_hWnd, rc, 0, WS_CHILD | WS_VISIBLE, 0, IDC_MINIMIZE);
+		m_btnMinBox.Create(m_hWnd, rc, 0, 0, 0, IDC_MINIMIZE);
 		m_btnMinBox.SetBitmapButtonExtendedStyle(BMPBTN_HOVER);
 		m_btnMinBox.SetImageList(il);
 		m_btnMinBox.SetImages(0, 2, 1);
@@ -130,7 +162,7 @@ protected:
 		int nWidth = img.GetWidth() / 3;
 		int nHeight = img.GetHeight();
 		CImageList il;
-		il.Create(nWidth, nHeight, ILC_COLOR32, 3, 0);
+		il.Create(nWidth, nHeight, ILC_COLOR32 | ILC_MASK, 0, 0);
 		il.Add(img);
 		
 		CRect rc;
@@ -139,7 +171,7 @@ protected:
 		rc.right = 775;
 		rc.bottom = 30;
 
-		m_btnMaxBox.Create(m_hWnd, rc, 0, WS_CHILD | WS_VISIBLE, 0, IDC_CLOSE);
+		m_btnMaxBox.Create(m_hWnd, rc, 0, 0, 0, IDC_CLOSE);
 		m_btnMaxBox.SetBitmapButtonExtendedStyle(BMPBTN_HOVER);
 		m_btnMaxBox.SetImageList(il);
 		m_btnMaxBox.SetImages(0, 2, 1);
@@ -149,6 +181,7 @@ private:
 	CFont m_font;
 	CBitmapButton m_btnMinBox;
 	CBitmapButton m_btnMaxBox;
+	CImageList m_il;
 
 public:
 

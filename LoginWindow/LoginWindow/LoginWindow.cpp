@@ -9,7 +9,6 @@ int WINAPI _tWinMain(HINSTANCE hInstance,
     int nCmdShow
 )
 {
-
 	// ::CoInitialize(NULL);
 	_Module.Init(NULL, hInstance);
 	
