@@ -1,4 +1,5 @@
 #pragma once
+#include "MyBitmapButton.h"
 
 typedef CWinTraits<WS_OVERLAPPEDWINDOW> CMyWinTraits;
 
@@ -159,11 +160,11 @@ protected:
 		CRect rc;
 		rc.left = 350;
 		rc.top = 10;
-		rc.right = 775;
+		rc.right = 370;
 		rc.bottom = 30;
 
 		m_btnMaxBox.Create(m_hWnd, rc, 0, 0, 0, IDC_CLOSE);
-		m_btnMaxBox.SetToolTipText(_T("max bossssssssssssx"));
+		m_btnMaxBox.SetToolTip(_T("maxbossssssssssssx"));
 		m_btnMaxBox.SetBitmapButtonExtendedStyle(BMPBTN_HOVER);
 		m_btnMaxBox.SetImageList(il);
 		m_btnMaxBox.SetImages(0, 2, 1);
@@ -171,7 +172,7 @@ protected:
 private:
 	CFont m_font;
 	CBitmapButton m_btnMinBox;
-	CBitmapButton m_btnMaxBox;
+	CMyBitmapButton m_btnMaxBox;
 	CImageList m_il;
 
 public:

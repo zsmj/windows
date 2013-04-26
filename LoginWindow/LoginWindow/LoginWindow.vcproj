@@ -197,6 +197,10 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
+				RelativePath=".\MyBitmapButton.h"
+				>
+			</File>
+			<File
 				RelativePath=".\MyWindow.h"
 				>
 			</File>
