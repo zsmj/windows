@@ -3,6 +3,9 @@
 
 #include "stdafx.h"
 #include "pure_win32.h"
+#include <commctrl.h>
+
+#pragma comment(lib, "comctl32.lib")
 
 #define MAX_LOADSTRING 100
 
@@ -131,15 +134,24 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 //  WM_DESTROY	- post a quit message and return
 //
 //
+HIMAGELIST hImagelist;
+
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	int wmId, wmEvent;
 	PAINTSTRUCT ps;
 	HDC hdc;
-
+	HDC hWndDC;
+	static HBITMAP hBitmap;
 	switch (message)
 	{
 	case WM_CREATE:
+		hImagelist = ImageList_Create(16, 16, ILC_COLOR32 | ILC_MASK, 0, 0);
+		hBitmap = (HBITMAP)LoadImage(NULL, _T("./main_bar.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
+		if (hBitmap != NULL)
+		{
+			ImageList_Add(hImagelist, hBitmap, NULL);
+		}
 		
 		break;
 	case WM_COMMAND:
@@ -161,6 +173,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case WM_PAINT:
 		hdc = BeginPaint(hWnd, &ps);
 		// TODO: Add any drawing code here...
+		hWndDCHWndDC = GetWindowDC(hWnd);
+		ImageList_Draw(hImagelist, 1, hWndDC, 100, 30, 0);
+
 		EndPaint(hWnd, &ps);
 		break;
 	case WM_DESTROY:
