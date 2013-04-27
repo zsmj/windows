@@ -21,7 +21,7 @@ public:
 	
 	CMyWindow()
 	{
-		
+		m_bkgnd.Load(_T("./image/Bg_Login.png"));
 		
 	}
 
@@ -34,10 +34,10 @@ public:
 		MESSAGE_HANDLER(WM_CREATE, OnCreate)
 		MESSAGE_HANDLER(WM_DESTROY, OnDestroyWindow)
 		// MESSAGE_HANDLER(WM_MOUSEMOVE, OnMouseMove)
-		//MESSAGE_HANDLER(WM_COMMAND, OnCommand)
+		MESSAGE_HANDLER(WM_COMMAND, OnCommand)
 		//MESSAGE_HANDLER(WM_ERASEBKGND, OnEraseBkgnd)
 		//MESSAGE_HANDLER(WM_CTLCOLORBTN, OnColorBtn)
-		//MESSAGE_HANDLER(WM_PAINT, OnPaint)
+		MESSAGE_HANDLER(WM_PAINT, OnPaint)
 		// REFLECT_NOTIFICATIONS()
 		// CHAIN_MSG_MAP(CUpdateUI<CMyWindow>)
 	END_MSG_MAP()
@@ -45,7 +45,12 @@ public:
 	{
 		CPaintDC dc(m_hWnd);
 		
-	//	m_il.Draw(dc, 0, 300, 300, 0);
+		ATLASSERT(m_bkgnd.IsNull() == NULL);
+
+		if (!m_bkgnd.IsNull())
+		{
+			m_bkgnd.Draw(dc, m_rcClient);
+		}
 
 		bHandled = FALSE;
 		return 0;
@@ -92,14 +97,22 @@ public:
 		rect.bottom = rect.top + 500;
 		rect.right = rect.left + 800;
 		MoveWindow(&rect);
+
+		m_rcClient = rect;
 		//
-	//	DrawMinBox();
+		DrawMinBox();
 		//
-	//	DrawMaxBox();
+		DrawMaxBox();
 		//
 		CenterWindow();
 		
-		InitButton();
+		CRect rcEdit;
+		rcEdit.left = 100;
+		rcEdit.top = 100;
+		rcEdit.right = 260;
+		rcEdit.bottom = 140;
+
+		DrawEdit(rcEdit);
 
 		return 0;
 	}
@@ -143,16 +156,17 @@ protected:
 		il.Add(img);
 		
 		CRect rc;
-		rc.left = 700;
-		rc.top = 10;
-		rc.right = 720;
-		rc.bottom = 30;
+		rc.left = 710;
+		rc.top = 20;
+		rc.right = 730;
+		rc.bottom = 40;
 
 		m_btnMinBox.Create(m_hWnd, rc, 0, 0, 0, IDC_MINIMIZE);
+		m_btnMinBox.SetToolTip(_T("min"));
 		m_btnMinBox.SetBitmapButtonExtendedStyle(BMPBTN_HOVER);
 		m_btnMinBox.SetImageList(il);
 		m_btnMinBox.SetImages(0, 2, 1);
-		m_btnMinBox.SetToolTipText(_T("test tips"));
+		m_btnMinBox.SetBackground(RGB(72, 169, 220));
 	}
 	void DrawMaxBox()
 	{
@@ -165,16 +179,17 @@ protected:
 		il.Add(img);
 		
 		CRect rc;
-		rc.left = 350;
-		rc.top = 10;
-		rc.right = 370;
-		rc.bottom = 30;
+		rc.left = 740;
+		rc.top = 20;
+		rc.right = 760;
+		rc.bottom = 40;
 
 		m_btnMaxBox.Create(m_hWnd, rc, 0, 0, 0, IDC_CLOSE);
-		m_btnMaxBox.SetToolTipText(_T("maxbossssssssssssx"));
+		m_btnMaxBox.SetToolTip(_T("close"));
 		m_btnMaxBox.SetBitmapButtonExtendedStyle(BMPBTN_HOVER);
 		m_btnMaxBox.SetImageList(il);
 		m_btnMaxBox.SetImages(0, 2, 1);
+		m_btnMaxBox.SetBackground(RGB(72, 169, 220));
 	}
 	void InitButton()
 	{
@@ -197,12 +212,19 @@ protected:
 		m_btn.SetImages(0, 2, 1);
 
 	}
+	void DrawEdit(CRect rc)
+	{
+		m_editUserName.Create(m_hWnd, rc);
+	}
 private:
 	CFont m_font;
-	CBitmapButton m_btnMinBox;
-	CBitmapButton m_btnMaxBox;
+	CMyBitmapButton m_btnMinBox;
+	CMyBitmapButton m_btnMaxBox;
 	CImageList m_il;
 	CBitmapButton m_btn;
+	CImage m_bkgnd;
+	CRect m_rcClient;
+	CWizEditBase m_editUserName;
 
 public:
 

@@ -34,6 +34,7 @@ public:
 	unsigned m_fFocus:1;
 	unsigned m_fPressed:1;
 
+	COLORREF m_rfBackground;
 
 // Constructor/Destructor
 	CMyBitmapButtonImpl(DWORD dwExtendedStyle = BMPBTN_AUTOSIZE, HIMAGELIST hImageList = NULL) : 
@@ -167,6 +168,11 @@ public:
 		return ResizeClient(cx, cy);
 	}
 
+	COLORREF GetBackground() const { return m_rfBackground; }
+	void SetBackground(COLORREF rfBkgnd)
+	{
+		m_rfBackground = rfBkgnd;
+	}
 // Overrideables
 	void DoPaint(CDCHandle dc)
 	{
@@ -184,6 +190,12 @@ public:
 			nImage = m_nImage[_nImageFocusOrHover];
 		if(nImage == -1)   // not there, use default one
 			nImage = m_nImage[_nImageNormal];
+
+		//
+		CRect rc;
+		GetWindowRect(&rc);
+		ScreenToClient(&rc);
+		dc.FillSolidRect(rc, m_rfBackground);
 
 		// draw the button image
 		int xyPos = 0;
@@ -369,7 +381,7 @@ public:
 	LRESULT OnMouseMove(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOOL& bHandled)
 	{
 		//
-		//TooltipRelayEvent();
+	//	TooltipRelayEvent();
 		//
 		if(::GetCapture() == m_hWnd)
 		{

@@ -44,7 +44,7 @@ CAppModule _Module;
 int Run(LPTSTR /*lpstrCmdLine*/ = NULL, int nCmdShow = SW_SHOWDEFAULT)
 {
 	CMessageLoop theLoop;
-//	_Module.AddMessageLoop(&theLoop);
+	_Module.AddMessageLoop(&theLoop);
 
 	CMyWindow mainWnd;
 
@@ -57,17 +57,18 @@ int Run(LPTSTR /*lpstrCmdLine*/ = NULL, int nCmdShow = SW_SHOWDEFAULT)
 
 	mainWnd.ShowWindow(nCmdShow);
 
-	//int nRet = theLoop.Run();
+	int nRet = theLoop.Run();
 
-	MSG msg;
-	while(GetMessage(&msg, 0, 0, 0))
-	{
-		::TranslateMessage(&msg); 
-		::DispatchMessage(&msg);
-	}
-//	_Module.RemoveMessageLoop();
+	//MSG msg;
+	//while(GetMessage(&msg, mainWnd, 0, 0))
+	//{
+	//	::TranslateMessage(&msg);
+	//	::DispatchMessage(&msg);
+	//}
+
+	_Module.RemoveMessageLoop();
 	
-	int nRet = 1;
+	//int nRet = 1;
 	return nRet;
 }
 
