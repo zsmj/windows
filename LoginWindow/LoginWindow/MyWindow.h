@@ -109,11 +109,12 @@ public:
 		CRect rcEdit;
 		rcEdit.left = 100;
 		rcEdit.top = 100;
-		rcEdit.right = 260;
+		rcEdit.right = 300;
 		rcEdit.bottom = 140;
 
 		DrawEdit(rcEdit);
 
+		bHandled = TRUE;
 		return 0;
 	}
 	LRESULT OnDestroyWindow(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
@@ -214,7 +215,7 @@ protected:
 	}
 	void DrawEdit(CRect rc)
 	{
-		m_editUserName.Create(m_hWnd, rc);
+		m_editUserName.Create(m_hWnd, rc, NULL, WS_CHILD | WS_VISIBLE | ES_AUTOHSCROLL);
 	}
 private:
 	CFont m_font;
@@ -224,7 +225,7 @@ private:
 	CBitmapButton m_btn;
 	CImage m_bkgnd;
 	CRect m_rcClient;
-	CWizEditBase m_editUserName;
+	CEdit m_editUserName;
 
 public:
 

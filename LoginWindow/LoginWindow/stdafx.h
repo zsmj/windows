@@ -18,7 +18,7 @@ extern CAppModule _Module;
 #include <atlimage.h>
 
 #include "resource.h"
-typedef CWinTraits<WS_CHILD | WS_VISIBLE> CMyEditTraits;
+typedef CWinTraits<WS_CHILD | WS_VISIBLE > CMyEditTraits;
 
 class CWizEditBase
 	: public CWindowImpl<CWizEditBase, CEdit, CMyEditTraits>
