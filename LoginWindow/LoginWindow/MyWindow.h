@@ -22,7 +22,10 @@ public:
 	CMyWindow()
 	{
 		m_bkgnd.Load(_T("./image/Bg_Login.png"));
-		
+		CImage img;
+		img.Load(_T("./image/Input_Login_Normal_Focus.png"));
+		m_editil.Create(img.GetWidth()/ 2, img.GetHeight(), ILC_COLOR32, 0, 0);
+		m_editil.Add(img);
 	}
 
 	DECLARE_WND_CLASS(_T("My Login In Window"));
@@ -36,7 +39,7 @@ public:
 		// MESSAGE_HANDLER(WM_MOUSEMOVE, OnMouseMove)
 		MESSAGE_HANDLER(WM_COMMAND, OnCommand)
 		//MESSAGE_HANDLER(WM_ERASEBKGND, OnEraseBkgnd)
-		//MESSAGE_HANDLER(WM_CTLCOLORBTN, OnColorBtn)
+		MESSAGE_HANDLER(WM_CTLCOLOREDIT, OnCtlColorEdit)
 		MESSAGE_HANDLER(WM_PAINT, OnPaint)
 		// REFLECT_NOTIFICATIONS()
 		// CHAIN_MSG_MAP(CUpdateUI<CMyWindow>)
@@ -49,33 +52,24 @@ public:
 
 		if (!m_bkgnd.IsNull())
 		{
-			m_bkgnd.Draw(dc, m_rcClient);
+		//	m_bkgnd.Draw(dc, m_rcClient);
 		}
-
 		bHandled = FALSE;
-		return 0;
-	}
-	LRESULT OnColorBtn(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
-	{
-		
 		return 0;
 	}
 	LRESULT OnEraseBkgnd(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 	{
-		HDC dc = (HDC)(wParam);
-		HBRUSH hBr = ::CreateSolidBrush(RGB(0, 200, 200));
-		if (hBr)
-		{
-			CRect rc;
-			GetClientRect(&rc);
-			::FillRect(dc, &rc, hBr);
-		}
-
-		// bHandled = FALSE;
-	//	SetBkMode(dc, TRANSPARENT);
-	//	m_il.Draw(dc, 0, 10, 10, ILD_TRANSPARENT);
 		
 		return 1;
+	}
+	LRESULT OnCtlColorEdit(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
+	{
+		HDC dc = (HDC)wParam;
+
+		m_editil.Draw(dc, 0, -5, -8, 0);
+		HBRUSH hbr = ::CreateSolidBrush(RGB(255, 0, 0));
+
+		return 0;
 	}
 	LRESULT OnCommand(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 	{
@@ -107,14 +101,13 @@ public:
 		CenterWindow();
 		
 		CRect rcEdit;
-		rcEdit.left = 100;
-		rcEdit.top = 100;
-		rcEdit.right = 300;
-		rcEdit.bottom = 140;
-
+		rcEdit.left = 40;
+		rcEdit.top = 20;
+		rcEdit.right = 276;
+		rcEdit.bottom = 45;
+		
 		DrawEdit(rcEdit);
 
-		bHandled = TRUE;
 		return 0;
 	}
 	LRESULT OnDestroyWindow(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
@@ -136,7 +129,7 @@ public:
 
 		ncm.lfMenuFont.lfWeight = FW_NORMAL;
 
-//		m_font.CreateFontIndirectW(&ncm.lfMenuFont);
+		m_font.CreateFontIndirectW(&ncm.lfMenuFont);
 	}
 	LRESULT OnMouseMove(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 	{
@@ -215,7 +208,9 @@ protected:
 	}
 	void DrawEdit(CRect rc)
 	{
-		m_editUserName.Create(m_hWnd, rc, NULL, WS_CHILD | WS_VISIBLE | ES_AUTOHSCROLL);
+		CreateFont(m_font);
+		m_editUserName.Create(m_hWnd, rc, NULL, WS_CHILD | WS_VISIBLE | ES_AUTOHSCROLL | WS_BORDER);
+		m_editUserName.SetFont(m_font);
 	}
 private:
 	CFont m_font;
@@ -226,6 +221,7 @@ private:
 	CImage m_bkgnd;
 	CRect m_rcClient;
 	CEdit m_editUserName;
+	CImageList m_editil;
 
 public:
 
