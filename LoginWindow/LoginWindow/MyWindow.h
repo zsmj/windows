@@ -26,6 +26,8 @@ public:
 		img.Load(_T("./image/Input_Login_Normal_Focus.png"));
 		m_editil.Create(img.GetWidth()/ 2, img.GetHeight(), ILC_COLOR32, 0, 0);
 		m_editil.Add(img);
+
+		m_editbkimg.Load(_T("./image/Text_Login_User_Normal.png"));
 	}
 
 	DECLARE_WND_CLASS(_T("My Login In Window"));
@@ -52,22 +54,30 @@ public:
 
 		if (!m_bkgnd.IsNull())
 		{
-		//	m_bkgnd.Draw(dc, m_rcClient);
+			m_bkgnd.Draw(dc, m_rcClient);
 		}
+		PaintEdit(dc.m_hDC);
+
 		bHandled = FALSE;
 		return 0;
 	}
 	LRESULT OnEraseBkgnd(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 	{
-		
+		bHandled = TRUE;
 		return 1;
 	}
 	LRESULT OnCtlColorEdit(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 	{
-		HDC dc = (HDC)wParam;
+		
+		CDCHandle dc = (HDC)wParam;
+	//	m_editil.Draw(dc, 0, -5, -8, 0);
+		HBRUSH hbr = ::CreateSolidBrush(RGB(253, 254, 255));
 
-		m_editil.Draw(dc, 0, -5, -8, 0);
-		HBRUSH hbr = ::CreateSolidBrush(RGB(255, 0, 0));
+	//	m_editbkimg.Draw(dc, 40, 20, 230, 15);
+		
+	//	return (LRESULT)::CreatePatternBrush(m_editbkimg);
+		
+		dc.SetBkColor(RGB(253, 254, 255));
 
 		return 0;
 	}
@@ -82,6 +92,16 @@ public:
 		{
 			DestroyWindow();
 		}
+
+		WORD wCode = HIWORD(wParam);
+		WORD wID = LOWORD(wParam);
+		if (wID == IDC_EDIT_USERNAME && wCode == EN_SETFOCUS)
+		{
+			SetEditState(TRUE);
+			Invalidate();
+		}
+
+		bHandled = FALSE;
 		return 0;
 	}
 	LRESULT OnCreate(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
@@ -103,7 +123,7 @@ public:
 		CRect rcEdit;
 		rcEdit.left = 40;
 		rcEdit.top = 20;
-		rcEdit.right = 276;
+		rcEdit.right = 275;
 		rcEdit.bottom = 45;
 		
 		DrawEdit(rcEdit);
@@ -126,7 +146,8 @@ public:
 #endif
 		//
 		::SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(NONCLIENTMETRICS), &ncm, 0);
-
+		
+		ncm.lfMenuFont.lfHeight -= 3;
 		ncm.lfMenuFont.lfWeight = FW_NORMAL;
 
 		m_font.CreateFontIndirectW(&ncm.lfMenuFont);
@@ -209,8 +230,30 @@ protected:
 	void DrawEdit(CRect rc)
 	{
 		CreateFont(m_font);
-		m_editUserName.Create(m_hWnd, rc, NULL, WS_CHILD | WS_VISIBLE | ES_AUTOHSCROLL | WS_BORDER);
+		m_editUserName.Create(m_hWnd, rc, NULL, WS_CHILD | WS_VISIBLE | ES_AUTOHSCROLL, 0, IDC_EDIT_USERNAME);
 		m_editUserName.SetFont(m_font);
+
+		
+		m_editUserName.SetMargins(5, 8);
+
+	}
+
+	void PaintEdit(CDCHandle dc)
+	{
+		int nImageIndex = 0;
+		if (m_bEditState)
+		{
+			nImageIndex = 1;
+		}
+		else 
+		{
+			nImageIndex = 0;
+		}
+		m_editil.Draw(dc, nImageIndex, 36, 12, 0);
+	}
+	void SetEditState(BOOL bState)
+	{
+		m_bEditState = bState;
 	}
 private:
 	CFont m_font;
@@ -222,6 +265,9 @@ private:
 	CRect m_rcClient;
 	CEdit m_editUserName;
 	CImageList m_editil;
+	CImage m_editbkimg;
+
+	BOOL m_bEditState;
 
 public:
 
