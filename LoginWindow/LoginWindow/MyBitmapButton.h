@@ -214,7 +214,7 @@ public:
 	BEGIN_MSG_MAP(CBitmapButtonImpl)
 		MESSAGE_HANDLER(WM_CREATE, OnCreate)
 		MESSAGE_HANDLER(WM_DESTROY, OnDestroy)
-	//	MESSAGE_RANGE_HANDLER(WM_MOUSEFIRST, WM_MOUSELAST, OnMouseMessage)
+		MESSAGE_RANGE_HANDLER(WM_MOUSEFIRST, WM_MOUSELAST, OnMouseMessage)
 		MESSAGE_HANDLER(WM_ERASEBKGND, OnEraseBackground)
 		MESSAGE_HANDLER(WM_PAINT, OnPaint)
 		MESSAGE_HANDLER(WM_PRINTCLIENT, OnPaint)
@@ -253,9 +253,11 @@ public:
 
 	LRESULT OnMouseMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 	{
-		MSG msg = { m_hWnd, uMsg, wParam, lParam };
-		if(m_tip.IsWindow())
-			m_tip.RelayEvent(&msg);
+		//MSG msg = { m_hWnd, uMsg, wParam, lParam };
+		//if(m_tip.IsWindow())
+		//	m_tip.RelayEvent(&msg);
+
+		TooltipRelayEvent();
 		bHandled = FALSE;
 		return 1;
 	}
@@ -367,7 +369,7 @@ public:
 	LRESULT OnMouseMove(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOOL& bHandled)
 	{
 		//
-		TooltipRelayEvent();
+		//TooltipRelayEvent();
 		//
 		if(::GetCapture() == m_hWnd)
 		{
@@ -396,6 +398,8 @@ public:
 
 	LRESULT OnMouseLeave(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)
 	{
+	//	TooltipRelayEvent();
+		//
 		if(m_fMouseOver == 1)
 		{
 			m_fMouseOver = 0;
@@ -483,16 +487,13 @@ public:
 		// create a tool tip
 		if (!m_tip.IsWindow())
 		{
-			m_tip.Create(NULL, rcDefault, NULL, WS_POPUP | TTS_ALWAYSTIP | TTS_NOPREFIX);
+			m_tip.Create(m_hWnd, rcDefault, NULL, WS_POPUP | TTS_ALWAYSTIP | TTS_NOPREFIX);
 		}
 		//
 		m_tip.AddTool(m_hWnd, lpszText);
 	}
 	void TooltipRelayEvent()	
 	{
-		TCHAR strText[100] = {0};
-		m_tip.GetText(strText, m_hWnd);
-
 		if (!m_tip.IsWindow())
 		{
 			return;

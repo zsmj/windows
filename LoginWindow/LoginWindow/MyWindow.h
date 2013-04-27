@@ -1,7 +1,7 @@
 #pragma once
 #include "MyBitmapButton.h"
 
-typedef CWinTraits<WS_OVERLAPPEDWINDOW> CMyWinTraits;
+typedef CWinTraits<WS_POPUPWINDOW> CMyWinTraits;
 
 CString StringFormat1(CString str, CString replaceStr)
 {
@@ -15,6 +15,7 @@ void tolog(LPCTSTR lpszLog)
 
 class CMyWindow
 	: public CWindowImpl<CMyWindow, CWindow, CMyWinTraits>
+	//, public CUpdateUI<CMyWindow>
 {
 public:
 	
@@ -26,15 +27,19 @@ public:
 
 	DECLARE_WND_CLASS(_T("My Login In Window"));
 
+	//BEGIN_UPDATE_UI_MAP(CMainFrame)
+	//END_UPDATE_UI_MAP()
+
 	BEGIN_MSG_MAP(CMyWindow)
 		MESSAGE_HANDLER(WM_CREATE, OnCreate)
 		MESSAGE_HANDLER(WM_DESTROY, OnDestroyWindow)
-		MESSAGE_HANDLER(WM_MOUSEMOVE, OnMouseMove)
-		MESSAGE_HANDLER(WM_COMMAND, OnCommand)
-		MESSAGE_HANDLER(WM_ERASEBKGND, OnEraseBkgnd)
-		MESSAGE_HANDLER(WM_CTLCOLORBTN, OnColorBtn)
-		MESSAGE_HANDLER(WM_PAINT, OnPaint)
+		// MESSAGE_HANDLER(WM_MOUSEMOVE, OnMouseMove)
+		//MESSAGE_HANDLER(WM_COMMAND, OnCommand)
+		//MESSAGE_HANDLER(WM_ERASEBKGND, OnEraseBkgnd)
+		//MESSAGE_HANDLER(WM_CTLCOLORBTN, OnColorBtn)
+		//MESSAGE_HANDLER(WM_PAINT, OnPaint)
 		// REFLECT_NOTIFICATIONS()
+		// CHAIN_MSG_MAP(CUpdateUI<CMyWindow>)
 	END_MSG_MAP()
 	LRESULT OnPaint(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 	{
@@ -42,13 +47,12 @@ public:
 		
 	//	m_il.Draw(dc, 0, 300, 300, 0);
 
-
-
+		bHandled = FALSE;
 		return 0;
 	}
 	LRESULT OnColorBtn(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 	{
-
+		
 		return 0;
 	}
 	LRESULT OnEraseBkgnd(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
@@ -91,9 +95,11 @@ public:
 		//
 	//	DrawMinBox();
 		//
-		DrawMaxBox();
+	//	DrawMaxBox();
 		//
 		CenterWindow();
+		
+		InitButton();
 
 		return 0;
 	}
@@ -122,6 +128,7 @@ public:
 	{
 		tolog(_T("in OnMouseMove"));
 		
+
 		return 0;
 	}
 protected:
@@ -164,16 +171,38 @@ protected:
 		rc.bottom = 30;
 
 		m_btnMaxBox.Create(m_hWnd, rc, 0, 0, 0, IDC_CLOSE);
-		m_btnMaxBox.SetToolTip(_T("maxbossssssssssssx"));
+		m_btnMaxBox.SetToolTipText(_T("maxbossssssssssssx"));
 		m_btnMaxBox.SetBitmapButtonExtendedStyle(BMPBTN_HOVER);
 		m_btnMaxBox.SetImageList(il);
 		m_btnMaxBox.SetImages(0, 2, 1);
 	}
+	void InitButton()
+	{
+		CImage img;
+		img.Load(_T("./image/Btn_Window_Close.png"));
+		CImageList il;
+		il.Create(img.GetWidth() / 3, img.GetHeight(), ILC_COLOR32, 0, 0);
+		il.Add(img);
+		
+		RECT rc;
+		rc.left = 10;
+		rc.top = 10;
+		rc.right = 40;
+		rc.bottom = 40;
+
+		m_btn.Create(m_hWnd, rc);
+		m_btn.SetBitmapButtonExtendedStyle(BMPBTN_HOVER);
+		m_btn.SetToolTipText(_T("my tooltips string"));
+		m_btn.SetImageList(il);
+		m_btn.SetImages(0, 2, 1);
+
+	}
 private:
 	CFont m_font;
 	CBitmapButton m_btnMinBox;
-	CMyBitmapButton m_btnMaxBox;
+	CBitmapButton m_btnMaxBox;
 	CImageList m_il;
+	CBitmapButton m_btn;
 
 public:
 

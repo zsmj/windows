@@ -104,11 +104,14 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
 //        In this function, we save the instance handle in a global variable and
 //        create and display the main program window.
 //
+HINSTANCE g_hInst;
 BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
    HWND hWnd;
 
    hInst = hInstance; // Store instance handle in our global variable
+   
+   g_hInst = hInst;
 
    hWnd = CreateWindow(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
       CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, NULL, NULL, hInstance, NULL);
@@ -135,7 +138,31 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 //
 //
 HIMAGELIST hImagelist;
+void CreateToolTipForRect(HWND hwndParent)
+{
+    // Create a tooltip.
+    HWND hwndTT = CreateWindowEx(WS_EX_TOPMOST, TOOLTIPS_CLASS, NULL, 
+                                 WS_POPUP | TTS_NOPREFIX | TTS_ALWAYSTIP, 
+                                 CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, 
+                                 hwndParent, NULL, g_hInst,NULL);
 
+    SetWindowPos(hwndTT, HWND_TOPMOST, 0, 0, 0, 0, 
+                 SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
+
+    // Set up "tool" information. In this case, the "tool" is the entire parent window.
+    
+    TOOLINFO ti = { 0 };
+    ti.cbSize   = sizeof(TOOLINFO);
+    ti.uFlags   = TTF_SUBCLASS;
+    ti.hwnd     = hwndParent;
+    ti.hinst    = g_hInst;
+    ti.lpszText = TEXT("This is your tooltip string.");;
+    
+    GetClientRect (hwndParent, &ti.rect);
+
+    // Associate the tooltip with the "tool" window.
+    SendMessage(hwndTT, TTM_ADDTOOL, 0, (LPARAM) (LPTOOLINFO) &ti);	
+} 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	int wmId, wmEvent;
@@ -146,13 +173,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	switch (message)
 	{
 	case WM_CREATE:
-		hImagelist = ImageList_Create(16, 16, ILC_COLOR32 | ILC_MASK, 0, 0);
-		hBitmap = (HBITMAP)LoadImage(NULL, _T("./main_bar.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
-		if (hBitmap != NULL)
-		{
-			ImageList_Add(hImagelist, hBitmap, NULL);
-		}
-		
+		//hImagelist = ImageList_Create(16, 16, ILC_COLOR32 | ILC_MASK, 0, 0);
+		//hBitmap = (HBITMAP)LoadImage(NULL, _T("./main_bar.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
+		//if (hBitmap != NULL)
+		//{
+		//	ImageList_Add(hImagelist, hBitmap, NULL);
+		//}
+		CreateToolTipForRect(hWnd);
 		break;
 	case WM_COMMAND:
 		wmId    = LOWORD(wParam);
@@ -173,8 +200,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case WM_PAINT:
 		hdc = BeginPaint(hWnd, &ps);
 		// TODO: Add any drawing code here...
-		hWndDCHWndDC = GetWindowDC(hWnd);
-		ImageList_Draw(hImagelist, 1, hWndDC, 100, 30, 0);
 
 		EndPaint(hWnd, &ps);
 		break;

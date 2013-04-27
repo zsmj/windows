@@ -38,6 +38,10 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 	pLoop->AddIdleHandler(this);
 
 	UIAddChildWindowContainer(m_hWnd);
+	
+//	CreateToolTipForRect(m_hWnd);
+
+	InitButton();
 
 	return TRUE;
 }
