@@ -43,6 +43,15 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 
 	InitButton();
 
+	// Set WS_EX_LAYERED on this window 
+	SetWindowLong(
+				  GWL_EXSTYLE, 
+				  GetWindowLong(GWL_EXSTYLE) | WS_EX_LAYERED);
+
+	// Make this window 70% alpha
+	SetLayeredWindowAttributes(m_hWnd, 0, (255 * 70) / 100, LWA_ALPHA);
+
+
 	return TRUE;
 }
 
@@ -67,13 +76,23 @@ LRESULT CMainDlg::OnAppAbout(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*
 LRESULT CMainDlg::OnOK(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
 {
 	// TODO: Add validation code 
-	CloseDialog(wID);
+	// CloseDialog(wID);
+	
+	HWND hChild = GetDlgItem(IDC_BUTTON_ChangeParent);
+
+	if (hChild)
+	{
+		::SetParent(hChild, NULL);
+	}
+
 	return 0;
 }
 
 LRESULT CMainDlg::OnCancel(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
 {
 	CloseDialog(wID);
+	
+	
 	return 0;
 }
 
