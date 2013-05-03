@@ -37,5 +37,15 @@ void CMyWindow::DrawAllLink()
 	m_linkFrgtPsd.SetHyperLink(_T("http://www.wiz.cn/register"));
 	m_linkFrgtPsd.SetHyperLinkExtendedStyle(HLINK_UNDERLINEHOVER);
 	
-	
+}
+LRESULT CMyWindow::OnNcHitTest(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
+{
+	POINT pt = { GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam)};
+	ScreenToClient(&pt);
+	if (PtInRect(m_rcCaption, pt))
+	{
+		return HTCAPTION;
+	}
+
+	return ::DefWindowProc(m_hWnd, uMsg, wParam, lParam);
 }

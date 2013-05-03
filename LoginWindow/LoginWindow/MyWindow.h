@@ -24,6 +24,12 @@ public:
 
 		m_clrBk = RGB(72, 169, 220);
 		CreateFont(m_font);
+		
+		m_rcCaption.left = 0;
+		m_rcCaption.top = 0;
+		m_rcCaption.right = 800;
+		m_rcCaption.bottom = 50;
+
 	}
 
 	DECLARE_WND_CLASS(_T("My Login In Window"));
@@ -37,12 +43,14 @@ public:
 		// MESSAGE_HANDLER(WM_MOUSEMOVE, OnMouseMove)
 		MESSAGE_HANDLER(WM_COMMAND, OnCommand)
 		//MESSAGE_HANDLER(WM_ERASEBKGND, OnEraseBkgnd)
+		MESSAGE_HANDLER(WM_NCHITTEST, OnNcHitTest);
 		MESSAGE_HANDLER(WM_CTLCOLOREDIT, OnCtlColorEdit)
 		MESSAGE_HANDLER(WM_CTLCOLORSTATIC, OnCtlColorStatic)
 		MESSAGE_HANDLER(WM_PAINT, OnPaint)
 		// REFLECT_NOTIFICATIONS()
 		// CHAIN_MSG_MAP(CUpdateUI<CMyWindow>)
 	END_MSG_MAP()
+	LRESULT OnNcHitTest(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 	LRESULT OnPaint(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 	{
 		CPaintDC dc(m_hWnd);
@@ -122,9 +130,9 @@ public:
 
 		CRect rcEdit;
 		rcEdit.left = 40;
-		rcEdit.top = 20;
+		rcEdit.top = 80;
 		rcEdit.right = 275;
-		rcEdit.bottom = 45;
+		rcEdit.bottom = 105;
 		
 		DrawEdit(rcEdit);
 
@@ -250,7 +258,7 @@ protected:
 		{
 			nImageIndex = 0;
 		}
-		m_editil.Draw(dc, nImageIndex, 36, 12, 0);
+		m_editil.Draw(dc, nImageIndex, 36, 72, 0);
 	}
 	void SetEditState(BOOL bState)
 	{
@@ -267,6 +275,7 @@ private:
 	CBitmapButton m_btn;
 	CImage m_bkgnd;
 	CRect m_rcClient;
+	CRect m_rcCaption;
 	CEdit m_editUserName;
 	CImageList m_editil;
 	CImage m_editbkimg;
