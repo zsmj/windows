@@ -48,6 +48,7 @@ public:
 		MESSAGE_HANDLER(WM_NCHITTEST, OnNcHitTest);
 		MESSAGE_HANDLER(WM_CTLCOLOREDIT, OnCtlColorEdit)
 		MESSAGE_HANDLER(WM_CTLCOLORSTATIC, OnCtlColorStatic)
+		MESSAGE_HANDLER(WM_CTLCOLORBTN, OnCtlColorBtn)
 		MESSAGE_HANDLER(WM_PAINT, OnPaint)
 		// REFLECT_NOTIFICATIONS()
 		// CHAIN_MSG_MAP(CUpdateUI<CMyWindow>)
@@ -89,6 +90,7 @@ public:
 		return 0;
 	}
 	LRESULT OnCtlColorStatic(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	LRESULT OnCtlColorBtn(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 	LRESULT OnCommand(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 	{
 		int nID = LOWORD(wParam);

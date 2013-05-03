@@ -877,7 +877,7 @@ public:
 			RECT rect = { 0 };
 			GetClientRect(&rect);
 			dc.FillRect(&rect, hBrush);
-		}
+		}	
 	}
 
 	void DoPaint(CDCHandle dc)

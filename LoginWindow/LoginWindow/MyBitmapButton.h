@@ -195,7 +195,7 @@ public:
 		CRect rc;
 		GetWindowRect(&rc);
 		ScreenToClient(&rc);
-		dc.FillSolidRect(rc, m_rfBackground);
+		//dc.FillSolidRect(rc, m_rfBackground);
 
 		// draw the button image
 		int xyPos = 0;
@@ -284,11 +284,13 @@ public:
 		T* pT = static_cast<T*>(this);
 		if(wParam != NULL)
 		{
+			//pT->DoEraseBackground((HDC)wParam);
 			pT->DoPaint((HDC)wParam);
 		}
 		else
 		{
 			CPaintDC dc(m_hWnd);
+			//pT->DoEraseBackground(dc.m_hDC);
 			pT->DoPaint(dc.m_hDC);
 		}
 		return 0;
@@ -415,8 +417,9 @@ public:
 		if(m_fMouseOver == 1)
 		{
 			m_fMouseOver = 0;
-			Invalidate();
-			UpdateWindow();
+			UpdateParentWindow();	
+			//Invalidate();
+			//UpdateWindow();
 		}
 		return 0;
 	}
@@ -529,6 +532,26 @@ public:
 	bool IsHoverMode() const
 	{
 		return ((m_dwExtendedStyle & BMPBTN_HOVER) != 0);
+	}
+	void DoEraseBackground(CDCHandle dc)
+	{
+		HBRUSH hBrush = (HBRUSH)::SendMessage(GetParent(), WM_CTLCOLORBTN, (WPARAM)dc.m_hDC, (LPARAM)m_hWnd);
+		if(hBrush != NULL)
+		{
+			RECT rect = { 0 };
+			GetClientRect(&rect);
+			dc.FillRect(&rect, hBrush);
+		}
+	}
+	void UpdateParentWindow()
+	{
+		CWindow hParent = GetParent();
+
+		CRect rc;
+		GetWindowRect(rc);
+		hParent.ScreenToClient(&rc);
+		hParent.InvalidateRect(rc);
+		hParent.UpdateWindow();
 	}
 };
 

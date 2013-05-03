@@ -21,6 +21,15 @@ LRESULT CMyWindow::OnCtlColorStatic(UINT uMsg, WPARAM wParam, LPARAM lParam, BOO
 	return (LRESULT)GetStockObject(HOLLOW_BRUSH);
 
 }
+LRESULT CMyWindow::OnCtlColorBtn(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
+{
+	bHandled = TRUE;
+	CDCHandle dc = (HDC)wParam;
+
+	dc.SetBkMode(TRANSPARENT);
+
+	return (LRESULT)GetStockObject(HOLLOW_BRUSH);
+}
 void CMyWindow::DrawFrgtPsdLink(CMyHyperLink& hl, CRect rc, LPCTSTR lpszLabel, LPCTSTR lpszURL, DWORD dwLinkExStyle)
 {
 	DWORD dwStyle = WS_CHILD | WS_VISIBLE | SS_NOTIFY;
