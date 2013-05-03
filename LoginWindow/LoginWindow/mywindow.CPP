@@ -10,6 +10,17 @@ void tolog(LPCTSTR lpszLog)
 {
 	::OutputDebugString(lpszLog);
 }
+LRESULT CMyWindow::OnNcHitTest(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
+{
+	POINT pt = { GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam)};
+	ScreenToClient(&pt);
+	if (PtInRect(m_rcCaption, pt))
+	{
+		return HTCAPTION;
+	}
+
+	return ::DefWindowProc(m_hWnd, uMsg, wParam, lParam);
+}
 LRESULT CMyWindow::OnCtlColorStatic(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 
@@ -67,15 +78,4 @@ void CMyWindow::DrawAllLink()
 
 	DrawRegLink(m_linkFrgtPsd, rcFrgt, _T("Íü¼ÇÃÜÂë"), _T("http://as.wiz.cn/wizas/htmlpages/reset_password_zh_CN.html"), dwLinkExStyle);
 	
-}
-LRESULT CMyWindow::OnNcHitTest(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
-{
-	POINT pt = { GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam)};
-	ScreenToClient(&pt);
-	if (PtInRect(m_rcCaption, pt))
-	{
-		return HTCAPTION;
-	}
-
-	return ::DefWindowProc(m_hWnd, uMsg, wParam, lParam);
 }

@@ -49,12 +49,28 @@ public:
 		MESSAGE_HANDLER(WM_CTLCOLOREDIT, OnCtlColorEdit)
 		MESSAGE_HANDLER(WM_CTLCOLORSTATIC, OnCtlColorStatic)
 		MESSAGE_HANDLER(WM_CTLCOLORBTN, OnCtlColorBtn)
-		MESSAGE_HANDLER(WM_PAINT, OnPaint)
+		//MESSAGE_HANDLER(WM_PAINT, OnPaint)
 		// REFLECT_NOTIFICATIONS()
 		// CHAIN_MSG_MAP(CUpdateUI<CMyWindow>)
 		CHAIN_MSG_MAP(CDoubleBufferImpl<CMyWindow>)
 	END_MSG_MAP()
 	LRESULT OnNcHitTest(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	LRESULT OnPaint(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
+	{
+		if(wParam != NULL)
+		{
+			RECT rect = { 0 };
+			GetClientRect(&rect);
+			
+			DoPaint((HDC)wParam);
+		}
+		else
+		{
+			CPaintDC dc(m_hWnd);
+			DoPaint(dc.m_hDC);
+		}		
+		return 0;
+	}
 	LRESULT DoPaint(CDCHandle dc)
 	{
 		tolog(_T("WM_PAINT in parent"));
