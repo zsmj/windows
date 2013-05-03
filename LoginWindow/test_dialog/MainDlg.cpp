@@ -44,12 +44,10 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 	InitButton();
 
 	// Set WS_EX_LAYERED on this window 
-	SetWindowLong(
-				  GWL_EXSTYLE, 
-				  GetWindowLong(GWL_EXSTYLE) | WS_EX_LAYERED);
+	//SetWindowLong(GWL_EXSTYLE, GetWindowLong(GWL_EXSTYLE) | WS_EX_LAYERED);
 
 	// Make this window 70% alpha
-	SetLayeredWindowAttributes(m_hWnd, 0, (255 * 70) / 100, LWA_ALPHA);
+	//SetLayeredWindowAttributes(m_hWnd, 0, (255 * 70) / 100, LWA_ALPHA);
 
 
 	return TRUE;

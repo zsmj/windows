@@ -1,5 +1,6 @@
 template <class T, class TBase = ATL::CWindow, class TWinTraits = ATL::CControlWinTraits>
 class ATL_NO_VTABLE CMyHyperLinkImpl : public ATL::CWindowImpl< T, TBase, TWinTraits >
+	//, public CDoubleBufferImpl<T>
 {
 public:
 	LPTSTR m_lpstrLabel;
@@ -322,7 +323,7 @@ public:
 			if(bRet)
 			{
 				m_bVisited = true;
-				Invalidate();
+				//Invalidate();
 			}
 		}
 		return bRet;
@@ -339,7 +340,7 @@ public:
 		hParent.UpdateWindow();
 	}
 // Message map and handlers
-	BEGIN_MSG_MAP(CHyperLinkImpl)
+	BEGIN_MSG_MAP(CMyHyperLinkImpl)
 		MESSAGE_HANDLER(WM_CREATE, OnCreate)
 #ifndef _WIN32_WCE
 		MESSAGE_HANDLER(WM_DESTROY, OnDestroy)
@@ -366,6 +367,7 @@ public:
 		MESSAGE_HANDLER(WM_SETFONT, OnSetFont)
 		MESSAGE_HANDLER(WM_UPDATEUISTATE, OnUpdateUiState)
 		MESSAGE_HANDLER(WM_SIZE, OnSize)
+		//CHAIN_MSG_MAP(CDoubleBufferImpl<T>)
 	END_MSG_MAP()
 
 	LRESULT OnCreate(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)
@@ -404,6 +406,7 @@ public:
 
 	LRESULT OnPaint(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOOL& bHandled)
 	{
+		tolog(_T("In Child WM_PAINT"));
 		if(!m_bPaintLabel)
 		{
 			bHandled = FALSE;
@@ -446,10 +449,10 @@ public:
 				if(!m_bHover)
 				{
 					m_bHover = true;
-					InvalidateRect(&m_rcLink);
-					UpdateWindow();
 					//
 					UpdateParentWindow();
+					//
+					
 #ifndef _WIN32_WCE
 					StartTrackMouseLeave();
 #endif // !_WIN32_WCE
@@ -463,11 +466,9 @@ public:
 				if(m_bHover)
 				{
 					m_bHover = false;
-					InvalidateRect(&m_rcLink);
-					UpdateWindow();
-
 					//
 					UpdateParentWindow();
+					//
 				}
 			}
 			bHandled = FALSE;
@@ -481,8 +482,6 @@ public:
 		if(IsUnderlineHover() && m_bHover)
 		{
 			m_bHover = false;
-			InvalidateRect(&m_rcLink);
-			UpdateWindow();
 			//
 			UpdateParentWindow();
 
@@ -500,6 +499,7 @@ public:
 			SetCapture();
 			//
 			UpdateParentWindow();
+
 		}
 		return 0;
 	}
@@ -928,6 +928,7 @@ public:
 		}
 		else
 		{
+			tolog(_T("in child dopaint"));
 			dc.SetBkMode(TRANSPARENT);
 			COLORREF clrOld = dc.SetTextColor(IsWindowEnabled() ? (m_bVisited ? m_clrVisited : m_clrLink) : (::GetSysColor(COLOR_GRAYTEXT)));
 
@@ -1059,7 +1060,7 @@ public:
 		//
 		::SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(NONCLIENTMETRICS), &ncm, 0);
 		
-		ncm.lfMenuFont.lfHeight -= 3;
+		ncm.lfMenuFont.lfHeight;
 		ncm.lfMenuFont.lfWeight = FW_NORMAL;
 		if (bUnderLine)
 		{

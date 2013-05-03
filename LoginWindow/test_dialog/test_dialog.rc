@@ -80,6 +80,7 @@ BEGIN
     PUSHBUTTON      "Cancel",IDCANCEL,348,24,50,14
     PUSHBUTTON      "&About...",ID_APP_ABOUT,348,239,50,14
     PUSHBUTTON      "Button1",IDC_BUTTON_ChangeParent,79,111,88,40
+    LTEXT           "asdfasdfasdfasldfasdlfajsdflkjasdlfasdflkasdfj",IDC_STATIC,242,100,110,12
 END
 
 

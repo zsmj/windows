@@ -17,31 +17,46 @@ LRESULT CMyWindow::OnCtlColorStatic(UINT uMsg, WPARAM wParam, LPARAM lParam, BOO
 	CDCHandle dc = (HDC)wParam;
 
 	dc.SetBkMode(TRANSPARENT);
-	dc.SetTextColor(RGB(255, 255, 255));
 
-	LOGBRUSH lb;
-	lb.lbStyle = BS_HOLLOW;
+	return (LRESULT)GetStockObject(HOLLOW_BRUSH);
 
-	return (LRESULT)CreateBrushIndirect(&lb);
+}
+void CMyWindow::DrawFrgtPsdLink(CMyHyperLink& hl, CRect rc, LPCTSTR lpszLabel, LPCTSTR lpszURL, DWORD dwLinkExStyle)
+{
+	DWORD dwStyle = WS_CHILD | WS_VISIBLE | SS_NOTIFY;
+	hl.Create(m_hWnd, rc, 0, dwStyle, WS_EX_TRANSPARENT);
 
-	//return (LRESULT)::CreateSolidBrush(m_clrBk);
+	hl.SetLabel(lpszLabel);
+	hl.SetHyperLink(lpszURL);
+	hl.SetHyperLinkExtendedStyle(dwLinkExStyle);
+}
+void CMyWindow::DrawRegLink(CMyHyperLink& hl, CRect rc, LPCTSTR lpszLabel, LPCTSTR lpszURL, DWORD dwLinkExStyle)
+{
+	DWORD dwStyle = WS_CHILD | WS_VISIBLE | SS_NOTIFY;
+	hl.Create(m_hWnd, rc, 0, dwStyle, WS_EX_TRANSPARENT);
 
+	hl.SetLabel(lpszLabel);
+	hl.SetHyperLink(lpszURL);
+	hl.SetHyperLinkExtendedStyle(dwLinkExStyle);
 }
 void CMyWindow::DrawAllLink()
 {
-	CRect rc;
-	rc.left = 50;
-	rc.top = 400;
-	rc.right = 110;
-	rc.bottom = 430;
+	DWORD dwLinkExStyle = HLINK_UNDERLINEHOVER | HLINK_NOTOOLTIP;
+	CRect rcReg;
+	rcReg.left = 50;
+	rcReg.top = 400;
+	rcReg.right = 80;
+	rcReg.bottom = 420;
 	
-	DWORD dwStyle = WS_CHILD | WS_VISIBLE | SS_NOTIFY | WS_CLIPSIBLINGS;
-	m_linkFrgtPsd.Create(m_hWnd, rc, 0, dwStyle, WS_EX_TRANSPARENT);
+	DrawRegLink(m_linkReg, rcReg, _T("×¢²á"), _T("http://www.wiz.cn/register"), dwLinkExStyle);
 
-	m_linkFrgtPsd.SetLabel(_T("×¢²á"));
-	m_linkFrgtPsd.SetHyperLink(_T("http://www.wiz.cn/register"));
-	m_linkFrgtPsd.SetHyperLinkExtendedStyle(HLINK_UNDERLINEHOVER);
+	CRect rcFrgt;
+	rcFrgt.left = 100;
+	rcFrgt.top = 400;
+	rcFrgt.right = 160;
+	rcFrgt.bottom = 420;
 
+	DrawRegLink(m_linkFrgtPsd, rcFrgt, _T("Íü¼ÇÃÜÂë"), _T("http://as.wiz.cn/wizas/htmlpages/reset_password_zh_CN.html"), dwLinkExStyle);
 	
 }
 LRESULT CMyWindow::OnNcHitTest(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)

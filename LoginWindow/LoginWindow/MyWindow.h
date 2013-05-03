@@ -56,6 +56,7 @@ public:
 	LRESULT OnNcHitTest(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 	LRESULT DoPaint(CDCHandle dc)
 	{
+		tolog(_T("WM_PAINT in parent"));
 		ATLASSERT(m_bkgnd.IsNull() == NULL);
 
 		if (!m_bkgnd.IsNull())
@@ -68,6 +69,7 @@ public:
 	}
 	LRESULT OnEraseBkgnd(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 	{
+		tolog(_T("in parent erase."));
 		bHandled = TRUE;
 		return 1;
 	}
@@ -80,7 +82,7 @@ public:
 
 	//	m_editbkimg.Draw(dc, 40, 20, 230, 15);
 		
-		return (LRESULT)::CreatePatternBrush(m_editbkimg);
+		//return (LRESULT)::CreatePatternBrush(m_editbkimg);
 		
 		//dc.SetBkColor(RGB(253, 254, 255));
 
@@ -114,9 +116,7 @@ public:
 	{
 		LONG lStyle = GetWindowLong(GWL_STYLE);
 		lStyle &= ~WS_CLIPCHILDREN;
-		//SetWindowLong(GWL_STYLE, lStyle);
-
-		
+		SetWindowLong(GWL_STYLE, lStyle);
 
 		//
 		CRect rect;
@@ -133,6 +133,7 @@ public:
 		//
 		CenterWindow();
 		//
+
 		DrawAllLink();
 
 		CRect rcEdit;
@@ -196,7 +197,8 @@ protected:
 		m_btnMinBox.SetBitmapButtonExtendedStyle(BMPBTN_HOVER);
 		m_btnMinBox.SetImageList(il);
 		m_btnMinBox.SetImages(0, 2, 1);
-		m_btnMinBox.SetBackground(RGB(72, 169, 220));
+
+		//m_btnMinBox.SetBackground(RGB(72, 169, 220));
 	}
 	void DrawMaxBox()
 	{
@@ -219,7 +221,7 @@ protected:
 		m_btnMaxBox.SetBitmapButtonExtendedStyle(BMPBTN_HOVER);
 		m_btnMaxBox.SetImageList(il);
 		m_btnMaxBox.SetImages(0, 2, 1);
-		m_btnMaxBox.SetBackground(RGB(72, 169, 220));
+		//m_btnMaxBox.SetBackground(RGB(72, 169, 220));
 	}
 	void InitButton()
 	{
@@ -272,6 +274,8 @@ protected:
 	}
 public:
 	void DrawAllLink();
+	void DrawRegLink(CMyHyperLink& hl, CRect rc, LPCTSTR lpszLabel, LPCTSTR lpszURL, DWORD dwLinkExStyle);
+	void DrawFrgtPsdLink(CMyHyperLink& hl, CRect rc, LPCTSTR lpszLabel, LPCTSTR lpszURL, DWORD dwLinkExStyle);
 private:
 	COLORREF m_clrBk;
 	CFont m_font;
