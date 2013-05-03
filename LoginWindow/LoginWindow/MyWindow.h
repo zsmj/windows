@@ -9,6 +9,7 @@ void tolog(LPCTSTR lpszLog);
 
 class CMyWindow
 	: public CWindowImpl<CMyWindow, CWindow, CMyWinTraits>
+	, public CDoubleBufferImpl<CMyWindow>
 	//, public CUpdateUI<CMyWindow>
 {
 public:
@@ -50,12 +51,11 @@ public:
 		MESSAGE_HANDLER(WM_PAINT, OnPaint)
 		// REFLECT_NOTIFICATIONS()
 		// CHAIN_MSG_MAP(CUpdateUI<CMyWindow>)
+		CHAIN_MSG_MAP(CDoubleBufferImpl<CMyWindow>)
 	END_MSG_MAP()
 	LRESULT OnNcHitTest(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
-	LRESULT OnPaint(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
+	LRESULT DoPaint(CDCHandle dc)
 	{
-		CPaintDC dc(m_hWnd);
-		
 		ATLASSERT(m_bkgnd.IsNull() == NULL);
 
 		if (!m_bkgnd.IsNull())
@@ -64,7 +64,6 @@ public:
 		}
 		PaintEdit(dc.m_hDC);
 
-		bHandled = FALSE;
 		return 0;
 	}
 	LRESULT OnEraseBkgnd(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)

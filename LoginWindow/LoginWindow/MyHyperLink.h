@@ -498,6 +498,8 @@ public:
 		{
 			SetFocus();
 			SetCapture();
+			//
+			UpdateParentWindow();
 		}
 		return 0;
 	}
