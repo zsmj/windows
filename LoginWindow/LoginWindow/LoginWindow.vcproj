@@ -201,6 +201,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\MyHyperLink.h"
+				>
+			</File>
+			<File
 				RelativePath=".\MyWindow.h"
 				>
 			</File>

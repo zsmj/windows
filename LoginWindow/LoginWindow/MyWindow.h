@@ -1,5 +1,6 @@
 #pragma once
 #include "MyBitmapButton.h"
+#include "MyHyperLink.h"
 
 typedef CWinTraits<WS_POPUPWINDOW> CMyWinTraits;
 
@@ -112,6 +113,13 @@ public:
 	}
 	LRESULT OnCreate(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 	{
+		LONG lStyle = GetWindowLong(GWL_STYLE);
+		lStyle &= ~WS_CLIPCHILDREN;
+		//SetWindowLong(GWL_STYLE, lStyle);
+
+		
+
+		//
 		CRect rect;
 		GetClientRect(&rect);
 		rect.bottom = rect.top + 500;
@@ -157,7 +165,6 @@ public:
 		
 		ncm.lfMenuFont.lfHeight -= 3;
 		ncm.lfMenuFont.lfWeight = FW_NORMAL;
-		ncm.lfMenuFont.lfUnderline = true;
 
 		m_font.CreateFontIndirectW(&ncm.lfMenuFont);
 	}
