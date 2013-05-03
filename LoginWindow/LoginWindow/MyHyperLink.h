@@ -946,8 +946,8 @@ public:
 
 			dc.DrawText(lpstrText, -1, &m_rcLink, nDrawStyle | DT_WORDBREAK);
 
-			if(GetFocus() == m_hWnd)
-				dc.DrawFocusRect(&m_rcLink);
+			//if(GetFocus() == m_hWnd)
+			//	dc.DrawFocusRect(&m_rcLink);
 
 			dc.SetTextColor(clrOld);
 			dc.SelectFont(hFontOld);
