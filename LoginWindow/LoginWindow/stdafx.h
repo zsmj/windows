@@ -38,6 +38,43 @@ public:
 };
 
 
+class CMyHyperLink : public CHyperLinkImpl<CMyHyperLink>
+{
+public:
+	DECLARE_WND_SUPERCLASS(_T("WTL_HyperLink"), _T("static"));
+
+	void Init()
+	{
+		CHyperLinkImpl<CMyHyperLink>::Init();
+		m_clrLink = m_clrVisited = RGB(255, 255, 255);
+		
+		CreateFont(m_hFont, TRUE);
+		CreateFont(m_hFontNormal, FALSE);
+
+	}
+	void CreateFont(HFONT& font, BOOL bUnderLine)
+	{
+		NONCLIENTMETRICS ncm;
+		ZeroMemory(&ncm, sizeof(NONCLIENTMETRICS));
+#if (WINVER >= 0x0600)
+		ncm.cbSize = sizeof(NONCLIENTMETRICS) - sizeof(ncm.iPaddedBorderWidth);
+#else
+		ncm.cbSize = sizeof(NONCLIENTMETRICS);
+#endif
+		//
+		::SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(NONCLIENTMETRICS), &ncm, 0);
+		
+		ncm.lfMenuFont.lfHeight -= 3;
+		ncm.lfMenuFont.lfWeight = FW_NORMAL;
+		if (bUnderLine)
+		{
+			ncm.lfMenuFont.lfUnderline = true;
+		}
+
+		font = ::CreateFontIndirectW(&ncm.lfMenuFont);
+	}
+};
+
 
 //#if defined _M_IX86
 //#pragma comment(linker,"/manifestdependency:\"type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='x86' publicKeyToken='6595b64144ccf1df' language='*'\"")

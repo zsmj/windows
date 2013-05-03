@@ -3,15 +3,8 @@
 
 typedef CWinTraits<WS_POPUPWINDOW> CMyWinTraits;
 
-CString StringFormat1(CString str, CString replaceStr)
-{
-	str.Replace(_T("%1"), replaceStr);
-	return str;
-}
-void tolog(LPCTSTR lpszLog)
-{
-	::OutputDebugString(lpszLog);
-}
+CString StringFormat1(CString str, CString replaceStr);
+void tolog(LPCTSTR lpszLog);
 
 class CMyWindow
 	: public CWindowImpl<CMyWindow, CWindow, CMyWinTraits>
@@ -28,6 +21,9 @@ public:
 		m_editil.Add(img);
 
 		m_editbkimg.Load(_T("./image/Text_Login_User_Normal.png"));
+
+		m_clrBk = RGB(72, 169, 220);
+		CreateFont(m_font);
 	}
 
 	DECLARE_WND_CLASS(_T("My Login In Window"));
@@ -42,6 +38,7 @@ public:
 		MESSAGE_HANDLER(WM_COMMAND, OnCommand)
 		//MESSAGE_HANDLER(WM_ERASEBKGND, OnEraseBkgnd)
 		MESSAGE_HANDLER(WM_CTLCOLOREDIT, OnCtlColorEdit)
+		MESSAGE_HANDLER(WM_CTLCOLORSTATIC, OnCtlColorStatic)
 		MESSAGE_HANDLER(WM_PAINT, OnPaint)
 		// REFLECT_NOTIFICATIONS()
 		// CHAIN_MSG_MAP(CUpdateUI<CMyWindow>)
@@ -75,12 +72,13 @@ public:
 
 	//	m_editbkimg.Draw(dc, 40, 20, 230, 15);
 		
-	//	return (LRESULT)::CreatePatternBrush(m_editbkimg);
+		return (LRESULT)::CreatePatternBrush(m_editbkimg);
 		
-		dc.SetBkColor(RGB(253, 254, 255));
+		//dc.SetBkColor(RGB(253, 254, 255));
 
 		return 0;
 	}
+	LRESULT OnCtlColorStatic(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 	LRESULT OnCommand(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 	{
 		int nID = LOWORD(wParam);
@@ -119,7 +117,9 @@ public:
 		DrawMaxBox();
 		//
 		CenterWindow();
-		
+		//
+		DrawAllLink();
+
 		CRect rcEdit;
 		rcEdit.left = 40;
 		rcEdit.top = 20;
@@ -149,6 +149,7 @@ public:
 		
 		ncm.lfMenuFont.lfHeight -= 3;
 		ncm.lfMenuFont.lfWeight = FW_NORMAL;
+		ncm.lfMenuFont.lfUnderline = true;
 
 		m_font.CreateFontIndirectW(&ncm.lfMenuFont);
 	}
@@ -229,7 +230,7 @@ protected:
 	}
 	void DrawEdit(CRect rc)
 	{
-		CreateFont(m_font);
+
 		m_editUserName.Create(m_hWnd, rc, NULL, WS_CHILD | WS_VISIBLE | ES_AUTOHSCROLL, 0, IDC_EDIT_USERNAME);
 		m_editUserName.SetFont(m_font);
 
@@ -255,7 +256,10 @@ protected:
 	{
 		m_bEditState = bState;
 	}
+public:
+	void DrawAllLink();
 private:
+	COLORREF m_clrBk;
 	CFont m_font;
 	CMyBitmapButton m_btnMinBox;
 	CMyBitmapButton m_btnMaxBox;
@@ -266,6 +270,10 @@ private:
 	CEdit m_editUserName;
 	CImageList m_editil;
 	CImage m_editbkimg;
+
+	CMyHyperLink m_linkReg;
+	CMyHyperLink m_linkFrgtPsd;
+	CMyHyperLink m_linkProxySet;
 
 	BOOL m_bEditState;
 

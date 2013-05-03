@@ -9,8 +9,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pure_win32", "pure_win32\pu
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_sdiwnd", "test_sdiwnd\test_sdiwnd.vcproj", "{38E0D787-CB84-4B01-B77B-900D3888C6AC}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "t", "t\t.vcproj", "{C009D3DE-8AE2-4AD2-A57E-C6A95047615F}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -33,10 +31,6 @@ Global
 		{38E0D787-CB84-4B01-B77B-900D3888C6AC}.Debug|Win32.Build.0 = Debug|Win32
 		{38E0D787-CB84-4B01-B77B-900D3888C6AC}.Release|Win32.ActiveCfg = Release|Win32
 		{38E0D787-CB84-4B01-B77B-900D3888C6AC}.Release|Win32.Build.0 = Release|Win32
-		{C009D3DE-8AE2-4AD2-A57E-C6A95047615F}.Debug|Win32.ActiveCfg = Debug|Win32
-		{C009D3DE-8AE2-4AD2-A57E-C6A95047615F}.Debug|Win32.Build.0 = Debug|Win32
-		{C009D3DE-8AE2-4AD2-A57E-C6A95047615F}.Release|Win32.ActiveCfg = Release|Win32
-		{C009D3DE-8AE2-4AD2-A57E-C6A95047615F}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
