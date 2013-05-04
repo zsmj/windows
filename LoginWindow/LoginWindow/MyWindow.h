@@ -15,11 +15,13 @@ void tolog(LPCTSTR lpszLog);
 
 class CMyWindow
 	: public CWindowImpl<CMyWindow, CWindow, CMyWinTraits>
+	, public CMessageFilter
 	, public CDoubleBufferImpl<CMyWindow>
 	//, public CUpdateUI<CMyWindow>
 {
 public:
 	
+	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	CMyWindow()
 	{
 		m_bkgnd.Load(_T("./image/Bg_Login.png"));
@@ -28,7 +30,14 @@ public:
 		m_editil.Create(img.GetWidth()/ 2, img.GetHeight(), ILC_COLOR32, 0, 0);
 		m_editil.Add(img);
 
-		m_editbkimg.Load(_T("./image/Text_Login_User_Normal.png"));
+		m_rcEditBk.left = 36 + 2;
+		m_rcEditBk.top = 132 + 2;
+		m_rcEditBk.right = m_rcEditBk.left + img.GetWidth() / 2 - 4;
+		m_rcEditBk.bottom = m_rcEditBk.top + img.GetHeight() - 4;
+
+		m_editbkimg.Load(_T("./image/Text_Login_User.png"));
+		m_imgLoginPass.Load(_T("./image/Text_Login_Pass.png"));
+		m_imgLoginPassFocus.Load(_T("./image/Text_Login_Pass_Focus.png"));
 
 		m_clrBk = RGB(72, 169, 220);
 		CreateFont(m_font);
@@ -37,6 +46,10 @@ public:
 		m_rcCaption.top = 0;
 		m_rcCaption.right = 800;
 		m_rcCaption.bottom = 50;
+
+		m_bTransparent = FALSE;
+		m_bFocus = FALSE;
+		m_bEditInit = TRUE;
 
 	}
 
@@ -52,7 +65,7 @@ public:
 		MESSAGE_HANDLER(WM_COMMAND, OnCommand)
 		//MESSAGE_HANDLER(WM_ERASEBKGND, OnEraseBkgnd)
 		MESSAGE_HANDLER(WM_NCHITTEST, OnNcHitTest);
-		//MESSAGE_HANDLER(WM_CTLCOLOREDIT, OnCtlColorEdit)
+		MESSAGE_HANDLER(WM_CTLCOLOREDIT, OnCtlColorEdit)
 		MESSAGE_HANDLER(WM_CTLCOLORSTATIC, OnCtlColorStatic)
 		MESSAGE_HANDLER(WM_CTLCOLORBTN, OnCtlColorBtn)
 		MESSAGE_HANDLER(WM_DBUFFER_PARENT_DRAWBACKGRAND, OnParentDraw);
@@ -110,81 +123,11 @@ public:
 
 		return 1;
 	}
-	LRESULT OnCtlColorEdit(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
-	{
-		
-		CDCHandle dc = (HDC)wParam;
-	//	m_editil.Draw(dc, 0, -5, -8, 0);
-		HBRUSH hbr = ::CreateSolidBrush(RGB(253, 254, 255));
-
-	//	m_editbkimg.Draw(dc, 40, 20, 230, 15);
-		
-		//return (LRESULT)::CreatePatternBrush(m_editbkimg);
-		
-		//dc.SetBkColor(RGB(253, 254, 255));
-
-		return 0;
-	}
+	LRESULT OnCtlColorEdit(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 	LRESULT OnCtlColorStatic(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 	LRESULT OnCtlColorBtn(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
-	LRESULT OnCommand(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
-	{
-		int nID = LOWORD(wParam);
-		if (nID == IDC_MINIMIZE)
-		{
-			ShowWindow(SW_SHOWMINIMIZED);
-		}
-		if (nID == IDC_CLOSE)
-		{
-			DestroyWindow();
-		}
-
-		WORD wCode = HIWORD(wParam);
-		WORD wID = LOWORD(wParam);
-		//if (wID == IDC_EDIT_USERNAME && wCode == EN_SETFOCUS)
-		//{
-		//	SetEditState(TRUE);
-		//	Invalidate();
-		//}
-
-		bHandled = FALSE;
-		return 0;
-	}
-	LRESULT OnCreate(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
-	{
-		LONG lStyle = GetWindowLong(GWL_STYLE);
-		//lStyle &= ~WS_CLIPCHILDREN;
-		lStyle |= WS_CLIPCHILDREN;
-		SetWindowLong(GWL_STYLE, lStyle);
-
-		//
-		CRect rect;
-		GetClientRect(&rect);
-		rect.bottom = rect.top + 450;
-		rect.right = rect.left + 600;
-		MoveWindow(&rect);
-
-		m_rcClient = rect;
-		//
-		DrawMinBox();
-		//
-		DrawMaxBox();
-		//
-		CenterWindow();
-		//
-
-		DrawAllLink();
-
-		CRect rcEdit;
-		rcEdit.left = 40;
-		rcEdit.top = 80;
-		rcEdit.right = 275;
-		rcEdit.bottom = 100;
-		
-		DrawEdit(rcEdit);
-
-		return 0;
-	}
+	LRESULT OnCommand(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	LRESULT OnCreate(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 	LRESULT OnDestroyWindow(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 	{
 		PostQuitMessage(0);
@@ -215,31 +158,10 @@ public:
 		return 0;
 	}
 	LRESULT OnParentDraw(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	void OnPasswordFocus(HWND hCtl);
+	void OnPasswordKillFocus(HWND hCtl);
 protected:
-	void DrawMinBox()
-	{
-		CImage img;
-		img.Load(_T("./image/Btn_Window_Min.png"));
-		int nWidth = img.GetWidth() / 3;
-		int nHeight = img.GetHeight();
-		CImageList il;
-		il.Create(nWidth, nHeight, ILC_COLOR32 | ILC_MASK, 0, 0);
-		il.Add(img);
-		
-		CRect rc;
-		rc.left = 510;
-		rc.top = 20;
-		rc.right = 530;
-		rc.bottom = 40;
-
-		m_btnMinBox.Create(m_hWnd, rc, 0, 0, 0, IDC_MINIMIZE);
-		m_btnMinBox.SetToolTip(_T("min"));
-		m_btnMinBox.SetBitmapButtonExtendedStyle(BMPBTN_HOVER);
-		m_btnMinBox.SetImageList(il);
-		m_btnMinBox.SetImages(0, 2, 1);
-
-		//m_btnMinBox.SetBackground(RGB(72, 169, 220));
-	}
+	void DrawMinBox();
 	void DrawMaxBox();
 	void InitButton()
 	{
@@ -262,30 +184,9 @@ protected:
 		m_btn.SetImages(0, 2, 1);
 
 	}
-	void DrawEdit(CRect rc)
-	{
-
-		m_editUserName.Create(m_hWnd, rc, NULL, WS_CHILD | WS_VISIBLE | ES_AUTOHSCROLL, 0, IDC_EDIT_USERNAME);
-		m_editUserName.SetFont(m_font);
-
-		
-		//m_editUserName.SetMargins(5, 8);
-
-	}
-
-	void PaintEdit(CDCHandle dc)
-	{
-		int nImageIndex = 0;
-		if (m_bEditState)
-		{
-			nImageIndex = 1;
-		}
-		else 
-		{
-			nImageIndex = 0;
-		}
-		//m_editil.Draw(dc, nImageIndex, 36, 72, 0);
-	}
+	void DrawAllEdit();
+	void DrawEdit(CEdit& edit, CRect rc, UINT nID);
+	void PaintEdit(CDCHandle dc);
 	void SetEditState(BOOL bState)
 	{
 		m_bEditState = bState;
@@ -305,9 +206,19 @@ private:
 	CImage m_bkgnd;
 	CRect m_rcClient;
 	CRect m_rcCaption;
+	//
 	CEdit m_editUserName;
+	CEdit m_editPassword;
+	CRect m_rcEditBk;
+	BOOL m_bTransparent;
+	BOOL m_bFocus;
+	BOOL m_bEditInit;
+	CImage m_imgLoginPass;
+	CImage m_imgLoginPassFocus;
+	//
 	CImageList m_editil;
 	CImage m_editbkimg;
+	
 
 	CMyDBufferHyperLink m_linkReg;
 	CMyDBufferHyperLink m_linkFrgtPsd;

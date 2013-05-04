@@ -7,6 +7,7 @@
 #define IDI_ICON1                       102
 #define IDC_CLOSE                       103
 #define IDC_EDIT_USERNAME               104
+#define IDC_EDIT_PASSWORD               105
 
 // Next default values for new objects
 // 
