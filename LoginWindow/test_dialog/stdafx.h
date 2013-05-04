@@ -23,7 +23,7 @@ extern CAppModule _Module;
 #include <atldlgs.h>
 
 #include <atlimage.h>
-#include <atlmisc.h>
+//#include <atlmisc.h>
 #include <atlctrlx.h>
 
 #if defined _M_IX86

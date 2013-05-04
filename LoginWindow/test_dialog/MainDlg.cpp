@@ -49,6 +49,14 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 	// Make this window 70% alpha
 	//SetLayeredWindowAttributes(m_hWnd, 0, (255 * 70) / 100, LWA_ALPHA);
 
+	CRect rc;
+	rc.left = 50;
+	rc.top = 50;
+	rc.right = 200;
+	rc.bottom = 80;
+
+	m_editTest.Create(m_hWnd, rc, NULL, WS_CHILD | WS_VISIBLE | ES_AUTOHSCROLL);
+	
 
 	return TRUE;
 }

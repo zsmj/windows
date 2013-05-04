@@ -1,6 +1,10 @@
+#pragma once
+
+const UINT WM_DBUFFER_PARENT_DRAWBACKGRAND = ::RegisterWindowMessage(_T("WM_DBUFFER_PARENT_DRAWBACKGRAND"));
+
 template <class T, class TBase = ATL::CWindow, class TWinTraits = ATL::CControlWinTraits>
-class ATL_NO_VTABLE CMyHyperLinkImpl : public ATL::CWindowImpl< T, TBase, TWinTraits >
-	//, public CDoubleBufferImpl<T>
+class ATL_NO_VTABLE CMyDBufferHyperLinkImpl : public ATL::CWindowImpl< T, TBase, TWinTraits >
+	, public CDoubleBufferImpl<T>
 {
 public:
 	LPTSTR m_lpstrLabel;
@@ -27,7 +31,7 @@ public:
 
 
 // Constructor/Destructor
-	CMyHyperLinkImpl(DWORD dwExtendedStyle = HLINK_UNDERLINED) : 
+	CMyDBufferHyperLinkImpl(DWORD dwExtendedStyle = HLINK_UNDERLINED) : 
 			m_lpstrLabel(NULL), m_lpstrHyperLink(NULL),
 			m_hCursor(NULL), m_hFont(NULL), m_hFontNormal(NULL),
 			m_clrLink(RGB(0, 0, 255)), m_clrVisited(RGB(128, 0, 128)),
@@ -38,7 +42,7 @@ public:
 		::SetRectEmpty(&m_rcLink);
 	}
 
-	~CMyHyperLinkImpl()
+	~CMyDBufferHyperLinkImpl()
 	{
 		delete [] m_lpstrLabel;
 		delete [] m_lpstrHyperLink;
@@ -339,6 +343,15 @@ public:
 		hParent.InvalidateRect(rc);
 		hParent.UpdateWindow();
 	}
+	void ParentDrawBk(CDCHandle dc)
+	{
+		CRect rc;
+		GetWindowRect(rc);
+		CWindow parent = GetParent();
+		parent.ScreenToClient(rc);
+
+		::SendMessage(GetParent(), WM_DBUFFER_PARENT_DRAWBACKGRAND, (WPARAM)dc.m_hDC, (LPARAM)&rc);
+	}
 // Message map and handlers
 	BEGIN_MSG_MAP(CMyHyperLinkImpl)
 		MESSAGE_HANDLER(WM_CREATE, OnCreate)
@@ -347,9 +360,9 @@ public:
 		MESSAGE_RANGE_HANDLER(WM_MOUSEFIRST, WM_MOUSELAST, OnMouseMessage)
 #endif // !_WIN32_WCE
 		MESSAGE_HANDLER(WM_ERASEBKGND, OnEraseBackground)
-		MESSAGE_HANDLER(WM_PAINT, OnPaint)
+		//MESSAGE_HANDLER(WM_PAINT, OnPaint)
 #ifndef _WIN32_WCE
-		MESSAGE_HANDLER(WM_PRINTCLIENT, OnPaint)
+		//MESSAGE_HANDLER(WM_PRINTCLIENT, OnPaint)
 #endif // !_WIN32_WCE
 		MESSAGE_HANDLER(WM_SETFOCUS, OnFocus)
 		MESSAGE_HANDLER(WM_KILLFOCUS, OnFocus)
@@ -367,7 +380,7 @@ public:
 		MESSAGE_HANDLER(WM_SETFONT, OnSetFont)
 		MESSAGE_HANDLER(WM_UPDATEUISTATE, OnUpdateUiState)
 		MESSAGE_HANDLER(WM_SIZE, OnSize)
-		//CHAIN_MSG_MAP(CDoubleBufferImpl<T>)
+		CHAIN_MSG_MAP(CDoubleBufferImpl<T>)
 	END_MSG_MAP()
 
 	LRESULT OnCreate(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)
@@ -450,7 +463,8 @@ public:
 				{
 					m_bHover = true;
 					//
-					UpdateParentWindow();
+					InvalidateRect(&m_rcLink);
+					UpdateWindow();
 					//
 					
 #ifndef _WIN32_WCE
@@ -467,7 +481,8 @@ public:
 				{
 					m_bHover = false;
 					//
-					UpdateParentWindow();
+					InvalidateRect(&m_rcLink);
+					UpdateWindow();
 					//
 				}
 			}
@@ -483,7 +498,8 @@ public:
 		{
 			m_bHover = false;
 			//
-			UpdateParentWindow();
+			InvalidateRect(&m_rcLink);
+			UpdateWindow();
 
 		}
 		return 0;
@@ -929,6 +945,9 @@ public:
 		else
 		{
 			tolog(_T("in child dopaint"));
+			//
+			ParentDrawBk(dc);
+			//
 			dc.SetBkMode(TRANSPARENT);
 			COLORREF clrOld = dc.SetTextColor(IsWindowEnabled() ? (m_bVisited ? m_clrVisited : m_clrLink) : (::GetSysColor(COLOR_GRAYTEXT)));
 
@@ -1034,15 +1053,15 @@ public:
 #endif // _ATL_MIN_CRT
 	}
 };
-class CMyHyperLink : public CMyHyperLinkImpl<CMyHyperLink>
+class CMyDBufferHyperLink : public CMyDBufferHyperLinkImpl<CMyDBufferHyperLink>
 {
 public:
 	DECLARE_WND_SUPERCLASS(_T("WTL_HyperLink"), _T("static"));
 
 	void Init()
 	{
-		CMyHyperLinkImpl<CMyHyperLink>::Init();
-		m_clrLink = m_clrVisited = RGB(255, 255, 255);
+		CMyDBufferHyperLinkImpl<CMyDBufferHyperLink>::Init();
+		m_clrLink = m_clrVisited = RGB(0, 255, 255);
 		
 		CreateFont(m_hFont, TRUE);
 		CreateFont(m_hFontNormal, FALSE);
@@ -1070,6 +1089,3 @@ public:
 		font = ::CreateFontIndirectW(&ncm.lfMenuFont);
 	}
 };
-
-
-//////////////////////////////////////////////////////////////////////////////////////////////

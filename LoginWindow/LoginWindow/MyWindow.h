@@ -1,6 +1,8 @@
 #pragma once
 #include "MyBitmapButton.h"
 #include "MyHyperLink.h"
+#include "MyDBufferHyperLink.h"
+
 
 typedef CWinTraits<WS_POPUPWINDOW> CMyWinTraits;
 
@@ -46,48 +48,62 @@ public:
 		MESSAGE_HANDLER(WM_COMMAND, OnCommand)
 		//MESSAGE_HANDLER(WM_ERASEBKGND, OnEraseBkgnd)
 		MESSAGE_HANDLER(WM_NCHITTEST, OnNcHitTest);
-		MESSAGE_HANDLER(WM_CTLCOLOREDIT, OnCtlColorEdit)
+		//MESSAGE_HANDLER(WM_CTLCOLOREDIT, OnCtlColorEdit)
 		MESSAGE_HANDLER(WM_CTLCOLORSTATIC, OnCtlColorStatic)
 		MESSAGE_HANDLER(WM_CTLCOLORBTN, OnCtlColorBtn)
+		MESSAGE_HANDLER(WM_DBUFFER_PARENT_DRAWBACKGRAND, OnParentDraw);
 		//MESSAGE_HANDLER(WM_PAINT, OnPaint)
 		// REFLECT_NOTIFICATIONS()
 		// CHAIN_MSG_MAP(CUpdateUI<CMyWindow>)
 		CHAIN_MSG_MAP(CDoubleBufferImpl<CMyWindow>)
 	END_MSG_MAP()
 	LRESULT OnNcHitTest(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
-	LRESULT OnPaint(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
-	{
-		if(wParam != NULL)
-		{
-			RECT rect = { 0 };
-			GetClientRect(&rect);
-			
-			DoPaint((HDC)wParam);
-		}
-		else
-		{
-			CPaintDC dc(m_hWnd);
-			DoPaint(dc.m_hDC);
-		}		
-		return 0;
-	}
+	//LRESULT OnPaint(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
+	//{
+	//	if(wParam != NULL)
+	//	{
+	//		RECT rect = { 0 };
+	//		GetClientRect(&rect);
+	//		
+	//		DoPaint((HDC)wParam);
+	//	}
+	//	else
+	//	{
+	//		CPaintDC dc(m_hWnd);
+	//		DoPaint(dc.m_hDC);
+	//	}		
+	//	return 0;
+	//}
 	LRESULT DoPaint(CDCHandle dc)
 	{
 		tolog(_T("WM_PAINT in parent"));
 		ATLASSERT(m_bkgnd.IsNull() == NULL);
+
+		CRect rcClient;
+		GetClientRect(rcClient);
+		//dc.FillSolidRect(rcClient, RGB(255, 255, 255));
 
 		if (!m_bkgnd.IsNull())
 		{
 			m_bkgnd.Draw(dc, m_rcClient);
 		}
 		PaintEdit(dc.m_hDC);
-
+		
 		return 0;
 	}
 	LRESULT OnEraseBkgnd(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 	{
 		tolog(_T("in parent erase."));
 		bHandled = TRUE;
+		
+		if (lParam != 0)
+		{
+			CRect rc = *(CRect* )lParam;
+			CDCHandle dc = (HDC)wParam;
+			m_bkgnd.Draw(dc, rc);
+		}
+
+
 		return 1;
 	}
 	LRESULT OnCtlColorEdit(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
@@ -121,11 +137,11 @@ public:
 
 		WORD wCode = HIWORD(wParam);
 		WORD wID = LOWORD(wParam);
-		if (wID == IDC_EDIT_USERNAME && wCode == EN_SETFOCUS)
-		{
-			SetEditState(TRUE);
-			Invalidate();
-		}
+		//if (wID == IDC_EDIT_USERNAME && wCode == EN_SETFOCUS)
+		//{
+		//	SetEditState(TRUE);
+		//	Invalidate();
+		//}
 
 		bHandled = FALSE;
 		return 0;
@@ -133,14 +149,15 @@ public:
 	LRESULT OnCreate(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 	{
 		LONG lStyle = GetWindowLong(GWL_STYLE);
-		lStyle &= ~WS_CLIPCHILDREN;
+		//lStyle &= ~WS_CLIPCHILDREN;
+		lStyle |= WS_CLIPCHILDREN;
 		SetWindowLong(GWL_STYLE, lStyle);
 
 		//
 		CRect rect;
 		GetClientRect(&rect);
-		rect.bottom = rect.top + 500;
-		rect.right = rect.left + 800;
+		rect.bottom = rect.top + 450;
+		rect.right = rect.left + 600;
 		MoveWindow(&rect);
 
 		m_rcClient = rect;
@@ -158,7 +175,7 @@ public:
 		rcEdit.left = 40;
 		rcEdit.top = 80;
 		rcEdit.right = 275;
-		rcEdit.bottom = 105;
+		rcEdit.bottom = 100;
 		
 		DrawEdit(rcEdit);
 
@@ -193,6 +210,7 @@ public:
 
 		return 0;
 	}
+	LRESULT OnParentDraw(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 protected:
 	void DrawMinBox()
 	{
@@ -205,9 +223,9 @@ protected:
 		il.Add(img);
 		
 		CRect rc;
-		rc.left = 710;
+		rc.left = 510;
 		rc.top = 20;
-		rc.right = 730;
+		rc.right = 530;
 		rc.bottom = 40;
 
 		m_btnMinBox.Create(m_hWnd, rc, 0, 0, 0, IDC_MINIMIZE);
@@ -229,9 +247,9 @@ protected:
 		il.Add(img);
 		
 		CRect rc;
-		rc.left = 740;
+		rc.left = 540;
 		rc.top = 20;
-		rc.right = 760;
+		rc.right = 560;
 		rc.bottom = 40;
 
 		m_btnMaxBox.Create(m_hWnd, rc, 0, 0, 0, IDC_CLOSE);
@@ -269,7 +287,7 @@ protected:
 		m_editUserName.SetFont(m_font);
 
 		
-		m_editUserName.SetMargins(5, 8);
+		//m_editUserName.SetMargins(5, 8);
 
 	}
 
@@ -284,7 +302,7 @@ protected:
 		{
 			nImageIndex = 0;
 		}
-		m_editil.Draw(dc, nImageIndex, 36, 72, 0);
+		//m_editil.Draw(dc, nImageIndex, 36, 72, 0);
 	}
 	void SetEditState(BOOL bState)
 	{
@@ -294,6 +312,7 @@ public:
 	void DrawAllLink();
 	void DrawRegLink(CMyHyperLink& hl, CRect rc, LPCTSTR lpszLabel, LPCTSTR lpszURL, DWORD dwLinkExStyle);
 	void DrawFrgtPsdLink(CMyHyperLink& hl, CRect rc, LPCTSTR lpszLabel, LPCTSTR lpszURL, DWORD dwLinkExStyle);
+	void DrawDBufferLink(CMyDBufferHyperLink& hl, CRect rc, LPCTSTR lpszLabel, LPCTSTR lpszURL, DWORD dwLinkExStyle);
 private:
 	COLORREF m_clrBk;
 	CFont m_font;
@@ -310,7 +329,7 @@ private:
 
 	CMyHyperLink m_linkReg;
 	CMyHyperLink m_linkFrgtPsd;
-	CMyHyperLink m_linkProxySet;
+	CMyDBufferHyperLink m_linkProxySet;
 
 	BOOL m_bEditState;
 

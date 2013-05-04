@@ -84,4 +84,5 @@ public:
 	}
 private:
 	CBitmapButton m_btn;
+	CEdit m_editTest;
 };

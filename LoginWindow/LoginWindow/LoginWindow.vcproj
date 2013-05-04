@@ -201,6 +201,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\MyDBufferHyperLink.h"
+				>
+			</File>
+			<File
 				RelativePath=".\MyHyperLink.h"
 				>
 			</File>
