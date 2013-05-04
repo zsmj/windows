@@ -58,19 +58,19 @@ LRESULT CMyWindow::OnParentDraw(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& b
 
 	return 1;
 }
-void CMyWindow::DrawFrgtPsdLink(CMyHyperLink& hl, CRect rc, LPCTSTR lpszLabel, LPCTSTR lpszURL, DWORD dwLinkExStyle)
+void CMyWindow::DrawFrgtPsdLink(CMyDBufferHyperLink& hl, CRect rc, LPCTSTR lpszLabel, LPCTSTR lpszURL, DWORD dwLinkExStyle)
 {
 	DWORD dwStyle = WS_CHILD | WS_VISIBLE | SS_NOTIFY;
-	hl.Create(m_hWnd, rc, 0, dwStyle, WS_EX_TRANSPARENT);
+	hl.Create(m_hWnd, rc, 0, dwStyle);
 
 	hl.SetLabel(lpszLabel);
 	hl.SetHyperLink(lpszURL);
 	hl.SetHyperLinkExtendedStyle(dwLinkExStyle);
 }
-void CMyWindow::DrawRegLink(CMyHyperLink& hl, CRect rc, LPCTSTR lpszLabel, LPCTSTR lpszURL, DWORD dwLinkExStyle)
+void CMyWindow::DrawRegLink(CMyDBufferHyperLink& hl, CRect rc, LPCTSTR lpszLabel, LPCTSTR lpszURL, DWORD dwLinkExStyle)
 {
 	DWORD dwStyle = WS_CHILD | WS_VISIBLE | SS_NOTIFY;
-	hl.Create(m_hWnd, rc, 0, dwStyle, WS_EX_TRANSPARENT);
+	hl.Create(m_hWnd, rc, 0, dwStyle);
 
 	hl.SetLabel(lpszLabel);
 	hl.SetHyperLink(lpszURL);

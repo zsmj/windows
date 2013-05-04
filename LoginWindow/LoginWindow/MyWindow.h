@@ -310,8 +310,8 @@ protected:
 	}
 public:
 	void DrawAllLink();
-	void DrawRegLink(CMyHyperLink& hl, CRect rc, LPCTSTR lpszLabel, LPCTSTR lpszURL, DWORD dwLinkExStyle);
-	void DrawFrgtPsdLink(CMyHyperLink& hl, CRect rc, LPCTSTR lpszLabel, LPCTSTR lpszURL, DWORD dwLinkExStyle);
+	void DrawRegLink(CMyDBufferHyperLink& hl, CRect rc, LPCTSTR lpszLabel, LPCTSTR lpszURL, DWORD dwLinkExStyle);
+	void DrawFrgtPsdLink(CMyDBufferHyperLink& hl, CRect rc, LPCTSTR lpszLabel, LPCTSTR lpszURL, DWORD dwLinkExStyle);
 	void DrawDBufferLink(CMyDBufferHyperLink& hl, CRect rc, LPCTSTR lpszLabel, LPCTSTR lpszURL, DWORD dwLinkExStyle);
 private:
 	COLORREF m_clrBk;
@@ -327,8 +327,8 @@ private:
 	CImageList m_editil;
 	CImage m_editbkimg;
 
-	CMyHyperLink m_linkReg;
-	CMyHyperLink m_linkFrgtPsd;
+	CMyDBufferHyperLink m_linkReg;
+	CMyDBufferHyperLink m_linkFrgtPsd;
 	CMyDBufferHyperLink m_linkProxySet;
 
 	BOOL m_bEditState;
