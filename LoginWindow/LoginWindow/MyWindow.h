@@ -1,5 +1,9 @@
 #pragma once
+
+const UINT WM_DBUFFER_PARENT_DRAWBACKGRAND = ::RegisterWindowMessage(_T("WM_DBUFFER_PARENT_DRAWBACKGRAND"));
+
 #include "MyBitmapButton.h"
+#include "MyDBufferBitmapButton.h"
 #include "MyHyperLink.h"
 #include "MyDBufferHyperLink.h"
 
@@ -236,29 +240,7 @@ protected:
 
 		//m_btnMinBox.SetBackground(RGB(72, 169, 220));
 	}
-	void DrawMaxBox()
-	{
-		CImage img;
-		img.Load(_T("./image/Btn_Window_Close.png"));
-		int nWidth = img.GetWidth() / 3;
-		int nHeight = img.GetHeight();
-		CImageList il;
-		il.Create(nWidth, nHeight, ILC_COLOR32 | ILC_MASK, 0, 0);
-		il.Add(img);
-		
-		CRect rc;
-		rc.left = 540;
-		rc.top = 20;
-		rc.right = 560;
-		rc.bottom = 40;
-
-		m_btnMaxBox.Create(m_hWnd, rc, 0, 0, 0, IDC_CLOSE);
-		m_btnMaxBox.SetToolTip(_T("close"));
-		m_btnMaxBox.SetBitmapButtonExtendedStyle(BMPBTN_HOVER);
-		m_btnMaxBox.SetImageList(il);
-		m_btnMaxBox.SetImages(0, 2, 1);
-		//m_btnMaxBox.SetBackground(RGB(72, 169, 220));
-	}
+	void DrawMaxBox();
 	void InitButton()
 	{
 		CImage img;
@@ -316,8 +298,8 @@ public:
 private:
 	COLORREF m_clrBk;
 	CFont m_font;
-	CMyBitmapButton m_btnMinBox;
-	CMyBitmapButton m_btnMaxBox;
+	CMyDBufferBitmapButton m_btnMinBox;
+	CMyDBufferBitmapButton m_btnMaxBox;
 	CImageList m_il;
 	CBitmapButton m_btn;
 	CImage m_bkgnd;

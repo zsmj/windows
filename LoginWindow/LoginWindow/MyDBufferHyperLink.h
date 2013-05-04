@@ -1,6 +1,5 @@
 #pragma once
 
-const UINT WM_DBUFFER_PARENT_DRAWBACKGRAND = ::RegisterWindowMessage(_T("WM_DBUFFER_PARENT_DRAWBACKGRAND"));
 
 template <class T, class TBase = ATL::CWindow, class TWinTraits = ATL::CControlWinTraits>
 class ATL_NO_VTABLE CMyDBufferHyperLinkImpl : public ATL::CWindowImpl< T, TBase, TWinTraits >

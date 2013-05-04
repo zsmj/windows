@@ -53,7 +53,6 @@ LRESULT CMyWindow::OnParentDraw(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& b
 	rc2.right = rc.right - rc.left;
 	rc2.bottom = rc.bottom - rc.top;
 
-
 	m_bkgnd.Draw(dc, rc2, rc);
 
 	return 1;
@@ -111,4 +110,27 @@ void CMyWindow::DrawAllLink()
 	rcProxy.bottom = 420;
 
 	DrawDBufferLink(m_linkProxySet, rcProxy, _T("¥˙¿Ì…Ë÷√"), _T("http://www.wiz.cn"), dwLinkExStyle); 
+}
+void CMyWindow::DrawMaxBox()
+{
+	CImage img;
+	img.Load(_T("./image/Btn_Window_Close.png"));
+	int nWidth = img.GetWidth() / 3;
+	int nHeight = img.GetHeight();
+	CImageList il;
+	il.Create(nWidth, nHeight, ILC_COLOR32 | ILC_MASK, 0, 0);
+	il.Add(img);
+	
+	CRect rc;
+	rc.left = 540;
+	rc.top = 20;
+	rc.right = 560;
+	rc.bottom = 40;
+
+	m_btnMaxBox.Create(m_hWnd, rc, 0, 0, 0, IDC_CLOSE);
+	m_btnMaxBox.SetToolTip(_T("close"));
+	m_btnMaxBox.SetBitmapButtonExtendedStyle(BMPBTN_HOVER);
+	m_btnMaxBox.SetImageList(il);
+	m_btnMaxBox.SetImages(0, 2, 1);
+	//m_btnMaxBox.SetBackground(RGB(72, 169, 220));
 }

@@ -201,6 +201,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\MyDBufferBitmapButton.h"
+				>
+			</File>
+			<File
 				RelativePath=".\MyDBufferHyperLink.h"
 				>
 			</File>

@@ -1,5 +1,6 @@
 template <class T, class TBase = CButton, class TWinTraits = ATL::CControlWinTraits>
-class ATL_NO_VTABLE CMyBitmapButtonImpl : public ATL::CWindowImpl< T, TBase, TWinTraits>
+class ATL_NO_VTABLE CMyDBufferBitmapButtonImpl : public ATL::CWindowImpl< T, TBase, TWinTraits>
+	, public CDoubleBufferImpl<T>
 {
 public:
 	DECLARE_WND_SUPERCLASS(NULL, TBase::GetWndClassName())
@@ -37,7 +38,7 @@ public:
 	COLORREF m_rfBackground;
 
 // Constructor/Destructor
-	CMyBitmapButtonImpl(DWORD dwExtendedStyle = BMPBTN_AUTOSIZE, HIMAGELIST hImageList = NULL) : 
+	CMyDBufferBitmapButtonImpl(DWORD dwExtendedStyle = BMPBTN_AUTOSIZE, HIMAGELIST hImageList = NULL) : 
 			m_ImageList(hImageList), m_dwExtendedStyle(dwExtendedStyle), 
 			m_lpstrToolTipText(NULL),
 			m_fMouseOver(0), m_fFocus(0), m_fPressed(0)
@@ -48,7 +49,7 @@ public:
 		m_nImage[_nImageDisabled] = -1;
 	}
 
-	~CMyBitmapButtonImpl()
+	~CMyDBufferBitmapButtonImpl()
 	{
 		if((m_dwExtendedStyle & BMPBTN_SHAREIMAGELISTS) == 0)
 			m_ImageList.Destroy();
@@ -173,6 +174,15 @@ public:
 	{
 		m_rfBackground = rfBkgnd;
 	}
+	void ParentDrawBk(CDCHandle dc)
+	{
+		CRect rc;
+		GetWindowRect(rc);
+		CWindow parent = GetParent();
+		parent.ScreenToClient(rc);
+
+		::SendMessage(parent, WM_DBUFFER_PARENT_DRAWBACKGRAND, (WPARAM)dc.m_hDC, (LPARAM)&rc);
+	}
 // Overrideables
 	void DoPaint(CDCHandle dc)
 	{
@@ -196,6 +206,8 @@ public:
 		GetWindowRect(&rc);
 		ScreenToClient(&rc);
 		//dc.FillSolidRect(rc, m_rfBackground);
+
+		ParentDrawBk(dc);
 
 		// draw the button image
 		int xyPos = 0;
@@ -228,8 +240,8 @@ public:
 		MESSAGE_HANDLER(WM_DESTROY, OnDestroy)
 		MESSAGE_RANGE_HANDLER(WM_MOUSEFIRST, WM_MOUSELAST, OnMouseMessage)
 		MESSAGE_HANDLER(WM_ERASEBKGND, OnEraseBackground)
-		MESSAGE_HANDLER(WM_PAINT, OnPaint)
-		MESSAGE_HANDLER(WM_PRINTCLIENT, OnPaint)
+		//MESSAGE_HANDLER(WM_PAINT, OnPaint)
+		//MESSAGE_HANDLER(WM_PRINTCLIENT, OnPaint)
 		MESSAGE_HANDLER(WM_SETFOCUS, OnFocus)
 		MESSAGE_HANDLER(WM_KILLFOCUS, OnFocus)
 		MESSAGE_HANDLER(WM_LBUTTONDOWN, OnLButtonDown)
@@ -243,6 +255,7 @@ public:
 		MESSAGE_HANDLER(WM_KEYUP, OnKeyUp)
 		MESSAGE_HANDLER(WM_TIMER, OnTimer)
 		MESSAGE_HANDLER(WM_UPDATEUISTATE, OnUpdateUiState)
+		CHAIN_MSG_MAP(CDoubleBufferImpl<T>)
 	END_MSG_MAP()
 
 	LRESULT OnCreate(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& bHandled)
@@ -418,8 +431,8 @@ public:
 		{
 			m_fMouseOver = 0;
 			UpdateParentWindow();	
-			//Invalidate();
-			//UpdateWindow();
+			Invalidate();
+			UpdateWindow();
 		}
 		return 0;
 	}
@@ -556,12 +569,12 @@ public:
 };
 
 
-class CMyBitmapButton : public CMyBitmapButtonImpl<CMyBitmapButton>
+class CMyDBufferBitmapButton : public CMyDBufferBitmapButtonImpl<CMyDBufferBitmapButton>
 {
 public:
 	DECLARE_WND_SUPERCLASS(_T("WTL_BitmapButton"), GetWndClassName())
 
-	CMyBitmapButton(DWORD dwExtendedStyle = BMPBTN_AUTOSIZE, HIMAGELIST hImageList = NULL) : 
-		CMyBitmapButtonImpl<CMyBitmapButton>(dwExtendedStyle, hImageList)
+	CMyDBufferBitmapButton(DWORD dwExtendedStyle = BMPBTN_AUTOSIZE, HIMAGELIST hImageList = NULL) : 
+		CMyDBufferBitmapButtonImpl<CMyDBufferBitmapButton>(dwExtendedStyle, hImageList)
 	{ }
 };
