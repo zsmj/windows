@@ -25,6 +25,8 @@ void CMyWindow::PaintEdit(CDCHandle dc)
 
 	m_editil.Draw(dc, nImageIndex, 36, 132, 0);
 
+	m_imgDropDown.Draw(dc, m_rcDropDown);
+
 	dc.FillSolidRect(m_rcEditBk, RGB(239, 247, 253));
 }
 BOOL CMyWindow::PreTranslateMessage(MSG* pMsg)
@@ -65,10 +67,14 @@ LRESULT CMyWindow::OnCreate(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHand
 	//
 	CenterWindow();
 	//
-
 	DrawAllLink();
+	//
+	DrawListBox();
 
+	//
 	DrawAllEdit();
+	//
+	
 
 	return 0;
 }
@@ -232,13 +238,8 @@ void CMyWindow::DrawEdit(CEdit& edit, CRect rc, UINT nID)
 }
 void CMyWindow::DrawAllEdit()
 {
-	CRect rcUserName;
-	rcUserName.left = 40;
-	rcUserName.top = 80;
-	rcUserName.right = 260;
-	rcUserName.bottom = 100;
 	
-	DrawEdit(m_editUserName, rcUserName, IDC_EDIT_USERNAME);
+	DrawEdit(m_editUserName, m_rcUserName, IDC_EDIT_USERNAME);
 
 	CRect rcPassword;
 	rcPassword.left = 40;
@@ -338,6 +339,22 @@ LRESULT CMyWindow::OnCommand(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHan
 			break;
 		}
 	}
+	CString strUserName;
+	if (wID == IDC_LIST_USERNAME)
+	{
+		switch(wCode)
+		{
+		case LBN_SELCHANGE:
+			tolog(_T("SEL CHANGE"));
+			m_listBoxUN.ShowWindow(SW_HIDE);
+			//m_listBoxUN.GetText(0, strUserName);
+			//m_editUserName.SetWindowText(strUserName);
+			break;
+		case LBN_SETFOCUS:
+			tolog(_T("list set focus"));
+			break;
+		}
+	}
 	bHandled = FALSE;
 	return 0;
 }
@@ -394,4 +411,75 @@ LRESULT CMyWindow::OnCtlColorEdit(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL&
 		hbr = ::CreateSolidBrush(RGB(255, 255, 255));
 	}
 	return (LRESULT)hbr;
+}
+void CMyWindow::DrawListBox()
+{
+	DWORD dwStyle = WS_CHILD | WS_CLIPSIBLINGS | LBS_NOTIFY;
+	m_listBoxUN.Create(m_hWnd, m_rcDropDownList, 0, dwStyle, 0, IDC_LIST_USERNAME);
+	
+	m_listBoxUN.SetFont(m_font);
+	m_listBoxUN.AddString(_T("example@wiz.cn"));
+	m_listBoxUN.AddString(_T("example@qq.cn"));
+	m_listBoxUN.AddString(_T("example@gmail.cn"));
+	
+}
+bool CMyWindow::HitTestInDropDown(const CPoint& pt)
+{
+	if (m_rcDropDown.PtInRect(pt))
+	{
+		return true;
+	}
+	return false;
+}
+LRESULT CMyWindow::OnLButtonDblClk(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
+{
+	bHandled = FALSE;
+	POINT pt = {GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam)};
+	
+	if (HitTestInDropDown(pt))
+	{
+		if (m_bDropDownShow)
+		{
+
+
+			m_listBoxUN.ShowWindow(SW_HIDE);
+			
+			m_bDropDownShow = FALSE;
+		}
+		else 
+		{
+			m_listBoxUN.BringWindowToTop();
+			
+			m_bDropDownShow = TRUE;
+		}
+	}
+	return 0;
+}
+LRESULT CMyWindow::OnLButtonDown(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
+{
+	tolog(_T("on lbutton down."));
+	bHandled = FALSE;
+
+	POINT pt = {GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam)};
+	
+	if (HitTestInDropDown(pt))
+	{
+		if (m_bDropDownShow)
+		{
+			m_listBoxUN.ShowWindow(SW_HIDE);
+			m_bDropDownShow = FALSE;
+		}
+		else 
+		{
+			m_listBoxUN.ShowWindow(SW_NORMAL);
+			m_bDropDownShow = TRUE;
+		}
+	}
+	
+	return 0;
+}
+LRESULT CMyWindow::OnListBeginDrag(int nID, LPNMHDR lpnm, BOOL& bHandled)
+{
+	tolog(_T("begin drag"));
+	return 1;
 }

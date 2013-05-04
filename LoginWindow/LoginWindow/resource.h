@@ -8,6 +8,7 @@
 #define IDC_CLOSE                       103
 #define IDC_EDIT_USERNAME               104
 #define IDC_EDIT_PASSWORD               105
+#define IDC_LIST_USERNAME               106
 
 // Next default values for new objects
 // 

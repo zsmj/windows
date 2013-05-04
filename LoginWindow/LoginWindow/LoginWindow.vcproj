@@ -201,6 +201,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\MyComboBox.h"
+				>
+			</File>
+			<File
 				RelativePath=".\MyDBufferBitmapButton.h"
 				>
 			</File>

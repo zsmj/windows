@@ -6,6 +6,7 @@ const UINT WM_DBUFFER_PARENT_DRAWBACKGRAND = ::RegisterWindowMessage(_T("WM_DBUF
 #include "MyDBufferBitmapButton.h"
 #include "MyHyperLink.h"
 #include "MyDBufferHyperLink.h"
+#include "MyComboBox.h"
 
 
 typedef CWinTraits<WS_POPUPWINDOW> CMyWinTraits;
@@ -51,6 +52,24 @@ public:
 		m_bFocus = FALSE;
 		m_bEditInit = TRUE;
 
+		m_rcUserName.left = 40;
+		m_rcUserName.top = 80;
+		m_rcUserName.right = 250;
+		m_rcUserName.bottom = 100;
+		
+		m_rcDropDown.left = 251;
+		m_rcDropDown.top = 72;
+		m_rcDropDown.right = 271;
+		m_rcDropDown.bottom = 108;
+
+		m_rcDropDownList.left = 37;
+		m_rcDropDownList.top = 108;
+		m_rcDropDownList.right = 275;
+		m_rcDropDownList.bottom = 220;
+
+		m_bDropDownShow = FALSE;
+
+		m_imgDropDown.Load(_T("./image/Btn_User_Down.png"));
 	}
 
 	DECLARE_WND_CLASS(_T("My Login In Window"));
@@ -62,13 +81,17 @@ public:
 		MESSAGE_HANDLER(WM_CREATE, OnCreate)
 		MESSAGE_HANDLER(WM_DESTROY, OnDestroyWindow)
 		// MESSAGE_HANDLER(WM_MOUSEMOVE, OnMouseMove)
+		MESSAGE_HANDLER(WM_LBUTTONDOWN, OnLButtonDown)
+		MESSAGE_HANDLER(WM_LBUTTONDBLCLK, OnLButtonDblClk)
 		MESSAGE_HANDLER(WM_COMMAND, OnCommand)
 		//MESSAGE_HANDLER(WM_ERASEBKGND, OnEraseBkgnd)
 		MESSAGE_HANDLER(WM_NCHITTEST, OnNcHitTest);
 		MESSAGE_HANDLER(WM_CTLCOLOREDIT, OnCtlColorEdit)
 		MESSAGE_HANDLER(WM_CTLCOLORSTATIC, OnCtlColorStatic)
 		MESSAGE_HANDLER(WM_CTLCOLORBTN, OnCtlColorBtn)
+		MESSAGE_HANDLER(WM_CTLCOLORBTN, OnCtlColorBtn)
 		MESSAGE_HANDLER(WM_DBUFFER_PARENT_DRAWBACKGRAND, OnParentDraw);
+		NOTIFY_HANDLER(IDC_LIST_USERNAME, DL_BEGINDRAG, OnListBeginDrag);
 		//MESSAGE_HANDLER(WM_PAINT, OnPaint)
 		// REFLECT_NOTIFICATIONS()
 		// CHAIN_MSG_MAP(CUpdateUI<CMyWindow>)
@@ -157,9 +180,12 @@ public:
 
 		return 0;
 	}
+	LRESULT OnLButtonDown(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	LRESULT OnLButtonDblClk(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 	LRESULT OnParentDraw(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 	void OnPasswordFocus(HWND hCtl);
 	void OnPasswordKillFocus(HWND hCtl);
+	LRESULT OnListBeginDrag(int nID, LPNMHDR lpnm, BOOL& bHandled);
 protected:
 	void DrawMinBox();
 	void DrawMaxBox();
@@ -191,6 +217,8 @@ protected:
 	{
 		m_bEditState = bState;
 	}
+	void DrawListBox();
+	bool HitTestInDropDown(const CPoint& pt);
 public:
 	void DrawAllLink();
 	void DrawRegLink(CMyDBufferHyperLink& hl, CRect rc, LPCTSTR lpszLabel, LPCTSTR lpszURL, DWORD dwLinkExStyle);
@@ -208,13 +236,23 @@ private:
 	CRect m_rcCaption;
 	//
 	CEdit m_editUserName;
+	CRect m_rcUserName;
+	BOOL m_bDropDownShow;
+
 	CEdit m_editPassword;
 	CRect m_rcEditBk;
+	CRect m_rcDropDown;
+	CRect m_rcDropDownList;
+	CImage m_imgDropDown;
+
+	//
 	BOOL m_bTransparent;
 	BOOL m_bFocus;
 	BOOL m_bEditInit;
 	CImage m_imgLoginPass;
 	CImage m_imgLoginPassFocus;
+	//
+	CListBox m_listBoxUN;
 	//
 	CImageList m_editil;
 	CImage m_editbkimg;
