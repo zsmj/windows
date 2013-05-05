@@ -1,6 +1,8 @@
 #pragma once
 
 const UINT WM_DBUFFER_PARENT_DRAWBACKGRAND = ::RegisterWindowMessage(_T("WM_DBUFFER_PARENT_DRAWBACKGRAND"));
+CString StringFormat1(CString str, CString replaceStr);
+void tolog(LPCTSTR lpszLog);
 
 #include "MyBitmapButton.h"
 #include "MyDBufferBitmapButton.h"
@@ -11,8 +13,7 @@ const UINT WM_DBUFFER_PARENT_DRAWBACKGRAND = ::RegisterWindowMessage(_T("WM_DBUF
 
 typedef CWinTraits<WS_POPUPWINDOW> CMyWinTraits;
 
-CString StringFormat1(CString str, CString replaceStr);
-void tolog(LPCTSTR lpszLog);
+
 
 class CMyWindow
 	: public CWindowImpl<CMyWindow, CWindow, CMyWinTraits>
@@ -56,6 +57,21 @@ public:
 		m_rcUserName.top = 80;
 		m_rcUserName.right = 250;
 		m_rcUserName.bottom = 100;
+
+		m_rcPassword.left = 40;
+		m_rcPassword.top = 140;
+		m_rcPassword.right = 260;
+		m_rcPassword.bottom = 160;
+
+		m_rcComboUserName.left = 40;
+		m_rcComboUserName.top = 200;
+		m_rcComboUserName.right = 260;
+		m_rcComboUserName.bottom = 480;
+
+		m_rcComboDropDown.left = 200;
+		m_rcComboDropDown.top = 200;
+		m_rcComboDropDown.right = 220;
+		m_rcComboDropDown.bottom = 236;
 		
 		m_rcDropDown.left = 251;
 		m_rcDropDown.top = 72;
@@ -91,6 +107,7 @@ public:
 		MESSAGE_HANDLER(WM_CTLCOLORSTATIC, OnCtlColorStatic)
 		MESSAGE_HANDLER(WM_CTLCOLORBTN, OnCtlColorBtn)
 		MESSAGE_HANDLER(WM_CTLCOLORBTN, OnCtlColorBtn)
+		MESSAGE_HANDLER(WM_DRAWITEM, OnDrawItem);
 		MESSAGE_HANDLER(WM_DBUFFER_PARENT_DRAWBACKGRAND, OnParentDraw);
 		NOTIFY_HANDLER(IDC_LIST_USERNAME, DL_BEGINDRAG, OnListBeginDrag);
 		//MESSAGE_HANDLER(WM_PAINT, OnPaint)
@@ -129,6 +146,8 @@ public:
 			m_bkgnd.Draw(dc, m_rcClient);
 		}
 		PaintEdit(dc.m_hDC);
+		//
+		DrawComboBoxDrowDownImg(dc.m_hDC);
 		
 		return 0;
 	}
@@ -150,6 +169,7 @@ public:
 	LRESULT OnCtlColorEdit(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 	LRESULT OnCtlColorStatic(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 	LRESULT OnCtlColorBtn(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	LRESULT OnDrawItem(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 	LRESULT OnCommand(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 	LRESULT OnCreate(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 	LRESULT OnDestroyWindow(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
@@ -212,7 +232,7 @@ protected:
 
 	}
 	void DrawAllEdit();
-	void DrawEdit(CEdit& edit, CRect rc, UINT nID);
+	void DrawEdit(CEdit& edit, CRect rc, UINT nID, DWORD dwStyle);
 	void PaintEdit(CDCHandle dc);
 	void SetEditState(BOOL bState)
 	{
@@ -220,6 +240,8 @@ protected:
 	}
 	void DrawListBox();
 	bool HitTestInDropDown(const CPoint& pt);
+	void DrawComboBox();
+	void DrawComboBoxDrowDownImg(CDCHandle dc);
 public:
 	void DrawAllLink();
 	void DrawRegLink(CMyDBufferHyperLink& hl, CRect rc, LPCTSTR lpszLabel, LPCTSTR lpszURL, DWORD dwLinkExStyle);
@@ -240,6 +262,7 @@ private:
 	CRect m_rcUserName;
 	BOOL m_bDropDownShow;
 
+	CRect m_rcPassword;
 	CEdit m_editPassword;
 	CRect m_rcEditBk;
 	CRect m_rcDropDown;
@@ -254,6 +277,10 @@ private:
 	CImage m_imgLoginPassFocus;
 	//
 	CListBox m_listBoxUN;
+	//
+	CMyComboBox m_comboUserName;
+	CRect m_rcComboUserName;
+	CRect m_rcComboDropDown;
 	//
 	CImageList m_editil;
 	CImage m_editbkimg;

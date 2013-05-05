@@ -57,6 +57,12 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 
 	m_editTest.Create(m_hWnd, rc, NULL, WS_CHILD | WS_VISIBLE | ES_AUTOHSCROLL);
 	
+	CComboBox combo = GetDlgItem(IDC_COMBO1);
+	combo.AddString(_T("AAAAAAAAAAAAAA"));
+	combo.AddString(_T("AAAAAAAAAAAAAA"));
+	combo.AddString(_T("AAAAAAAAAAAAAA"));
+	combo.AddString(_T("AAAAAAAAAAAAAA"));
+
 
 	return TRUE;
 }
