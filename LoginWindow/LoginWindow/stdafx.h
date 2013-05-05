@@ -8,18 +8,20 @@
 
 
 
+
 #include <atlbase.h>
-
-#include <atlapp.h>
-
-extern CAppModule _Module;
 #include <atlwin.h>
-#include <atlframe.h>
-//#include <atlmisc.h>
-#include <atlctrls.h>
-#include <atlctrlx.h>
+#include <atlstr.h>
 #include <atlimage.h>
 
+#define _WTL_NO_CSTRING
+#define _WTL_NO_WTYPES
+#include <atlapp.h>
+extern CAppModule _Module;
+#include <atlframe.h>
+#include <atlctrls.h>
+#include <atlctrlx.h>
+#include <atlmisc.h>
 #include "resource.h"
 
 typedef CWinTraits<WS_CHILD | WS_VISIBLE > CMyEditTraits;

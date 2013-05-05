@@ -31,6 +31,21 @@ void CMyWindow::PaintEdit(CDCHandle dc)
 }
 BOOL CMyWindow::PreTranslateMessage(MSG* pMsg)
 {
+	if (pMsg->message == WM_LBUTTONDOWN || pMsg->message == WM_NCLBUTTONDOWN
+		|| pMsg->message == WM_LBUTTONDBLCLK || pMsg->message == WM_NCLBUTTONDBLCLK
+		|| pMsg->message == WM_RBUTTONDOWN || pMsg->message == WM_NCRBUTTONDOWN
+		|| pMsg->message == WM_RBUTTONDBLCLK || pMsg->message == WM_NCRBUTTONDBLCLK )
+	{
+		POINT pt = {GET_X_LPARAM(pMsg->lParam), GET_Y_LPARAM(pMsg->lParam)};
+		if (!HitTestInDropDown(pt))
+		{
+			if (m_bDropDownShow)
+			{
+				m_listBoxUN.ShowWindow(SW_HIDE);
+				m_bDropDownShow = FALSE;
+			}	
+		}
+	}
 	if (pMsg->hwnd == m_editPassword && pMsg->message == WM_LBUTTONDOWN)
 	{
 		tolog(_T("password edit lbuttondown."));
@@ -347,8 +362,9 @@ LRESULT CMyWindow::OnCommand(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHan
 		case LBN_SELCHANGE:
 			tolog(_T("SEL CHANGE"));
 			m_listBoxUN.ShowWindow(SW_HIDE);
-			//m_listBoxUN.GetText(0, strUserName);
-			//m_editUserName.SetWindowText(strUserName);
+			m_listBoxUN.GetText(0, strUserName);
+			m_editUserName.SetWindowText(strUserName);
+			m_bDropDownShow = FALSE;
 			break;
 		case LBN_SETFOCUS:
 			tolog(_T("list set focus"));
@@ -473,8 +489,9 @@ LRESULT CMyWindow::OnLButtonDown(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& 
 		{
 			m_listBoxUN.ShowWindow(SW_NORMAL);
 			m_bDropDownShow = TRUE;
-		}
+		}	
 	}
+	
 	
 	return 0;
 }
