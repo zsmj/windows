@@ -6,11 +6,6 @@
 #define IDR_MAINFRAME                   128
 #define IDD_MAINDLG                     129
 #define IDC_EDIT1                       1000
-#define IDC_BUTTON_ChangeParent         1001
-#define IDC_COMBO1                      1002
-#define IDC_LIST1                       1003
-#define IDC_COMBO2                      1004
-#define IDC_COMBO3                      1005
 #define IDC_COMBO4                      1006
 
 // Next default values for new objects

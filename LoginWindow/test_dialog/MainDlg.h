@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include "MycomboBox.h"
+
 class CMainDlg : public CDialogImpl<CMainDlg>, public CUpdateUI<CMainDlg>,
 		public CMessageFilter, public CIdleHandler
 {
@@ -22,6 +24,7 @@ public:
 		COMMAND_ID_HANDLER(ID_APP_ABOUT, OnAppAbout)
 		COMMAND_ID_HANDLER(IDOK, OnOK)
 		COMMAND_ID_HANDLER(IDCANCEL, OnCancel)
+		REFLECT_NOTIFICATIONS()
 	END_MSG_MAP()
 
 // Handler prototypes (uncomment arguments if needed):
@@ -85,4 +88,6 @@ public:
 private:
 	CBitmapButton m_btn;
 	CEdit m_editTest;
+
+	CMyComboBox m_combo;
 };

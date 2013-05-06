@@ -41,7 +41,7 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 	
 //	CreateToolTipForRect(m_hWnd);
 
-	InitButton();
+	//InitButton();
 
 	// Set WS_EX_LAYERED on this window 
 	//SetWindowLong(GWL_EXSTYLE, GetWindowLong(GWL_EXSTYLE) | WS_EX_LAYERED);
@@ -49,20 +49,23 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 	// Make this window 70% alpha
 	//SetLayeredWindowAttributes(m_hWnd, 0, (255 * 70) / 100, LWA_ALPHA);
 
-	CRect rc;
-	rc.left = 50;
-	rc.top = 50;
-	rc.right = 200;
-	rc.bottom = 80;
 
-	m_editTest.Create(m_hWnd, rc, NULL, WS_CHILD | WS_VISIBLE | ES_AUTOHSCROLL);
-	
-	CComboBox combo = GetDlgItem(IDC_COMBO1);
-	combo.AddString(_T("AAAAAAAAAAAAAA"));
-	combo.AddString(_T("AAAAAAAAAAAAAA"));
-	combo.AddString(_T("AAAAAAAAAAAAAA"));
-	combo.AddString(_T("AAAAAAAAAAAAAA"));
 
+
+	DWORD dwStyle = WS_CHILD | WS_VISIBLE | CBS_DROPDOWN | CBS_OWNERDRAWVARIABLE | CBS_AUTOHSCROLL | WS_CLIPCHILDREN | WS_CLIPSIBLINGS;
+
+	CRect rcCombo;
+
+	rcCombo.left = 100;
+	rcCombo.top = 50;
+	rcCombo.right = 400;
+	rcCombo.bottom = 90;
+
+	m_combo.Create(m_hWnd, rcCombo, 0, dwStyle, 0);
+
+	m_combo.AddString(_T("example@wiz.cn"));
+	m_combo.AddString(_T("example@qq.cn"));
+	m_combo.AddString(_T("example@gmail.cn"));
 
 	return TRUE;
 }
@@ -90,12 +93,12 @@ LRESULT CMainDlg::OnOK(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /
 	// TODO: Add validation code 
 	// CloseDialog(wID);
 	
-	HWND hChild = GetDlgItem(IDC_BUTTON_ChangeParent);
+	//HWND hChild = GetDlgItem(IDC_BUTTON_ChangeParent);
 
-	if (hChild)
-	{
-		::SetParent(hChild, NULL);
-	}
+	//if (hChild)
+	//{
+	//	::SetParent(hChild, NULL);
+	//}
 
 	return 0;
 }

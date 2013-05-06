@@ -1,8 +1,7 @@
 #pragma once
 
 const UINT WM_DBUFFER_PARENT_DRAWBACKGRAND = ::RegisterWindowMessage(_T("WM_DBUFFER_PARENT_DRAWBACKGRAND"));
-CString StringFormat1(CString str, CString replaceStr);
-void tolog(LPCTSTR lpszLog);
+
 
 #include "MyBitmapButton.h"
 #include "MyDBufferBitmapButton.h"
@@ -63,10 +62,10 @@ public:
 		m_rcPassword.right = 260;
 		m_rcPassword.bottom = 160;
 
-		m_rcComboUserName.left = 40;
-		m_rcComboUserName.top = 200;
-		m_rcComboUserName.right = 260;
-		m_rcComboUserName.bottom = 480;
+		m_rcComboUserName.left = 36;
+		m_rcComboUserName.top = 80;
+		m_rcComboUserName.right = 275;
+		m_rcComboUserName.bottom = 360;
 
 		m_rcComboDropDown.left = 200;
 		m_rcComboDropDown.top = 200;
@@ -100,20 +99,22 @@ public:
 		MESSAGE_HANDLER(WM_LBUTTONDOWN, OnLButtonDown)
 		MESSAGE_HANDLER(WM_NCLBUTTONDOWN, OnLButtonDown)
 		MESSAGE_HANDLER(WM_LBUTTONDBLCLK, OnLButtonDblClk)
-		MESSAGE_HANDLER(WM_COMMAND, OnCommand)
 		//MESSAGE_HANDLER(WM_ERASEBKGND, OnEraseBkgnd)
 		MESSAGE_HANDLER(WM_NCHITTEST, OnNcHitTest);
 		MESSAGE_HANDLER(WM_CTLCOLOREDIT, OnCtlColorEdit)
 		MESSAGE_HANDLER(WM_CTLCOLORSTATIC, OnCtlColorStatic)
 		MESSAGE_HANDLER(WM_CTLCOLORBTN, OnCtlColorBtn)
 		MESSAGE_HANDLER(WM_CTLCOLORBTN, OnCtlColorBtn)
-		MESSAGE_HANDLER(WM_DRAWITEM, OnDrawItem);
+		//MESSAGE_HANDLER(WM_DRAWITEM, OnDrawItem);
 		MESSAGE_HANDLER(WM_DBUFFER_PARENT_DRAWBACKGRAND, OnParentDraw);
 		NOTIFY_HANDLER(IDC_LIST_USERNAME, DL_BEGINDRAG, OnListBeginDrag);
 		//MESSAGE_HANDLER(WM_PAINT, OnPaint)
 		// REFLECT_NOTIFICATIONS()
 		// CHAIN_MSG_MAP(CUpdateUI<CMyWindow>)
+		MESSAGE_HANDLER(WM_COMMAND, OnCommand)
 		CHAIN_MSG_MAP(CDoubleBufferImpl<CMyWindow>)
+		REFLECT_NOTIFICATIONS()
+		
 	END_MSG_MAP()
 	LRESULT OnNcHitTest(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 	//LRESULT OnPaint(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
@@ -147,8 +148,17 @@ public:
 		}
 		PaintEdit(dc.m_hDC);
 		//
-		DrawComboBoxDrowDownImg(dc.m_hDC);
-		
+		//DrawComboBoxDrowDownImg(dc.m_hDC);
+		CRect rc;
+		rc.left = 36;
+		rc.top = 50;
+		rc.right = 200;
+		rc.bottom = 70;
+		dc.SetBkMode(TRANSPARENT);
+		dc.SetTextColor(RGB(203, 234, 255));
+		dc.SelectFont(m_font);
+		dc.DrawText(_T("ÎªÖª±Ê¼ÇÕÊºÅ"), 6, rc, DT_LEFT);
+
 		return 0;
 	}
 	LRESULT OnEraseBkgnd(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)

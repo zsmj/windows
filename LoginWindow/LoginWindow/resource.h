@@ -9,6 +9,7 @@
 #define IDC_EDIT_USERNAME               104
 #define IDC_EDIT_PASSWORD               105
 #define IDC_LIST_USERNAME               106
+#define IDC_COMBO_USERNAME              107
 
 // Next default values for new objects
 // 

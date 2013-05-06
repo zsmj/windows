@@ -1,15 +1,7 @@
 #include "StdAfx.h"
 #include "MyWindow.h"
 
-CString StringFormat1(CString str, CString replaceStr)
-{
-	str.Replace(_T("%1"), replaceStr);
-	return str;
-}
-void tolog(LPCTSTR lpszLog)
-{
-	::OutputDebugString(lpszLog);
-}
+
 void CMyWindow::PaintEdit(CDCHandle dc)
 {
 	int nImageIndex = 0;
@@ -21,11 +13,11 @@ void CMyWindow::PaintEdit(CDCHandle dc)
 	{
 		nImageIndex = 0;
 	}
-	m_editil.Draw(dc, nImageIndex, 36, 72, 0);
+	//m_editil.Draw(dc, nImageIndex, 36, 72, 0);
 
 	m_editil.Draw(dc, nImageIndex, 36, 132, 0);
 
-	m_imgDropDown.Draw(dc, m_rcDropDown);
+	//m_imgDropDown.Draw(dc, m_rcDropDown);
 
 	dc.FillSolidRect(m_rcEditBk, RGB(239, 247, 253));
 }
@@ -256,7 +248,7 @@ void CMyWindow::DrawEdit(CEdit& edit, CRect rc, UINT nID, DWORD dwStyle = 0)
 void CMyWindow::DrawAllEdit()
 {
 	
-	DrawEdit(m_editUserName, m_rcUserName, IDC_EDIT_USERNAME);
+	//DrawEdit(m_editUserName, m_rcUserName, IDC_EDIT_USERNAME);
 
 	DrawEdit(m_editPassword, m_rcPassword, IDC_EDIT_PASSWORD, ES_PASSWORD);
 	m_editPassword.SetPasswordChar(_T('*'));
@@ -297,7 +289,7 @@ LRESULT CMyWindow::OnCommand(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHan
 	if (wID == IDC_EDIT_PASSWORD)
 	{
 		CDC dc = GetDC();
-		CDC dcControl = ::GetDC((HWND)lParam);
+		CDC dcControl = ::GetDC((HWND)lParam);	
 		CRect rcControl;
 		::GetClientRect((HWND)lParam, rcControl);
 		HBRUSH hbr;
@@ -316,8 +308,7 @@ LRESULT CMyWindow::OnCommand(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHan
 			break;
 		case EN_KILLFOCUS:
 			tolog(_T("kill focus."));
-			OnPasswordKillFocus((HWND)lParam);
-			
+			OnPasswordKillFocus((HWND)lParam);	
 			
 			m_editPassword.GetWindowTextW(strText);
 			if (!strText.IsEmpty())
@@ -374,6 +365,19 @@ LRESULT CMyWindow::OnCommand(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHan
 			break;
 		}
 	}
+	if (wID == IDC_COMBO_USERNAME)
+	{
+		if (wCode == CBN_DROPDOWN)
+		{
+			tolog(_T("cbn_dropdown in parent."));
+			//::SendMessage((HWND)lParam, OCM__BASE + uMsg, wParam, lParam);
+		}
+		if (wCode == CBN_SELENDOK)
+		{
+			tolog(_T("parent CBN_SELENDOK"));
+		}
+		
+	}
 	bHandled = FALSE;
 	return 0;
 }
@@ -388,7 +392,7 @@ LRESULT CMyWindow::OnCtlColorEdit(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL&
 	}
 	if ((HWND)lParam == GetDlgItem(IDC_EDIT_PASSWORD))
 	{
-		tolog(_T("on edit ctl color"));
+		tolog(_T("on edit IDC_EDIT_PASSWORD ctl color."));
 		CString strText;
 		CWindow wnd = (HWND)lParam;
 		wnd.GetWindowText(strText);
@@ -429,8 +433,9 @@ LRESULT CMyWindow::OnCtlColorEdit(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL&
 		//hbr = ::CreatePatternBrush(m_editbkimg);
 		hbr = ::CreateSolidBrush(RGB(255, 255, 255));
 	}
-	if (hbr == NULL)
+	if ((HWND)lParam == GetDlgItem(IDC_COMBO_USERNAME))
 	{
+		tolog(_T("on edit IDC_COMBO_USERNAME color."));
 		hbr = ::CreateSolidBrush(RGB(255, 255, 255));
 	}
 	
@@ -522,13 +527,16 @@ LRESULT CMyWindow::OnDrawItem(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHa
 }
 void CMyWindow::DrawComboBox()
 {
-	DWORD dwStyle = WS_CHILD | WS_VISIBLE | CBS_DROPDOWN | CBS_OWNERDRAWFIXED;
-	m_comboUserName.Create(m_hWnd, m_rcComboUserName, 0, dwStyle);
+	DWORD dwStyle = WS_CHILD | WS_VISIBLE | CBS_DROPDOWN | CBS_AUTOHSCROLL;
+
+	CRect rc = m_rcComboUserName;
+
+
+	m_comboUserName.Create(m_hWnd, rc, 0, dwStyle, 0, IDC_COMBO_USERNAME);
 
 	m_comboUserName.SetFont(m_font);
 	m_comboUserName.AddString(_T("example@wiz.cn"));
 	m_comboUserName.AddString(_T("example@qq.cn"));
-	m_comboUserName.AddString(_T("example@gmail.cn"));
-
+	m_comboUserName.AddString(_T("example@gmail.com"));
 
 }

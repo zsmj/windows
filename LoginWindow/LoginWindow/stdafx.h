@@ -24,6 +24,8 @@ extern CAppModule _Module;
 #include <atlmisc.h>
 #include "resource.h"
 
+#include "misc.h"
+
 typedef CWinTraits<WS_CHILD | WS_VISIBLE > CMyEditTraits;
 
 class CWizEditBase
