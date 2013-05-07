@@ -12,7 +12,12 @@ const UINT WM_DBUFFER_PARENT_DRAWBACKGRAND = ::RegisterWindowMessage(_T("WM_DBUF
 
 typedef CWinTraits<WS_POPUPWINDOW> CMyWinTraits;
 
-
+enum ButtonState
+{
+	NORMAL = 0,
+	HOVER,
+	PRESS
+};
 
 class CMyWindow
 	: public CWindowImpl<CMyWindow, CWindow, CMyWinTraits>
@@ -32,7 +37,7 @@ public:
 		m_editil.Add(img);
 
 		m_rcEditBk.left = 36 + 2;
-		m_rcEditBk.top = 132 + 2;
+		m_rcEditBk.top = 192 + 2;
 		m_rcEditBk.right = m_rcEditBk.left + img.GetWidth() / 2 - 4;
 		m_rcEditBk.bottom = m_rcEditBk.top + img.GetHeight() - 4;
 
@@ -57,15 +62,15 @@ public:
 		m_rcUserName.right = 250;
 		m_rcUserName.bottom = 100;
 
-		m_rcPassword.left = 40;
-		m_rcPassword.top = 140;
-		m_rcPassword.right = 260;
-		m_rcPassword.bottom = 160;
-
 		m_rcComboUserName.left = 36;
-		m_rcComboUserName.top = 80;
+		m_rcComboUserName.top = 120;
 		m_rcComboUserName.right = 275;
-		m_rcComboUserName.bottom = 360;
+		m_rcComboUserName.bottom = 400;
+
+		m_rcPassword.left = 40;
+		m_rcPassword.top = 200;
+		m_rcPassword.right = 260;
+		m_rcPassword.bottom = 220;
 
 		m_rcComboDropDown.left = 200;
 		m_rcComboDropDown.top = 200;
@@ -85,6 +90,36 @@ public:
 		m_bDropDownShow = FALSE;
 
 		m_imgDropDown.Load(_T("./image/Btn_User_Down.png"));
+		//
+		CImage imgLoginCheck;
+		imgLoginCheck.Load(_T("./image/Input_Check.png"));
+		
+		m_ilLoginCheck.Create(imgLoginCheck.GetWidth() / 2, imgLoginCheck.GetHeight(), ILC_COLOR32, 0, 0);
+		m_ilLoginCheck.Add(imgLoginCheck);
+		//	
+		m_rcLoginCheck.left = 36;
+		m_rcLoginCheck.top = 270;
+		m_rcLoginCheck.right = m_rcLoginCheck.left + imgLoginCheck.GetWidth() / 2;
+		m_rcLoginCheck.bottom = m_rcLoginCheck.top + imgLoginCheck.GetHeight();
+		//
+		int nSep = 3;
+		int nFontExtent = 4;
+		m_rcAutoLogin.left = m_rcLoginCheck.left + imgLoginCheck.GetWidth()/2 + nSep;
+		m_rcAutoLogin.top = m_rcLoginCheck.top - nFontExtent;
+		m_rcAutoLogin.right = m_rcAutoLogin.left + 80;
+		m_rcAutoLogin.bottom = m_rcAutoLogin.top + 20;
+
+		m_bAuto = TRUE;
+		//
+		InitThirdPartyAccount(m_ilQQLogin, m_QQState, m_rcQQLogin, 350, 120, _T("./image/Btn_Login_QQ.png"), FALSE);
+		InitThirdPartyAccount(m_ilSinaWbLogin, m_SinaWbState, m_rcSinaWbLogin, 350, 180, _T("./image/Btn_Login_Weibo.png"), FALSE);
+		InitThirdPartyAccount(m_ilQQWbLogin, m_QQWbState, m_rcQQWbLogin, 350, 240, _T("./image/Btn_Login_QQT.png"), FALSE);
+		InitThirdPartyAccount(m_ilLogin, m_LoginState, m_rcLogin, 115, 320, _T("./image/Btn_Login_Normal_Over_Down.png"));
+		//
+		m_pen.CreatePen(PS_SOLID, 1, RGB(222, 218, 218));
+	}
+	~CMyWindow()
+	{
 	}
 
 	DECLARE_WND_CLASS(_T("My Login In Window"));
@@ -95,7 +130,8 @@ public:
 	BEGIN_MSG_MAP(CMyWindow)
 		MESSAGE_HANDLER(WM_CREATE, OnCreate)
 		MESSAGE_HANDLER(WM_DESTROY, OnDestroyWindow)
-		// MESSAGE_HANDLER(WM_MOUSEMOVE, OnMouseMove)
+		MESSAGE_HANDLER(WM_MOUSEMOVE, OnMouseMove)
+		MESSAGE_HANDLER(WM_MOUSEMOVE, OnMouseLeave)
 		MESSAGE_HANDLER(WM_LBUTTONDOWN, OnLButtonDown)
 		MESSAGE_HANDLER(WM_NCLBUTTONDOWN, OnLButtonDown)
 		MESSAGE_HANDLER(WM_LBUTTONDBLCLK, OnLButtonDblClk)
@@ -108,7 +144,6 @@ public:
 		//MESSAGE_HANDLER(WM_DRAWITEM, OnDrawItem);
 		MESSAGE_HANDLER(WM_DBUFFER_PARENT_DRAWBACKGRAND, OnParentDraw);
 		NOTIFY_HANDLER(IDC_LIST_USERNAME, DL_BEGINDRAG, OnListBeginDrag);
-		//MESSAGE_HANDLER(WM_PAINT, OnPaint)
 		// REFLECT_NOTIFICATIONS()
 		// CHAIN_MSG_MAP(CUpdateUI<CMyWindow>)
 		MESSAGE_HANDLER(WM_COMMAND, OnCommand)
@@ -117,27 +152,14 @@ public:
 		
 	END_MSG_MAP()
 	LRESULT OnNcHitTest(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
-	//LRESULT OnPaint(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
-	//{
-	//	if(wParam != NULL)
-	//	{
-	//		RECT rect = { 0 };
-	//		GetClientRect(&rect);
-	//		
-	//		DoPaint((HDC)wParam);
-	//	}
-	//	else
-	//	{
-	//		CPaintDC dc(m_hWnd);
-	//		DoPaint(dc.m_hDC);
-	//	}		
-	//	return 0;
-	//}
 	LRESULT DoPaint(CDCHandle dc)
 	{
 		tolog(_T("WM_PAINT in parent"));
 		ATLASSERT(m_bkgnd.IsNull() == NULL);
 
+
+		dc.SelectFont(m_miniFont);
+		//
 		CRect rcClient;
 		GetClientRect(rcClient);
 		//dc.FillSolidRect(rcClient, RGB(255, 255, 255));
@@ -150,15 +172,38 @@ public:
 		//
 		//DrawComboBoxDrowDownImg(dc.m_hDC);
 		CRect rc;
-		rc.left = 36;
-		rc.top = 50;
+		rc.left = 38;
+		rc.top = 90;
 		rc.right = 200;
-		rc.bottom = 70;
+		rc.bottom = 110;
 		dc.SetBkMode(TRANSPARENT);
 		dc.SetTextColor(RGB(203, 234, 255));
-		dc.SelectFont(m_font);
+		
 		dc.DrawText(_T("为知笔记帐号"), 6, rc, DT_LEFT);
 
+		CRect rcMoreLogin;
+		rcMoreLogin.left = 350;
+		rcMoreLogin.top = 90;
+		rcMoreLogin.right = 450;
+		rcMoreLogin.bottom = 110;
+		dc.DrawText(_T("其他帐号登陆"), 6, rcMoreLogin, DT_LEFT);
+		
+		if (m_bAuto)
+		{
+			m_ilLoginCheck.Draw(dc, 1, m_rcLoginCheck.left, m_rcLoginCheck.top, ILD_NORMAL);
+		}
+		else 
+		{
+			m_ilLoginCheck.Draw(dc, 0, m_rcLoginCheck.left, m_rcLoginCheck.top, ILD_NORMAL);
+		}
+		dc.DrawText(_T("自动登陆"), 4, m_rcAutoLogin, DT_LEFT);
+		//
+		PaintThirdPartyBtn(dc, m_ilQQLogin, m_rcQQLogin, m_QQState);
+		PaintThirdPartyBtn(dc, m_ilSinaWbLogin, m_rcSinaWbLogin, m_SinaWbState);
+		PaintThirdPartyBtn(dc, m_ilQQWbLogin, m_rcQQWbLogin, m_QQWbState);
+		PaintThirdPartyBtn(dc, m_ilLogin, m_rcLogin, m_LoginState);
+
+		DrawVertialLine(dc);
 		return 0;
 	}
 	LRESULT OnEraseBkgnd(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
@@ -199,18 +244,19 @@ public:
 		//
 		::SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(NONCLIENTMETRICS), &ncm, 0);
 		
+		NONCLIENTMETRICS miniNcm = ncm;
+
 		ncm.lfMenuFont.lfHeight -= 3;
 		ncm.lfMenuFont.lfWeight = FW_NORMAL;
 
 		m_font.CreateFontIndirectW(&ncm.lfMenuFont);
-	}
-	LRESULT OnMouseMove(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
-	{
-		tolog(_T("in OnMouseMove"));
 		
-
-		return 0;
+		miniNcm.lfMenuFont.lfHeight -= 1;
+		ncm.lfMenuFont.lfWeight = FW_NORMAL;
+		m_miniFont.CreateFontIndirectW(&miniNcm.lfMenuFont);
 	}
+	LRESULT OnMouseMove(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	LRESULT OnMouseLeave(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 	LRESULT OnLButtonDown(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 	LRESULT OnLButtonDblClk(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 	LRESULT OnParentDraw(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
@@ -250,16 +296,25 @@ protected:
 	}
 	void DrawListBox();
 	bool HitTestInDropDown(const CPoint& pt);
+	bool HitTestAutoLogin(const CPoint& pt);
 	void DrawComboBox();
 	void DrawComboBoxDrowDownImg(CDCHandle dc);
+	bool HitTestInQQLogin(const CPoint& pt);
+	bool HitTestInSinaWbLogin(const CPoint& pt);
+	bool HitTestInQQWbLogin(const CPoint& pt);
+	bool HitTestInLogin(const CPoint& pt);
+	void InitThirdPartyAccount(CImageList& il, ButtonState& btnState, CRect& rcBtn, int nBtnX, int nBtnY, LPCTSTR lpszImageFileName, BOOL bHorizontal = TRUE);
+	void PaintThirdPartyBtn(const CDCHandle& dc, CImageList& il, const CRect& rc, ButtonState& btnState);
 public:
 	void DrawAllLink();
 	void DrawRegLink(CMyDBufferHyperLink& hl, CRect rc, LPCTSTR lpszLabel, LPCTSTR lpszURL, DWORD dwLinkExStyle);
 	void DrawFrgtPsdLink(CMyDBufferHyperLink& hl, CRect rc, LPCTSTR lpszLabel, LPCTSTR lpszURL, DWORD dwLinkExStyle);
 	void DrawDBufferLink(CMyDBufferHyperLink& hl, CRect rc, LPCTSTR lpszLabel, LPCTSTR lpszURL, DWORD dwLinkExStyle);
+	void DrawVertialLine(CDCHandle& dc);
 private:
 	COLORREF m_clrBk;
 	CFont m_font;
+	CFont m_miniFont;
 	CMyDBufferBitmapButton m_btnMinBox;
 	CMyDBufferBitmapButton m_btnMaxBox;
 	CImageList m_il;
@@ -301,7 +356,30 @@ private:
 	CMyDBufferHyperLink m_linkProxySet;
 
 	BOOL m_bEditState;
-
+	//
+	BOOL m_bAuto;
+	CRect m_rcLoginCheck;
+	CRect m_rcAutoLogin;
+	CImageList m_ilLoginCheck;
+	//
+	ButtonState m_QQState;
+	CRect m_rcQQLogin;
+	CImageList m_ilQQLogin;
+	//
+	ButtonState m_SinaWbState;
+	CRect m_rcSinaWbLogin;
+	CImageList m_ilSinaWbLogin;
+	//
+	ButtonState m_QQWbState;
+	CRect m_rcQQWbLogin;
+	CImageList m_ilQQWbLogin;
+	//
+	ButtonState m_LoginState;
+	CRect m_rcLogin;
+	CImageList m_ilLogin;
+	
+	//
+	CPen m_pen;
 public:
 
 };

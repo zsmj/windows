@@ -15,7 +15,7 @@ void CMyWindow::PaintEdit(CDCHandle dc)
 	}
 	//m_editil.Draw(dc, nImageIndex, 36, 72, 0);
 
-	m_editil.Draw(dc, nImageIndex, 36, 132, 0);
+	m_editil.Draw(dc, nImageIndex, 36, 192, 0);
 
 	//m_imgDropDown.Draw(dc, m_rcDropDown);
 
@@ -163,7 +163,7 @@ void CMyWindow::DrawAllLink()
 {
 	DWORD dwLinkExStyle = HLINK_UNDERLINEHOVER | HLINK_NOTOOLTIP;
 	CRect rcReg;
-	rcReg.left = 50;
+	rcReg.left = 36;
 	rcReg.top = 400;
 	rcReg.right = 80;
 	rcReg.bottom = 420;
@@ -171,7 +171,7 @@ void CMyWindow::DrawAllLink()
 	DrawRegLink(m_linkReg, rcReg, _T("×¢²á"), _T("http://www.wiz.cn/register"), dwLinkExStyle);
 
 	CRect rcFrgt;
-	rcFrgt.left = 100;
+	rcFrgt.left = 86;
 	rcFrgt.top = 400;
 	rcFrgt.right = 160;
 	rcFrgt.bottom = 420;
@@ -179,7 +179,7 @@ void CMyWindow::DrawAllLink()
 	DrawFrgtPsdLink(m_linkFrgtPsd, rcFrgt, _T("Íü¼ÇÃÜÂë"), _T("http://as.wiz.cn/wizas/htmlpages/reset_password_zh_CN.html"), dwLinkExStyle);
 	
 	CRect rcProxy;
-	rcProxy.left = 170;
+	rcProxy.left = 156;
 	rcProxy.top = 400;
 	rcProxy.right = 230;
 	rcProxy.bottom = 420;
@@ -460,6 +460,14 @@ bool CMyWindow::HitTestInDropDown(const CPoint& pt)
 	}
 	return false;
 }
+bool CMyWindow::HitTestAutoLogin(const CPoint& pt)
+{
+	if (m_rcAutoLogin.PtInRect(pt) || m_rcLoginCheck.PtInRect(pt))
+	{
+		return true;
+	}
+	return false;
+}
 LRESULT CMyWindow::OnLButtonDblClk(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 	bHandled = FALSE;
@@ -482,6 +490,7 @@ LRESULT CMyWindow::OnLButtonDblClk(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL
 			m_bDropDownShow = TRUE;
 		}
 	}
+
 	return 0;
 }
 LRESULT CMyWindow::OnLButtonDown(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
@@ -504,8 +513,34 @@ LRESULT CMyWindow::OnLButtonDown(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& 
 			m_bDropDownShow = TRUE;
 		}	
 	}
-	
-	
+	if (HitTestAutoLogin(pt))
+	{
+		tolog(_T("login"));
+		m_bAuto = m_bAuto ? FALSE : TRUE;
+
+		InvalidateRect(m_rcLoginCheck);
+	}
+	if (HitTestInQQLogin(pt))
+	{
+		m_QQState = PRESS;
+		InvalidateRect(m_rcQQLogin);
+	}
+	if (HitTestInSinaWbLogin(pt))
+	{
+		m_SinaWbState = PRESS;
+		InvalidateRect(m_rcSinaWbLogin);
+	}
+	if (HitTestInQQWbLogin(pt))
+	{
+		m_QQWbState = PRESS;
+		InvalidateRect(m_rcQQWbLogin);
+	}
+	if (HitTestInLogin(pt))
+	{
+		m_LoginState = PRESS;
+		InvalidateRect(m_rcLogin);
+	}
+	tolog(_T("lbutton down."));
 	return 0;
 }
 LRESULT CMyWindow::OnListBeginDrag(int nID, LPNMHDR lpnm, BOOL& bHandled)
@@ -539,4 +574,181 @@ void CMyWindow::DrawComboBox()
 	m_comboUserName.AddString(_T("example@qq.cn"));
 	m_comboUserName.AddString(_T("example@gmail.com"));
 
+}
+bool CMyWindow::HitTestInQQLogin(const CPoint& pt)
+{
+	if (m_rcQQLogin.PtInRect(pt))
+	{
+		return true;
+	}
+	return false;
+}
+bool CMyWindow::HitTestInSinaWbLogin(const CPoint& pt)
+{
+	if (m_rcSinaWbLogin.PtInRect(pt))
+	{
+		return true;
+	}
+	return false;
+}
+bool CMyWindow::HitTestInQQWbLogin(const CPoint& pt)
+{
+	if (m_rcQQWbLogin.PtInRect(pt))
+	{
+		return true;
+	}
+	return false;
+}
+bool CMyWindow::HitTestInLogin(const CPoint& pt)
+{
+	if (m_rcLogin.PtInRect(pt))
+	{
+		return true;
+	}
+	return false;
+}
+LRESULT CMyWindow::OnMouseMove(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
+{
+	bHandled = FALSE;
+
+	POINT pt = {GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam)};
+	if (HitTestInQQLogin(pt))
+	{
+		m_QQState = HOVER;
+		InvalidateRect(m_rcQQLogin);
+
+	}
+	if (HitTestInSinaWbLogin(pt))
+	{
+		m_SinaWbState = HOVER;
+		InvalidateRect(m_rcSinaWbLogin);
+
+	}
+	if (HitTestInQQWbLogin(pt))
+	{
+		m_QQWbState = HOVER;
+		InvalidateRect(m_rcQQWbLogin);
+
+	}
+	if (HitTestInLogin(pt))
+	{
+		m_LoginState = HOVER;
+		InvalidateRect(m_rcLogin);
+
+	}
+	return 0;
+}
+LRESULT CMyWindow::OnMouseLeave(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
+{
+	bHandled = FALSE;
+	
+	POINT pt = {GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam)};
+	if (!HitTestInQQLogin(pt))
+	{
+		if (m_QQState != NORMAL)
+		{
+			m_QQState = NORMAL;
+			InvalidateRect(m_rcQQLogin);
+		}
+	}
+	if (!HitTestInSinaWbLogin(pt))
+	{
+		if (m_SinaWbState != NORMAL)
+		{
+			m_SinaWbState = NORMAL;
+			InvalidateRect(m_rcSinaWbLogin);
+		}
+	}
+	if (!HitTestInQQWbLogin(pt))
+	{
+		if (m_QQWbState != NORMAL)
+		{
+			m_QQWbState = NORMAL;
+			InvalidateRect(m_rcQQWbLogin);
+		}
+	}
+	if (!HitTestInLogin(pt))
+	{
+		if (m_LoginState != NORMAL)
+		{
+			m_LoginState = NORMAL;
+			InvalidateRect(m_rcLogin);
+		}
+	}
+	return 0;
+}
+void CMyWindow::InitThirdPartyAccount(CImageList& il, ButtonState& btnState, CRect& rcBtn, int nBtnX, int nBtnY, LPCTSTR lpszImageFileName, BOOL bHorizontal)
+{
+
+	btnState = NORMAL;
+	CImage imgLogin;
+	imgLogin.Load(lpszImageFileName);
+
+	int nWidth = imgLogin.GetWidth();
+	int nHeight = imgLogin.GetHeight();
+
+
+	//
+	
+	if (bHorizontal)
+	{
+		il.Create(nWidth / 3, nHeight, ILC_COLOR32, 0, 3);
+		il.Add(imgLogin);
+		rcBtn.left = nBtnX;
+		rcBtn.top = nBtnY;
+		rcBtn.right = rcBtn.left + nWidth / 3;
+		rcBtn.bottom = rcBtn.top + nHeight;
+		return;
+	}
+	il.Create(nWidth, nHeight / 3, ILC_COLOR32, 0, 3);
+	rcBtn.left = nBtnX;
+	rcBtn.top = nBtnY;
+	rcBtn.right = rcBtn.left + nWidth;
+	rcBtn.bottom = rcBtn.top + nHeight/3;
+	//
+	CImage img;
+	img.Create(nWidth, nHeight / 3, imgLogin.GetBPP());
+	//
+	imgLogin.BitBlt(img.GetDC(), 0, 0, nWidth, nHeight / 3, 0, 0, SRCCOPY );		
+	img.ReleaseDC();
+	int nIndex = il.Add(img);
+	
+	//
+	imgLogin.BitBlt(img.GetDC(), 0, 0, nWidth, nHeight / 3, 0 , nHeight / 3,SRCCOPY);
+	img.ReleaseDC();
+	il.Add(img);
+
+	imgLogin.BitBlt(img.GetDC(), 0, 0, nWidth, nHeight / 3, 0, (nHeight / 3)*2, SRCCOPY);
+	img.ReleaseDC();
+	il.Add(img);
+
+	int nCount = il.GetImageCount();
+
+}
+void CMyWindow::PaintThirdPartyBtn(const CDCHandle& dc, CImageList& il, const CRect& rc, ButtonState& btnState)
+{
+	if (btnState == NORMAL)
+	{
+		il.Draw(dc, 0, rc.left, rc.top, ILD_NORMAL);
+	}
+	if (btnState == HOVER)
+	{
+		il.Draw(dc, 1, rc.left, rc.top, ILD_NORMAL);
+	}
+	if (btnState == PRESS)
+	{
+		il.Draw(dc, 2, rc.left, rc.top, ILD_NORMAL);
+	}
+}
+void CMyWindow::DrawVertialLine(CDCHandle& dc)
+{
+	int nState = dc.SaveDC();
+	dc.SelectPen(m_pen);
+	dc.SetBkMode(TRANSPARENT);
+	dc.MoveTo(310, 60);
+	//dc.SetDCPenColor(RGB(255, 0, 0));
+	dc.LineTo(310, 360);
+
+
+	dc.RestoreDC(nState);
 }

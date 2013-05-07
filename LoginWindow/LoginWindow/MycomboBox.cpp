@@ -62,7 +62,7 @@ LRESULT CMyComboBox::OnMeasureItem(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL
 	else
 	{
 		tolog(_T("on measure listbox item."));
-		lpMeasureItem->itemHeight = 25;
+		lpMeasureItem->itemHeight = 20;
 	}
 
 	return 0;
