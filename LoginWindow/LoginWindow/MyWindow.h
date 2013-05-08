@@ -154,7 +154,7 @@ public:
 	LRESULT OnNcHitTest(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 	LRESULT DoPaint(CDCHandle dc)
 	{
-		tolog(_T("WM_PAINT in parent"));
+		tolog(_T("WM_PAINT in parent..."));
 		ATLASSERT(m_bkgnd.IsNull() == NULL);
 
 
@@ -162,7 +162,7 @@ public:
 		//
 		CRect rcClient;
 		GetClientRect(rcClient);
-		//dc.FillSolidRect(rcClient, RGB(255, 255, 255));
+		
 
 		if (!m_bkgnd.IsNull())
 		{
@@ -311,6 +311,8 @@ public:
 	void DrawFrgtPsdLink(CMyDBufferHyperLink& hl, CRect rc, LPCTSTR lpszLabel, LPCTSTR lpszURL, DWORD dwLinkExStyle);
 	void DrawDBufferLink(CMyDBufferHyperLink& hl, CRect rc, LPCTSTR lpszLabel, LPCTSTR lpszURL, DWORD dwLinkExStyle);
 	void DrawVertialLine(CDCHandle& dc);
+	void DrawUI();
+	void RetWindowRgn();
 private:
 	COLORREF m_clrBk;
 	CFont m_font;

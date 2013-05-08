@@ -57,8 +57,10 @@ LRESULT CMyWindow::OnCreate(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHand
 	LONG lStyle = GetWindowLong(GWL_STYLE);
 	//lStyle &= ~WS_CLIPCHILDREN;
 	lStyle |= WS_CLIPCHILDREN;
+	lStyle &= ~WS_BORDER;
 	SetWindowLong(GWL_STYLE, lStyle);
-
+	//
+	//ModifyStyleEx(0, WS_EX_LAYERED);
 	//
 	CRect rect;
 	GetClientRect(&rect);
@@ -82,6 +84,8 @@ LRESULT CMyWindow::OnCreate(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHand
 	DrawAllEdit();
 	//
 	DrawComboBox();
+	
+	RetWindowRgn();
 
 	return 0;
 }
@@ -751,4 +755,38 @@ void CMyWindow::DrawVertialLine(CDCHandle& dc)
 
 
 	dc.RestoreDC(nState);
+}
+void CMyWindow::DrawUI()
+{
+
+	CDC dc = GetDC();
+	CRect rcClient;
+	GetClientRect(rcClient);
+	CMemoryDC dcMem(dc.m_hDC, rcClient);
+	m_bkgnd.Draw(dcMem, rcClient);
+
+	CPoint ptWnd;
+	ClientToScreen(rcClient);
+	ptWnd.x = rcClient.left;
+	ptWnd.y = rcClient.top;
+	
+	CPoint pt(0, 0);
+	CSize psize(rcClient.right - rcClient.left, rcClient.bottom - rcClient.top);
+	BLENDFUNCTION blendFunc32bpp;
+	blendFunc32bpp.AlphaFormat = 0;
+	blendFunc32bpp.BlendFlags = 0;
+	blendFunc32bpp.BlendOp = AC_SRC_OVER;
+	blendFunc32bpp.SourceConstantAlpha = 255;
+
+	int nRet = ::UpdateLayeredWindow(m_hWnd, dc, &ptWnd, &psize, dcMem, &pt, 0, &blendFunc32bpp, ULW_ALPHA);
+
+}
+void CMyWindow::RetWindowRgn()
+{
+
+	CRect rc;
+	GetClientRect(rc);
+	HRGN hrgn = CreateRoundRectRgn(rc.left, rc.top, rc.right, rc.bottom, 11, 11);
+	
+	SetWindowRgn(hrgn);
 }
