@@ -63,6 +63,10 @@ BOOL CMyWindow::PreTranslateMessage(MSG* pMsg)
 		bFocus = 1;
 		
 	}
+	if ((pMsg->hwnd == m_comboUserName || pMsg->hwnd == m_editUserName) && (pMsg->message == WM_LBUTTONDOWN))
+	{
+		SetChildFocus();
+	}
 	return FALSE;
 }
 LRESULT CMyWindow::OnCreate(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
@@ -895,22 +899,15 @@ LRESULT CMyWindow::OnKeyUp(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandl
 }
 void CMyWindow::SetChildFocus()
 {
-	//m_editPassword.SetFocus();
 	CWindow* pTabFocus = m_queChildTab.front();
-	
 	pTabFocus->SetFocus();
+	//
+	m_queChildTab.pop();
+	m_queChildTab.push(pTabFocus);
+
 }
 LRESULT CMyWindow::OnSwitchFocus(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
-	if ((DWORD)lParam == 0)
-	{
-		SetChildFocus();
-	}
-	else
-	{
-		CWindow* pChild	= m_queChildTab.front();
-		m_queChildTab.pop();
-		m_queChildTab.push(pChild);
-	}
+	SetChildFocus();
 	return 0;
 }

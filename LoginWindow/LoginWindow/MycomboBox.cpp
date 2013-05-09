@@ -114,7 +114,6 @@ LRESULT CMyComboBox::OnCommand(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bH
 			m_bFocus = TRUE;
 			m_bTransparent = TRUE;
 			tolog(_T("CBN_SETFOCUS"));
-			::PostMessage(GetParent(), WM_SWITCH_FOCUS, 0, 1);
 			break;
 		case CBN_KILLFOCUS:
 			
