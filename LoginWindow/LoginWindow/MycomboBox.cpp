@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "MyComboBox.h"
+#include "MyWindow.h"
 
 HWND CMyComboBox::Create(HWND hParent, RECT& rc, LPCTSTR lpszWindowName = NULL, DWORD dwStyle = 0, DWORD dwExStyle = 0, UINT nMenuOrID = 0)
 {
@@ -73,11 +74,12 @@ LRESULT CMyComboBox::OnCommand(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bH
 	
 	if (uMsg == OCM_COMMAND)
 	{
-		tolog(_T("in ocm_command"));
+		//tolog(_T("in ocm_command"));
 	}
 	HWND hWnd = (HWND)lParam;
-	//if (hWnd == m_list.m_hWnd)
-	//{
+	tolog(StringFormat1(_T("in combo command, wcode: %1"), Int2Str(HIWORD(wParam))));
+	if (m_edit.IsWindow())
+	{
 		WORD wCode = HIWORD(wParam);
 		CString str;
 		CDC dc = GetDC();
@@ -99,6 +101,8 @@ LRESULT CMyComboBox::OnCommand(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bH
 				SetWindowText(str);
 			}
 			bHandled = TRUE;
+
+			::PostMessage(GetParent(), WM_SWITCH_FOCUS, 0, 0);
 			break;
 		case CBN_SETFOCUS:
 			dcEdit.FillRect(rcEdit, m_editBkFocusBrush);
@@ -110,6 +114,7 @@ LRESULT CMyComboBox::OnCommand(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bH
 			m_bFocus = TRUE;
 			m_bTransparent = TRUE;
 			tolog(_T("CBN_SETFOCUS"));
+			::PostMessage(GetParent(), WM_SWITCH_FOCUS, 0, 1);
 			break;
 		case CBN_KILLFOCUS:
 			
@@ -142,7 +147,7 @@ LRESULT CMyComboBox::OnCommand(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bH
 			}
 			tolog(_T("CBN_EDITUPDATE"));
 		}
-	//}
+	}
 	
 	return 0;
 }

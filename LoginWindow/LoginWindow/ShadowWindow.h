@@ -32,7 +32,8 @@ public:
 
 		m_bCreated = FALSE;
 
-		m_imgTest.Load(_T("./image/test_shadow.png"));
+		CString strSkinPath = GetAppPath() + _T("/image/");
+		m_imgTest.Load(strSkinPath + _T("test_shadow.png"));
 
 	}
 	BEGIN_MSG_MAP(CShadowWindow)
@@ -60,7 +61,7 @@ public:
 		_baseClass::Create(GetDesktopWindow(), m_rect);
 
 		m_bCreated = TRUE;
-		//ResetWindowRgn();
+		ResetWindowRgn();
 		//
 		CustomizedPaint(m_rect);
 

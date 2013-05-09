@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="9.00"
 	Name="test_dialog"
-	ProjectGUID="{9E6AB171-7312-4845-BB14-F6166073EB6F}"
+	ProjectGUID="{E1BD9948-D13B-485E-A1A9-8566EE904598}"
 	TargetFrameworkVersion="196613"
 	>
 	<Platforms>
@@ -188,22 +188,6 @@
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm"
 			>
 			<File
-				RelativePath=".\AboutDlg.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\MainDlg.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\misc.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\MycomboBox.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\stdafx.cpp"
 				>
 				<FileConfiguration
@@ -238,14 +222,6 @@
 			</File>
 			<File
 				RelativePath=".\MainDlg.h"
-				>
-			</File>
-			<File
-				RelativePath=".\misc.h"
-				>
-			</File>
-			<File
-				RelativePath=".\MyComboBox.h"
 				>
 			</File>
 			<File

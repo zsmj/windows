@@ -4,16 +4,21 @@
 
 #pragma once
 
-#include "MycomboBox.h"
-
 class CMainDlg : public CDialogImpl<CMainDlg>, public CUpdateUI<CMainDlg>,
 		public CMessageFilter, public CIdleHandler
 {
 public:
 	enum { IDD = IDD_MAINDLG };
 
-	virtual BOOL PreTranslateMessage(MSG* pMsg);
-	virtual BOOL OnIdle();
+	virtual BOOL PreTranslateMessage(MSG* pMsg)
+	{
+		return CWindow::IsDialogMessage(pMsg);
+	}
+
+	virtual BOOL OnIdle()
+	{
+		return FALSE;
+	}
 
 	BEGIN_UPDATE_UI_MAP(CMainDlg)
 	END_UPDATE_UI_MAP()
@@ -24,7 +29,6 @@ public:
 		COMMAND_ID_HANDLER(ID_APP_ABOUT, OnAppAbout)
 		COMMAND_ID_HANDLER(IDOK, OnOK)
 		COMMAND_ID_HANDLER(IDCANCEL, OnCancel)
-		REFLECT_NOTIFICATIONS()
 	END_MSG_MAP()
 
 // Handler prototypes (uncomment arguments if needed):
@@ -32,62 +36,65 @@ public:
 //	LRESULT CommandHandler(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
 //	LRESULT NotifyHandler(int /*idCtrl*/, LPNMHDR /*pnmh*/, BOOL& /*bHandled*/)
 
-	LRESULT OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
-	LRESULT OnDestroy(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
-	LRESULT OnAppAbout(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
-	LRESULT OnOK(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
-	LRESULT OnCancel(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
-	void CreateToolTipForRect(HWND hwndParent)
+	LRESULT OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)
 	{
-		HINSTANCE hInst = _Module.GetModuleInstance();
-		// Create a tooltip.
-		HWND hwndTT = CreateWindowEx(WS_EX_TOPMOST, TOOLTIPS_CLASS, NULL, 
-									 WS_POPUP | TTS_NOPREFIX | TTS_ALWAYSTIP, 
-									 CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, 
-									 hwndParent, NULL, hInst,NULL);
+		// center the dialog on the screen
+		CenterWindow();
 
-		::SetWindowPos(hwndTT, HWND_TOPMOST, 0, 0, 0, 0, 
-					 SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
+		// set icons
+		HICON hIcon = (HICON)::LoadImage(_Module.GetResourceInstance(), MAKEINTRESOURCE(IDR_MAINFRAME), 
+			IMAGE_ICON, ::GetSystemMetrics(SM_CXICON), ::GetSystemMetrics(SM_CYICON), LR_DEFAULTCOLOR);
+		SetIcon(hIcon, TRUE);
+		HICON hIconSmall = (HICON)::LoadImage(_Module.GetResourceInstance(), MAKEINTRESOURCE(IDR_MAINFRAME), 
+			IMAGE_ICON, ::GetSystemMetrics(SM_CXSMICON), ::GetSystemMetrics(SM_CYSMICON), LR_DEFAULTCOLOR);
+		SetIcon(hIconSmall, FALSE);
 
-		// Set up "tool" information. In this case, the "tool" is the entire parent window.
-	    
-		TOOLINFO ti = { 0 };
-		ti.cbSize   = sizeof(TOOLINFO);
-		ti.uFlags   = TTF_SUBCLASS;
-		ti.hwnd     = hwndParent;
-		ti.hinst    = hInst;
-		ti.lpszText = TEXT("This is your tooltip string.");;
-	    
-		::GetClientRect (hwndParent, &ti.rect);
+		// register object for message filtering and idle updates
+		CMessageLoop* pLoop = _Module.GetMessageLoop();
+		ATLASSERT(pLoop != NULL);
+		pLoop->AddMessageFilter(this);
+		pLoop->AddIdleHandler(this);
 
-		// Associate the tooltip with the "tool" window.
-		::SendMessage(hwndTT, TTM_ADDTOOL, 0, (LPARAM) (LPTOOLINFO) &ti);
-	} 
-	void CloseDialog(int nVal);
-	void InitButton()
-	{
-		CImage img;
-		img.Load(_T("./Btn_Window_Close.png"));
-		CImageList il;
-		il.Create(img.GetWidth() / 3, img.GetHeight(), ILC_COLOR32, 0, 0);
-		il.Add(img);
-		
-		RECT rc;
-		rc.left = 10;
-		rc.top = 10;
-		rc.right = 40;
-		rc.bottom = 40;
+		UIAddChildWindowContainer(m_hWnd);
 
-		m_btn.Create(m_hWnd, rc);
-		m_btn.SetBitmapButtonExtendedStyle(BMPBTN_HOVER);
-		m_btn.SetToolTipText(_T("my tooltips string"));
-		m_btn.SetImageList(il);
-		m_btn.SetImages(0, 2, 1);
 
+		return TRUE;
 	}
-private:
-	CBitmapButton m_btn;
-	CEdit m_editTest;
 
-	CMyComboBox m_combo;
+	LRESULT OnDestroy(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)
+	{
+		// unregister message filtering and idle updates
+		CMessageLoop* pLoop = _Module.GetMessageLoop();
+		ATLASSERT(pLoop != NULL);
+		pLoop->RemoveMessageFilter(this);
+		pLoop->RemoveIdleHandler(this);
+
+		return 0;
+	}
+
+	LRESULT OnAppAbout(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
+	{
+		CAboutDlg dlg;
+		dlg.DoModal();
+		return 0;
+	}
+
+	LRESULT OnOK(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
+	{
+		// TODO: Add validation code 
+		CloseDialog(wID);
+		return 0;
+	}
+
+	LRESULT OnCancel(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
+	{
+		CloseDialog(wID);
+		return 0;
+	}
+
+	void CloseDialog(int nVal)
+	{
+		DestroyWindow();
+		::PostQuitMessage(nVal);
+	}
 };

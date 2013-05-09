@@ -1,6 +1,9 @@
 #pragma once
 
+#include <queue>
+
 const UINT WM_DBUFFER_PARENT_DRAWBACKGRAND = ::RegisterWindowMessage(_T("WM_DBUFFER_PARENT_DRAWBACKGRAND"));
+const UINT WM_SWITCH_FOCUS = ::RegisterWindowMessage(_T("WM_SWITCH_FOCUS"));
 
 
 #include "MyBitmapButton.h"
@@ -31,9 +34,10 @@ public:
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	CMyWindow()
 	{
-		m_bkgnd.Load(_T("./image/Bg_Login.png"));
+		CString strSkinPath = GetAppPath() + _T("./image/");
+		m_bkgnd.Load(strSkinPath + _T("Bg_Login.png"));
 		CImage img;
-		img.Load(_T("./image/Input_Login_Normal_Focus.png"));
+		img.Load(strSkinPath + _T("Input_Login_Normal_Focus.png"));
 		m_editil.Create(img.GetWidth()/ 2, img.GetHeight(), ILC_COLOR32, 0, 0);
 		m_editil.Add(img);
 
@@ -42,9 +46,9 @@ public:
 		m_rcEditBk.right = m_rcEditBk.left + img.GetWidth() / 2 - 4;
 		m_rcEditBk.bottom = m_rcEditBk.top + img.GetHeight() - 4;
 
-		m_editbkimg.Load(_T("./image/Text_Login_User.png"));
-		m_imgLoginPass.Load(_T("./image/Text_Login_Pass.png"));
-		m_imgLoginPassFocus.Load(_T("./image/Text_Login_Pass_Focus.png"));
+		m_editbkimg.Load(strSkinPath + _T("Text_Login_User.png"));
+		m_imgLoginPass.Load(strSkinPath + _T("Text_Login_Pass.png"));
+		m_imgLoginPassFocus.Load(strSkinPath + _T("Text_Login_Pass_Focus.png"));
 
 		m_clrBk = RGB(72, 169, 220);
 		CreateFont(m_font);
@@ -90,10 +94,10 @@ public:
 
 		m_bDropDownShow = FALSE;
 
-		m_imgDropDown.Load(_T("./image/Btn_User_Down.png"));
+		m_imgDropDown.Load(strSkinPath + _T("Btn_User_Down.png"));
 		//
 		CImage imgLoginCheck;
-		imgLoginCheck.Load(_T("./image/Input_Check.png"));
+		imgLoginCheck.Load(strSkinPath + _T("Input_Check.png"));
 		
 		m_ilLoginCheck.Create(imgLoginCheck.GetWidth() / 2, imgLoginCheck.GetHeight(), ILC_COLOR32, 0, 0);
 		m_ilLoginCheck.Add(imgLoginCheck);
@@ -112,10 +116,10 @@ public:
 
 		m_bAuto = TRUE;
 		//
-		InitThirdPartyAccount(m_ilQQLogin, m_QQState, m_rcQQLogin, 350, 120, _T("./image/Btn_Login_QQ.png"), FALSE);
-		InitThirdPartyAccount(m_ilSinaWbLogin, m_SinaWbState, m_rcSinaWbLogin, 350, 180, _T("./image/Btn_Login_Weibo.png"), FALSE);
-		InitThirdPartyAccount(m_ilQQWbLogin, m_QQWbState, m_rcQQWbLogin, 350, 240, _T("./image/Btn_Login_QQT.png"), FALSE);
-		InitThirdPartyAccount(m_ilLogin, m_LoginState, m_rcLogin, 115, 320, _T("./image/Btn_Login_Normal_Over_Down.png"));
+		InitThirdPartyAccount(m_ilQQLogin, m_QQState, m_rcQQLogin, 350, 120, strSkinPath + _T("Btn_Login_QQ.png"), FALSE);
+		InitThirdPartyAccount(m_ilSinaWbLogin, m_SinaWbState, m_rcSinaWbLogin, 350, 180, strSkinPath + _T("Btn_Login_Weibo.png"), FALSE);
+		InitThirdPartyAccount(m_ilQQWbLogin, m_QQWbState, m_rcQQWbLogin, 350, 240, strSkinPath + _T("Btn_Login_QQT.png"), FALSE);
+		InitThirdPartyAccount(m_ilLogin, m_LoginState, m_rcLogin, 115, 320, strSkinPath + _T("Btn_Login_Normal_Over_Down.png"));
 		//
 		m_pen.CreatePen(PS_SOLID, 1, RGB(222, 218, 218));
 	}
@@ -132,23 +136,25 @@ public:
 		MESSAGE_HANDLER(WM_MOUSEMOVE, OnMouseMove)
 		MESSAGE_HANDLER(WM_MOUSEMOVE, OnMouseLeave)
 		MESSAGE_HANDLER(WM_LBUTTONDOWN, OnLButtonDown)
-		MESSAGE_HANDLER(WM_NCLBUTTONUP, OnLButtonUp)
+		//MESSAGE_HANDLER(WM_NCLBUTTONUP, OnLButtonUp)
+		//MESSAGE_HANDLER(WM_KEYUP, OnKeyUp);
+		MESSAGE_HANDLER(WM_LBUTTONUP, OnLButtonUp)
 		MESSAGE_HANDLER(WM_LBUTTONDBLCLK, OnLButtonDblClk)
-		MESSAGE_HANDLER(WM_SIZE, OnSize);
-		MESSAGE_HANDLER(WM_SIZING, OnSizing);
-		MESSAGE_HANDLER(WM_MOVE, OnMove);
-		MESSAGE_HANDLER(WM_MOVING, OnMoving);
+		MESSAGE_HANDLER(WM_SIZE, OnSize)
+		MESSAGE_HANDLER(WM_SIZING, OnSizing)
+		MESSAGE_HANDLER(WM_MOVE, OnMove)
+		MESSAGE_HANDLER(WM_MOVING, OnMoving)
 		MESSAGE_HANDLER(WM_ERASEBKGND, OnEraseBkgnd)
-		MESSAGE_HANDLER(WM_NCHITTEST, OnNcHitTest);
+		MESSAGE_HANDLER(WM_NCHITTEST, OnNcHitTest)
 		MESSAGE_HANDLER(WM_CTLCOLOREDIT, OnCtlColorEdit)
 		MESSAGE_HANDLER(WM_CTLCOLORSTATIC, OnCtlColorStatic)
 		MESSAGE_HANDLER(WM_CTLCOLORBTN, OnCtlColorBtn)
 		MESSAGE_HANDLER(WM_CTLCOLORBTN, OnCtlColorBtn)
 		//MESSAGE_HANDLER(WM_DRAWITEM, OnDrawItem);
-		MESSAGE_HANDLER(WM_DBUFFER_PARENT_DRAWBACKGRAND, OnParentDraw);
+		MESSAGE_HANDLER(WM_DBUFFER_PARENT_DRAWBACKGRAND, OnParentDraw)
 		MESSAGE_HANDLER(WM_SHOWWINDOW, OnShowWindow)
-		
-		NOTIFY_HANDLER(IDC_LIST_USERNAME, DL_BEGINDRAG, OnListBeginDrag);
+		MESSAGE_HANDLER(WM_SWITCH_FOCUS, OnSwitchFocus)
+		NOTIFY_HANDLER(IDC_LIST_USERNAME, DL_BEGINDRAG, OnListBeginDrag)
 		MESSAGE_HANDLER(WM_COMMAND, OnCommand)
 		CHAIN_MSG_MAP(CDoubleBufferImpl<CMyWindow>)
 		REFLECT_NOTIFICATIONS()
@@ -201,9 +207,9 @@ public:
 		}
 		dc.DrawText(_T("×Ô¶¯µÇÂ½"), 4, m_rcAutoLogin, DT_LEFT);
 		//
-		//PaintThirdPartyBtn(dc, m_ilQQLogin, m_rcQQLogin, m_QQState);
-		//PaintThirdPartyBtn(dc, m_ilSinaWbLogin, m_rcSinaWbLogin, m_SinaWbState);
-		//PaintThirdPartyBtn(dc, m_ilQQWbLogin, m_rcQQWbLogin, m_QQWbState);
+		PaintThirdPartyBtn(dc, m_ilQQLogin, m_rcQQLogin, m_QQState);
+		PaintThirdPartyBtn(dc, m_ilSinaWbLogin, m_rcSinaWbLogin, m_SinaWbState);
+		PaintThirdPartyBtn(dc, m_ilQQWbLogin, m_rcQQWbLogin, m_QQWbState);
 		PaintThirdPartyBtn(dc, m_ilLogin, m_rcLogin, m_LoginState);
 
 		DrawVertialLine(dc);
@@ -276,13 +282,16 @@ public:
 	LRESULT OnMove(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 	LRESULT OnMoving(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 	LRESULT OnShowWindow(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	LRESULT OnKeyUp(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	LRESULT OnSwitchFocus(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 protected:
 	void DrawMinBox();
 	void DrawMaxBox();
 	void InitButton()
 	{
+		CString strSkinPath = GetAppPath() + _T("/image/");
 		CImage img;
-		img.Load(_T("./image/Btn_Window_Close.png"));
+		img.Load(strSkinPath + _T("Btn_Window_Close.png"));
 		CImageList il;
 		il.Create(img.GetWidth() / 3, img.GetHeight(), ILC_COLOR32, 0, 0);
 		il.Add(img);
@@ -328,6 +337,7 @@ public:
 	void ResetWindowRgn();
 	void OnPasswordFocus(HWND hCtl);
 	void OnPasswordKillFocus(HWND hCtl);
+	void SetChildFocus();
 	
 private:
 	COLORREF m_clrBk;
@@ -399,6 +409,8 @@ private:
 	CPen m_pen;
 	//
 	CShadowWindow m_shadow;
+	//
+	std::queue<CWindow* > m_queChildTab;
 public:
 
 };

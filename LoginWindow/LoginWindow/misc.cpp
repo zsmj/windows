@@ -24,3 +24,15 @@ void tolog(LPCTSTR lpszLog)
 {
 	::OutputDebugString(lpszLog);
 }
+CString GetAppPath()
+{
+	TCHAR szFileName[MAX_PATH+1] = {0};
+	::GetModuleFileName(NULL, szFileName, MAX_PATH);
+	
+	TCHAR szDriver[MAX_PATH+1] = {0};
+	TCHAR szDir[MAX_PATH+1] = {0};
+
+	_tsplitpath_s(szFileName, szDriver, MAX_PATH, szDir, MAX_PATH, NULL, 0, NULL, 0);
+
+	return CString(szDriver) + szDir;
+}

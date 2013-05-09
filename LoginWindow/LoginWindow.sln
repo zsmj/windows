@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LoginWindow", "LoginWindow\LoginWindow.vcproj", "{0990BFBB-1C71-41C0-837D-5B60BE7D2089}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_dialog", "test_dialog\test_dialog.vcproj", "{9E6AB171-7312-4845-BB14-F6166073EB6F}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pure_win32", "pure_win32\pure_win32.vcproj", "{458F811D-1089-4627-B7EC-4AA56C166B4E}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_sdiwnd", "test_sdiwnd\test_sdiwnd.vcproj", "{38E0D787-CB84-4B01-B77B-900D3888C6AC}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_dialog", "test_dialog\test_dialog.vcproj", "{E1BD9948-D13B-485E-A1A9-8566EE904598}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,10 +19,6 @@ Global
 		{0990BFBB-1C71-41C0-837D-5B60BE7D2089}.Debug|Win32.Build.0 = Debug|Win32
 		{0990BFBB-1C71-41C0-837D-5B60BE7D2089}.Release|Win32.ActiveCfg = Release|Win32
 		{0990BFBB-1C71-41C0-837D-5B60BE7D2089}.Release|Win32.Build.0 = Release|Win32
-		{9E6AB171-7312-4845-BB14-F6166073EB6F}.Debug|Win32.ActiveCfg = Debug|Win32
-		{9E6AB171-7312-4845-BB14-F6166073EB6F}.Debug|Win32.Build.0 = Debug|Win32
-		{9E6AB171-7312-4845-BB14-F6166073EB6F}.Release|Win32.ActiveCfg = Release|Win32
-		{9E6AB171-7312-4845-BB14-F6166073EB6F}.Release|Win32.Build.0 = Release|Win32
 		{458F811D-1089-4627-B7EC-4AA56C166B4E}.Debug|Win32.ActiveCfg = Debug|Win32
 		{458F811D-1089-4627-B7EC-4AA56C166B4E}.Debug|Win32.Build.0 = Debug|Win32
 		{458F811D-1089-4627-B7EC-4AA56C166B4E}.Release|Win32.ActiveCfg = Release|Win32
@@ -31,6 +27,10 @@ Global
 		{38E0D787-CB84-4B01-B77B-900D3888C6AC}.Debug|Win32.Build.0 = Debug|Win32
 		{38E0D787-CB84-4B01-B77B-900D3888C6AC}.Release|Win32.ActiveCfg = Release|Win32
 		{38E0D787-CB84-4B01-B77B-900D3888C6AC}.Release|Win32.Build.0 = Release|Win32
+		{E1BD9948-D13B-485E-A1A9-8566EE904598}.Debug|Win32.ActiveCfg = Debug|Win32
+		{E1BD9948-D13B-485E-A1A9-8566EE904598}.Debug|Win32.Build.0 = Debug|Win32
+		{E1BD9948-D13B-485E-A1A9-8566EE904598}.Release|Win32.ActiveCfg = Release|Win32
+		{E1BD9948-D13B-485E-A1A9-8566EE904598}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

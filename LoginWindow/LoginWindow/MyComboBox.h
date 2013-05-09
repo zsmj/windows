@@ -17,15 +17,16 @@ public:
 		m_bkHoverColor = RGB(218, 231, 242);
 		m_itemBkBrush.CreateSolidBrush(m_bkHoverColor);
 		
+		m_strSkinPath = GetAppPath() + _T("/image/");
 		//m_comboBkBrush.CreateSolidBrush(RGB(233, 242, 247));
 
 		//m_editBkBrush.CreateSolidBrush(RGB(239, 247, 253));
-		m_imgDropDown.Load(_T("./image/Btn_User_Down.png"));
+		m_imgDropDown.Load(m_strSkinPath + _T("Btn_User_Down.png"));
 
 		m_nHeightListTop = 2;
-		m_editBkNormal.Load(_T("./image/Text_Login_User_Normal.png"));
+		m_editBkNormal.Load(m_strSkinPath + _T("Text_Login_User_Normal.png"));
 		m_editBkBrush.CreatePatternBrush(m_editBkNormal);
-		m_editBkFocus.Load(_T("./image/Text_Login_User_Focus.png"));
+		m_editBkFocus.Load(m_strSkinPath + _T("Text_Login_User_Focus.png"));
 		m_editBkFocusBrush.CreatePatternBrush(m_editBkFocus);
 		
 		m_haveTextBrush.CreateSolidBrush(RGB(233, 242, 247));
@@ -44,7 +45,6 @@ public:
 		MESSAGE_HANDLER(WM_MOUSEMOVE, OnMouseMove)
 		MESSAGE_HANDLER(WM_COMMAND, OnCommand)
 		MESSAGE_HANDLER(OCM_COMMAND, OnCommand)
-
 	END_MSG_MAP()
 	LRESULT OnCreate(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 	{
@@ -170,5 +170,6 @@ public:
 	CImage m_imgDropDown;
 	CRect m_rcDropDown;
 	
+	CString m_strSkinPath;
 	int m_nHeightListTop;
 };

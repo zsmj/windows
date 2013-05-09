@@ -46,6 +46,23 @@ BOOL CMyWindow::PreTranslateMessage(MSG* pMsg)
 
 		//dc.FillSolidRect(m_rcEditBk, RGB(255, 255, 255));
 	}
+	
+	if (pMsg->message == WM_KEYUP && (DWORD)pMsg->wParam == VK_TAB)
+	{
+		SetChildFocus();
+		tolog(_T("vk_tab up."));
+	}
+	static bool bFocus = 0;
+	if (pMsg->hwnd == m_comboUserName && pMsg->message == WM_PAINT)
+	{
+		tolog(_T("combo username wm_paint"));
+		if (bFocus != 1)
+		{
+			SetChildFocus();
+		}
+		bFocus = 1;
+		
+	}
 	return FALSE;
 }
 LRESULT CMyWindow::OnCreate(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
@@ -60,12 +77,7 @@ LRESULT CMyWindow::OnCreate(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHand
 	lStyle |= WS_CLIPCHILDREN;
 	lStyle &= ~WS_BORDER;
 	SetWindowLong(GWL_STYLE, lStyle);
-	//
-	//ModifyStyleEx(0, WS_EX_LAYERED);
-	//
 	
-	//
-
 	//
 	CRect rect;
 	GetClientRect(&rect);
@@ -88,13 +100,14 @@ LRESULT CMyWindow::OnCreate(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHand
 	DrawListBox();
 
 	//
-	DrawAllEdit();
-	//
 	DrawComboBox();
+	//
+	DrawAllEdit();
+
 	
-	//ResetWindowRgn();
+	ResetWindowRgn();
 	
-	//m_shadow.Create(m_hWnd, 255);
+	m_shadow.Create(m_hWnd, 40);
 
 	//DrawUI();
 
@@ -204,7 +217,8 @@ void CMyWindow::DrawAllLink()
 void CMyWindow::DrawMinBox()
 {
 	CImage img;
-	img.Load(_T("./image/Btn_Window_Min.png"));
+	CString strSkinPath = GetAppPath() + _T("/image/");
+	img.Load(strSkinPath + _T("Btn_Window_Min.png"));
 	int nWidth = img.GetWidth() / 3;
 	int nHeight = img.GetHeight();
 	CImageList il;
@@ -228,7 +242,8 @@ void CMyWindow::DrawMinBox()
 void CMyWindow::DrawMaxBox()
 {
 	CImage img;
-	img.Load(_T("./image/Btn_Window_Close.png"));
+	CString strSkinPath = GetAppPath() + _T("/image/");
+	img.Load(strSkinPath + _T("Btn_Window_Close.png"));
 	int nWidth = img.GetWidth() / 3;
 	int nHeight = img.GetHeight();
 	CImageList il;
@@ -267,6 +282,8 @@ void CMyWindow::DrawAllEdit()
 
 	DrawEdit(m_editPassword, m_rcPassword, IDC_EDIT_PASSWORD, ES_PASSWORD);
 	m_editPassword.SetPasswordChar(_T('*'));
+
+	m_queChildTab.push(&m_editPassword);
 }
 
 void CMyWindow::OnPasswordFocus(HWND hCtl)
@@ -554,18 +571,17 @@ LRESULT CMyWindow::OnLButtonDown(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& 
 	if (HitTestInLogin(pt))
 	{
 		m_LoginState = PRESS;
-		SetCapture();
-		//bHandled = TRUE;
+		
 		InvalidateRect(m_rcLogin);
 	}
 	return 1;
 }
 LRESULT CMyWindow::OnLButtonUp(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
-	tolog(_T("on mouse up"));
+	//tolog(_T("on mouse up"));
 	bHandled = FALSE;
 
-	ReleaseCapture();
+	//ReleaseCapture();
 	return 0;
 }
 LRESULT CMyWindow::OnListBeginDrag(int nID, LPNMHDR lpnm, BOOL& bHandled)
@@ -598,6 +614,9 @@ void CMyWindow::DrawComboBox()
 	m_comboUserName.AddString(_T("example@wiz.cn"));
 	m_comboUserName.AddString(_T("example@qq.cn"));
 	m_comboUserName.AddString(_T("example@gmail.com"));
+	//
+	m_queChildTab.push(static_cast<CWindow*>(&m_comboUserName));
+	
 
 }
 bool CMyWindow::HitTestInQQLogin(const CPoint& pt)
@@ -862,7 +881,36 @@ LRESULT CMyWindow::OnShowWindow(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& b
 {
 
 	//tolog(StringFormat1(_T("show window.bshow: %1"), Int2Str((BOOL)wParam)));
-	
+
 	m_shadow.ShowShadow();
 	return 1;
+}
+LRESULT CMyWindow::OnKeyUp(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
+{
+	bHandled = FALSE;
+	
+
+
+	return 1;
+}
+void CMyWindow::SetChildFocus()
+{
+	//m_editPassword.SetFocus();
+	CWindow* pTabFocus = m_queChildTab.front();
+	
+	pTabFocus->SetFocus();
+}
+LRESULT CMyWindow::OnSwitchFocus(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
+{
+	if ((DWORD)lParam == 0)
+	{
+		SetChildFocus();
+	}
+	else
+	{
+		CWindow* pChild	= m_queChildTab.front();
+		m_queChildTab.pop();
+		m_queChildTab.push(pChild);
+	}
+	return 0;
 }
