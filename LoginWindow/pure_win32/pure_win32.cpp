@@ -179,7 +179,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		//{
 		//	ImageList_Add(hImagelist, hBitmap, NULL);
 		//}
-		CreateToolTipForRect(hWnd);
+		//CreateToolTipForRect(hWnd);
 		break;
 	case WM_COMMAND:
 		wmId    = LOWORD(wParam);
@@ -196,6 +196,15 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		default:
 			return DefWindowProc(hWnd, message, wParam, lParam);
 		}
+		break;
+	case WM_MOUSEMOVE:
+		OutputDebugString(_T("WM_MOUSEMOVE"));
+		break;
+	case WM_LBUTTONDOWN:
+		OutputDebugString(_T("WM_LBUTTONDOWN"));
+		break;
+	case WM_LBUTTONUP:
+		OutputDebugString(_T("WM_LBUTTONUP"));
 		break;
 	case WM_PAINT:
 		hdc = BeginPaint(hWnd, &ps);

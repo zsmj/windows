@@ -1,6 +1,7 @@
 #include "StdAfx.h"
 #include "MyWindow.h"
 
+int arrayShadowColor[11] = {214, 221, 229, 234, 239, 244, 248, 250, 252, 253, 254};
 
 void CMyWindow::PaintEdit(CDCHandle dc)
 {
@@ -62,19 +63,25 @@ LRESULT CMyWindow::OnCreate(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHand
 	//
 	//ModifyStyleEx(0, WS_EX_LAYERED);
 	//
+	
+	//
+
+	//
 	CRect rect;
 	GetClientRect(&rect);
 	rect.bottom = rect.top + 450;
 	rect.right = rect.left + 600;
-	MoveWindow(&rect);
+	
+	SetWindowPos(0, 0, 0, 600, 450, SWP_NOMOVE);
+	//
+	
 
 	m_rcClient = rect;
 	//
 	DrawMinBox();
 	//
 	DrawMaxBox();
-	//
-	CenterWindow();
+
 	//
 	DrawAllLink();
 	//
@@ -85,7 +92,11 @@ LRESULT CMyWindow::OnCreate(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHand
 	//
 	DrawComboBox();
 	
-	RetWindowRgn();
+	//ResetWindowRgn();
+	
+	//m_shadow.Create(m_hWnd, 255);
+
+	//DrawUI();
 
 	return 0;
 }
@@ -499,6 +510,7 @@ LRESULT CMyWindow::OnLButtonDblClk(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL
 }
 LRESULT CMyWindow::OnLButtonDown(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
+	
 	tolog(_T("on lbutton down."));
 	bHandled = FALSE;
 
@@ -542,9 +554,18 @@ LRESULT CMyWindow::OnLButtonDown(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& 
 	if (HitTestInLogin(pt))
 	{
 		m_LoginState = PRESS;
+		SetCapture();
+		//bHandled = TRUE;
 		InvalidateRect(m_rcLogin);
 	}
-	tolog(_T("lbutton down."));
+	return 1;
+}
+LRESULT CMyWindow::OnLButtonUp(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
+{
+	tolog(_T("on mouse up"));
+	bHandled = FALSE;
+
+	ReleaseCapture();
 	return 0;
 }
 LRESULT CMyWindow::OnListBeginDrag(int nID, LPNMHDR lpnm, BOOL& bHandled)
@@ -613,6 +634,7 @@ bool CMyWindow::HitTestInLogin(const CPoint& pt)
 }
 LRESULT CMyWindow::OnMouseMove(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
+	//tolog(_T("on mouse move"));
 	bHandled = FALSE;
 
 	POINT pt = {GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam)};
@@ -632,7 +654,6 @@ LRESULT CMyWindow::OnMouseMove(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bH
 	{
 		m_QQWbState = HOVER;
 		InvalidateRect(m_rcQQWbLogin);
-
 	}
 	if (HitTestInLogin(pt))
 	{
@@ -640,7 +661,7 @@ LRESULT CMyWindow::OnMouseMove(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bH
 		InvalidateRect(m_rcLogin);
 
 	}
-	return 0;
+	return 1;
 }
 LRESULT CMyWindow::OnMouseLeave(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
@@ -673,8 +694,10 @@ LRESULT CMyWindow::OnMouseLeave(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& b
 	}
 	if (!HitTestInLogin(pt))
 	{
+		
 		if (m_LoginState != NORMAL)
 		{
+			tolog(_T("HitTestInLogin mouse leave."));
 			m_LoginState = NORMAL;
 			InvalidateRect(m_rcLogin);
 		}
@@ -733,14 +756,17 @@ void CMyWindow::PaintThirdPartyBtn(const CDCHandle& dc, CImageList& il, const CR
 {
 	if (btnState == NORMAL)
 	{
+		//tolog(_T("normal"));
 		il.Draw(dc, 0, rc.left, rc.top, ILD_NORMAL);
 	}
 	if (btnState == HOVER)
 	{
+		//tolog(_T("hover"));
 		il.Draw(dc, 1, rc.left, rc.top, ILD_NORMAL);
 	}
 	if (btnState == PRESS)
 	{
+		//tolog(_T("press"));
 		il.Draw(dc, 2, rc.left, rc.top, ILD_NORMAL);
 	}
 }
@@ -763,6 +789,7 @@ void CMyWindow::DrawUI()
 	CRect rcClient;
 	GetClientRect(rcClient);
 	CMemoryDC dcMem(dc.m_hDC, rcClient);
+	//dcMem.FillSolidRect(rcClient, RGB(255, 0, 0));
 	m_bkgnd.Draw(dcMem, rcClient);
 
 	CPoint ptWnd;
@@ -773,20 +800,69 @@ void CMyWindow::DrawUI()
 	CPoint pt(0, 0);
 	CSize psize(rcClient.right - rcClient.left, rcClient.bottom - rcClient.top);
 	BLENDFUNCTION blendFunc32bpp;
-	blendFunc32bpp.AlphaFormat = 0;
+	blendFunc32bpp.AlphaFormat = AC_SRC_ALPHA;
 	blendFunc32bpp.BlendFlags = 0;
 	blendFunc32bpp.BlendOp = AC_SRC_OVER;
 	blendFunc32bpp.SourceConstantAlpha = 255;
 
 	int nRet = ::UpdateLayeredWindow(m_hWnd, dc, &ptWnd, &psize, dcMem, &pt, 0, &blendFunc32bpp, ULW_ALPHA);
-
 }
-void CMyWindow::RetWindowRgn()
+void CMyWindow::ResetWindowRgn()
 {
-
 	CRect rc;
 	GetClientRect(rc);
 	HRGN hrgn = CreateRoundRectRgn(rc.left, rc.top, rc.right, rc.bottom, 11, 11);
 	
 	SetWindowRgn(hrgn);
+}
+LRESULT CMyWindow::OnSize(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
+{
+	
+	bHandled = FALSE;
+	
+	int cx = LOWORD(lParam);
+	int cy = HIWORD(lParam);
+	//tolog(StringFormat2(_T("on size. cx: %1, cy: %2."), Int2Str(cx), Int2Str(cy)));
+	m_shadow.OnShadowCastingWndNewSize(cx, cy);
+
+	return 1;
+}
+LRESULT CMyWindow::OnSizing(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
+{
+	//tolog(_T("on sizing."));
+	bHandled = FALSE;
+	
+	CRect rc = *(RECT* )lParam;
+	m_shadow.OnShadowCastingWndNewSize(rc);
+
+	return 1;
+}
+LRESULT CMyWindow::OnMove(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
+{
+	bHandled = FALSE;
+	
+	int x = LOWORD(lParam);
+	int y = HIWORD(lParam);
+	//tolog(StringFormat2(_T("onmove.x: %1, y: %2"), Int2Str(x), Int2Str(y)));
+	m_shadow.OnShadowCastingWndNewPos(x, y);
+
+	return 1;
+}
+LRESULT CMyWindow::OnMoving(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
+{
+	//tolog(_T("on moving"));
+	bHandled = FALSE;
+	
+	CRect rc = *(RECT* )lParam;
+	m_shadow.OnShadowCastingWndNewPos(rc.left, rc.top);
+
+	return 1;
+}
+LRESULT CMyWindow::OnShowWindow(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
+{
+
+	//tolog(StringFormat1(_T("show window.bshow: %1"), Int2Str((BOOL)wParam)));
+	
+	m_shadow.ShowShadow();
+	return 1;
 }

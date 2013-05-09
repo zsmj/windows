@@ -48,15 +48,39 @@ int Run(LPTSTR /*lpstrCmdLine*/ = NULL, int nCmdShow = SW_SHOWDEFAULT)
 
 	CMyWindow mainWnd;
 
+
+
 	HWND hWnd;
-	if((hWnd = mainWnd.Create(NULL, CWindow::rcDefault, _T("Test"))) == NULL)
+	CRect rc;
+	rc.left = 100;
+	rc.top = 100; 
+	rc.right = 700;
+	rc.bottom = 550;
+	CRect rc0;
+	rc0.left = 0;
+	rc0.top = 0; 
+	rc0.right = 0;
+	rc0.bottom = 0;
+	if((hWnd = mainWnd.Create(NULL, rc0, _T("Test"))) == NULL)
 	{
 		ATLTRACE(_T("Main window creation failed!\n"));
 		return 0;
 	}
 
+	//CShadowWindow mainWnd;
+	//HWND hWnd;
+	//if((hWnd = mainWnd.Create(GetDesktopWindow(), 255)) == NULL)
+	//{
+	//	ATLTRACE(_T("Main window creation failed!\n"));
+	//	return 0;
+	//}
+	mainWnd.CenterWindow();
 	mainWnd.ShowWindow(nCmdShow);
 
+	CRect rc1;
+	mainWnd.GetWindowRect(rc1);
+
+	
 	int nRet = theLoop.Run();
 
 	//MSG msg;

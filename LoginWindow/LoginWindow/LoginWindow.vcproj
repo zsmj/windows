@@ -237,6 +237,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ShadowWindow.h"
+				>
+			</File>
+			<File
 				RelativePath=".\stdafx.h"
 				>
 			</File>

@@ -8,6 +8,7 @@ const UINT WM_DBUFFER_PARENT_DRAWBACKGRAND = ::RegisterWindowMessage(_T("WM_DBUF
 #include "MyHyperLink.h"
 #include "MyDBufferHyperLink.h"
 #include "MyComboBox.h"
+#include "ShadowWindow.h"
 
 
 typedef CWinTraits<WS_POPUPWINDOW> CMyWinTraits;
@@ -23,10 +24,10 @@ class CMyWindow
 	: public CWindowImpl<CMyWindow, CWindow, CMyWinTraits>
 	, public CMessageFilter
 	, public CDoubleBufferImpl<CMyWindow>
-	//, public CUpdateUI<CMyWindow>
 {
 public:
-	
+	typedef CWindowImpl<CMyWindow, CWindow, CMyWinTraits> _baseClass;
+
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	CMyWindow()
 	{
@@ -124,8 +125,6 @@ public:
 
 	DECLARE_WND_CLASS(_T("My Login In Window"));
 
-	//BEGIN_UPDATE_UI_MAP(CMainFrame)
-	//END_UPDATE_UI_MAP()
 
 	BEGIN_MSG_MAP(CMyWindow)
 		MESSAGE_HANDLER(WM_CREATE, OnCreate)
@@ -133,9 +132,13 @@ public:
 		MESSAGE_HANDLER(WM_MOUSEMOVE, OnMouseMove)
 		MESSAGE_HANDLER(WM_MOUSEMOVE, OnMouseLeave)
 		MESSAGE_HANDLER(WM_LBUTTONDOWN, OnLButtonDown)
-		MESSAGE_HANDLER(WM_NCLBUTTONDOWN, OnLButtonDown)
+		MESSAGE_HANDLER(WM_NCLBUTTONUP, OnLButtonUp)
 		MESSAGE_HANDLER(WM_LBUTTONDBLCLK, OnLButtonDblClk)
-		//MESSAGE_HANDLER(WM_ERASEBKGND, OnEraseBkgnd)
+		MESSAGE_HANDLER(WM_SIZE, OnSize);
+		MESSAGE_HANDLER(WM_SIZING, OnSizing);
+		MESSAGE_HANDLER(WM_MOVE, OnMove);
+		MESSAGE_HANDLER(WM_MOVING, OnMoving);
+		MESSAGE_HANDLER(WM_ERASEBKGND, OnEraseBkgnd)
 		MESSAGE_HANDLER(WM_NCHITTEST, OnNcHitTest);
 		MESSAGE_HANDLER(WM_CTLCOLOREDIT, OnCtlColorEdit)
 		MESSAGE_HANDLER(WM_CTLCOLORSTATIC, OnCtlColorStatic)
@@ -143,9 +146,9 @@ public:
 		MESSAGE_HANDLER(WM_CTLCOLORBTN, OnCtlColorBtn)
 		//MESSAGE_HANDLER(WM_DRAWITEM, OnDrawItem);
 		MESSAGE_HANDLER(WM_DBUFFER_PARENT_DRAWBACKGRAND, OnParentDraw);
+		MESSAGE_HANDLER(WM_SHOWWINDOW, OnShowWindow)
+		
 		NOTIFY_HANDLER(IDC_LIST_USERNAME, DL_BEGINDRAG, OnListBeginDrag);
-		// REFLECT_NOTIFICATIONS()
-		// CHAIN_MSG_MAP(CUpdateUI<CMyWindow>)
 		MESSAGE_HANDLER(WM_COMMAND, OnCommand)
 		CHAIN_MSG_MAP(CDoubleBufferImpl<CMyWindow>)
 		REFLECT_NOTIFICATIONS()
@@ -154,7 +157,7 @@ public:
 	LRESULT OnNcHitTest(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 	LRESULT DoPaint(CDCHandle dc)
 	{
-		tolog(_T("WM_PAINT in parent..."));
+		//tolog(_T("WM_PAINT in parent..."));
 		ATLASSERT(m_bkgnd.IsNull() == NULL);
 
 
@@ -198,9 +201,9 @@ public:
 		}
 		dc.DrawText(_T("×Ô¶¯µÇÂ½"), 4, m_rcAutoLogin, DT_LEFT);
 		//
-		PaintThirdPartyBtn(dc, m_ilQQLogin, m_rcQQLogin, m_QQState);
-		PaintThirdPartyBtn(dc, m_ilSinaWbLogin, m_rcSinaWbLogin, m_SinaWbState);
-		PaintThirdPartyBtn(dc, m_ilQQWbLogin, m_rcQQWbLogin, m_QQWbState);
+		//PaintThirdPartyBtn(dc, m_ilQQLogin, m_rcQQLogin, m_QQState);
+		//PaintThirdPartyBtn(dc, m_ilSinaWbLogin, m_rcSinaWbLogin, m_SinaWbState);
+		//PaintThirdPartyBtn(dc, m_ilQQWbLogin, m_rcQQWbLogin, m_QQWbState);
 		PaintThirdPartyBtn(dc, m_ilLogin, m_rcLogin, m_LoginState);
 
 		DrawVertialLine(dc);
@@ -208,7 +211,7 @@ public:
 	}
 	LRESULT OnEraseBkgnd(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 	{
-		tolog(_T("in parent erase."));
+		//tolog(_T("in parent erase."));
 		bHandled = TRUE;
 		
 		if (lParam != 0)
@@ -229,7 +232,13 @@ public:
 	LRESULT OnCreate(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 	LRESULT OnDestroyWindow(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 	{
+		if (m_shadow.IsWindow())
+		{
+			m_shadow.DestroyWindow();
+		}
+		//
 		PostQuitMessage(0);
+
 		return 0;
 	}
 	void CreateFont(CFont& font)
@@ -258,11 +267,15 @@ public:
 	LRESULT OnMouseMove(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 	LRESULT OnMouseLeave(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 	LRESULT OnLButtonDown(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	LRESULT OnLButtonUp(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 	LRESULT OnLButtonDblClk(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 	LRESULT OnParentDraw(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
-	void OnPasswordFocus(HWND hCtl);
-	void OnPasswordKillFocus(HWND hCtl);
 	LRESULT OnListBeginDrag(int nID, LPNMHDR lpnm, BOOL& bHandled);
+	LRESULT OnSize(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	LRESULT OnSizing(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	LRESULT OnMove(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	LRESULT OnMoving(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	LRESULT OnShowWindow(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 protected:
 	void DrawMinBox();
 	void DrawMaxBox();
@@ -312,7 +325,10 @@ public:
 	void DrawDBufferLink(CMyDBufferHyperLink& hl, CRect rc, LPCTSTR lpszLabel, LPCTSTR lpszURL, DWORD dwLinkExStyle);
 	void DrawVertialLine(CDCHandle& dc);
 	void DrawUI();
-	void RetWindowRgn();
+	void ResetWindowRgn();
+	void OnPasswordFocus(HWND hCtl);
+	void OnPasswordKillFocus(HWND hCtl);
+	
 private:
 	COLORREF m_clrBk;
 	CFont m_font;
@@ -379,9 +395,10 @@ private:
 	ButtonState m_LoginState;
 	CRect m_rcLogin;
 	CImageList m_ilLogin;
-	
 	//
 	CPen m_pen;
+	//
+	CShadowWindow m_shadow;
 public:
 
 };
