@@ -90,7 +90,16 @@ LRESULT CMyWindow::OnCreate(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHand
 	
 	SetWindowPos(0, 0, 0, 600, 450, SWP_NOMOVE);
 	//
-	
+	CString strSkinPath = GetAppPath() + _T("/image/");
+	HICON hIcon = (HICON)LoadImage(NULL, strSkinPath + _T("wiz.ico"), IMAGE_ICON, 16, 16, LR_LOADFROMFILE);
+
+	if (hIcon)
+	{
+		SetIcon(hIcon);
+		SetIcon(hIcon, FALSE);
+	}
+
+	//SetIcon(m_icon);
 
 	m_rcClient = rect;
 	//

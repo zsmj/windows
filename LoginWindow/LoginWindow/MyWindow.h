@@ -140,10 +140,10 @@ public:
 		//MESSAGE_HANDLER(WM_KEYUP, OnKeyUp);
 		MESSAGE_HANDLER(WM_LBUTTONUP, OnLButtonUp)
 		MESSAGE_HANDLER(WM_LBUTTONDBLCLK, OnLButtonDblClk)
-		MESSAGE_HANDLER(WM_SIZE, OnSize)
-		MESSAGE_HANDLER(WM_SIZING, OnSizing)
-		MESSAGE_HANDLER(WM_MOVE, OnMove)
-		MESSAGE_HANDLER(WM_MOVING, OnMoving)
+		//MESSAGE_HANDLER(WM_SIZE, OnSize)
+		//MESSAGE_HANDLER(WM_SIZING, OnSizing)
+		//MESSAGE_HANDLER(WM_MOVE, OnMove)
+		//MESSAGE_HANDLER(WM_MOVING, OnMoving)
 		MESSAGE_HANDLER(WM_ERASEBKGND, OnEraseBkgnd)
 		MESSAGE_HANDLER(WM_NCHITTEST, OnNcHitTest)
 		MESSAGE_HANDLER(WM_CTLCOLOREDIT, OnCtlColorEdit)
@@ -165,7 +165,6 @@ public:
 	{
 		//tolog(_T("WM_PAINT in parent..."));
 		ATLASSERT(m_bkgnd.IsNull() == NULL);
-
 
 		dc.SelectFont(m_miniFont);
 		//
@@ -411,6 +410,8 @@ private:
 	CShadowWindow m_shadow;
 	//
 	std::queue<CWindow* > m_queChildTab;
+	//
+	CImage m_icon;
 public:
 
 };
