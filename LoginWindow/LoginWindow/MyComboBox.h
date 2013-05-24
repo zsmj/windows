@@ -143,7 +143,6 @@ public:
 	LRESULT OnCommand(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 	HWND Create(HWND hParent, RECT& rc, LPCTSTR lpszWindowName, DWORD dwStyle, DWORD dwExStyle, UINT nMenuOrID);
 private:
-
 	void SetListBoxPos();
 	void ModifyListBoxProperty();
 	void ModifyEditProperty();
