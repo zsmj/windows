@@ -6,12 +6,12 @@ class CMyComboBox
 public:
 	CMyComboBox()
 	{
-		m_rcDropDown.left = 220;
-		m_rcDropDown.top = 0;
-		m_rcDropDown.right = 240;
-		m_rcDropDown.bottom = 36;
+		//m_rcDropDown.left = 220;
+		//m_rcDropDown.top = 0;
+		//m_rcDropDown.right = 240;
+		//m_rcDropDown.bottom = 36;
 
-		m_bkColor = RGB(233, 242, 247);
+		m_bkColor = RGB(233, 0, 0);//242, 247);
 		m_itemBrush.CreateSolidBrush(m_bkColor);
 		
 		m_bkHoverColor = RGB(218, 231, 242);
@@ -20,12 +20,13 @@ public:
 		m_strSkinPath = GetAppPath() + _T("/image/");
 		//m_comboBkBrush.CreateSolidBrush(RGB(233, 242, 247));
 
-		//m_editBkBrush.CreateSolidBrush(RGB(239, 247, 253));
+		//m_editBkNormalBrush.CreateSolidBrush(RGB(239, 247, 253));
 		m_imgDropDown.Load(m_strSkinPath + _T("Btn_User_Down.png"));
-
 		m_nHeightListTop = 2;
+		//
 		m_editBkNormal.Load(m_strSkinPath + _T("Text_Login_User_Normal.png"));
-		m_editBkBrush.CreatePatternBrush(m_editBkNormal);
+		m_editBkNormalBrush.CreatePatternBrush(m_editBkNormal);
+		//
 		m_editBkFocus.Load(m_strSkinPath + _T("Text_Login_User_Focus.png"));
 		m_editBkFocusBrush.CreatePatternBrush(m_editBkFocus);
 		
@@ -44,7 +45,9 @@ public:
 		MESSAGE_HANDLER(WM_CTLCOLOREDIT, OnCtlColorEdit)
 		MESSAGE_HANDLER(WM_MOUSEMOVE, OnMouseMove)
 		MESSAGE_HANDLER(WM_COMMAND, OnCommand)
-		MESSAGE_HANDLER(OCM_COMMAND, OnCommand)
+		COMMAND_CODE_HANDLER(CBN_SETFOCUS, OnSetFocus)
+		REFLECTED_COMMAND_CODE_HANDLER(CBN_SETFOCUS, OnSetFocus)
+		//MESSAGE_HANDLER(OCM_COMMAND, OnCommand)
 	END_MSG_MAP()
 	LRESULT OnCreate(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 	{
@@ -68,7 +71,7 @@ public:
 			dc.FillSolidRect(rc, RGB(233, 242, 247));
 		}
 
-		m_imgDropDown.Draw(dc, m_rcDropDown);
+		m_imgDropDown.Draw(dc, rc.right - m_imgDropDown.GetWidth(), rc.top);
 		
 		return 1;
 	}
@@ -126,7 +129,7 @@ public:
 		{
 			SetListBoxPos();
 		}
-		return (LRESULT)::CreateSolidBrush(m_bkColor);
+		return (LRESULT)(HBRUSH)m_itemBrush;//(LRESULT)::CreateSolidBrush(m_bkColor);
 	}
 	LRESULT OnMouseMove(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 	{
@@ -141,11 +144,12 @@ public:
 	LRESULT OnCtlColorEdit(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 	LRESULT OnMeasureItem(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 	LRESULT OnCommand(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	LRESULT OnSetFocus(WORD wCode, WORD wID, HWND hWndCombo, BOOL& bHandled);
 	HWND Create(HWND hParent, RECT& rc, LPCTSTR lpszWindowName, DWORD dwStyle, DWORD dwExStyle, UINT nMenuOrID);
 private:
 	void SetListBoxPos();
-	void ModifyListBoxProperty();
-	void ModifyEditProperty();
+	void ModifyListBox();
+	void ModifyEdit();
 public:
 	CBrush m_haveTextBrush;
 	CImage m_editBkNormal;
@@ -163,11 +167,10 @@ public:
 	CBrush m_itemBrush;
 	COLORREF m_bkHoverColor;
 	CBrush m_itemBkBrush;
-	CBrush m_editBkBrush;
 	//
 	CFont m_font;
 	CImage m_imgDropDown;
-	CRect m_rcDropDown;
+	//CRect m_rcDropDown;
 	
 	CString m_strSkinPath;
 	int m_nHeightListTop;

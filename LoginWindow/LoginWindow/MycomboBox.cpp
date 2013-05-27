@@ -28,10 +28,10 @@ LRESULT CMyComboBox::OnCtlColorEdit(UINT uMsg, WPARAM wParam, LPARAM lParam, BOO
 	
 		GetComboBoxInfo(&info);
 		m_list = info.hwndList;
-		ModifyListBoxProperty();
+		ModifyListBox();
 
 		m_edit = info.hwndItem;
-		ModifyEditProperty();
+		ModifyEdit();
 	}
 	tolog(_T("combo color edit."));
 
@@ -48,7 +48,7 @@ LRESULT CMyComboBox::OnCtlColorEdit(UINT uMsg, WPARAM wParam, LPARAM lParam, BOO
 		return (LRESULT)(HBRUSH)m_editBkFocusBrush;
 	}
 	
-	return (LRESULT)(HBRUSH)m_editBkBrush;
+	return (LRESULT)(HBRUSH)m_editBkNormalBrush;
 }
 LRESULT CMyComboBox::OnMeasureItem(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
@@ -74,7 +74,7 @@ LRESULT CMyComboBox::OnCommand(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bH
 	
 	if (uMsg == OCM_COMMAND)
 	{
-		//tolog(_T("in ocm_command"));
+		tolog(_T("in ocm_command"));
 	}
 	HWND hWnd = (HWND)lParam;
 	tolog(StringFormat1(_T("in combo command, wcode: %1"), Int2Str(HIWORD(wParam))));
@@ -104,23 +104,12 @@ LRESULT CMyComboBox::OnCommand(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bH
 
 			::PostMessage(GetParent(), WM_SWITCH_FOCUS, 0, 0);
 			break;
-		case CBN_SETFOCUS:
-			dcEdit.FillRect(rcEdit, m_editBkFocusBrush);
-			//
-			
-			dc.FillSolidRect(rcCombo, RGB(255, 255, 255));
-			m_imgDropDown.Draw(dc, m_rcDropDown);
-
-			m_bFocus = TRUE;
-			m_bTransparent = TRUE;
-			tolog(_T("CBN_SETFOCUS"));
-			break;
 		case CBN_KILLFOCUS:
 			
 			dc.FillSolidRect(rcEdit, RGB(233, 242, 247));
 			if (strEdit.IsEmpty())
 			{
-				dcEdit.FillRect(rcEdit, m_editBkBrush);
+				dcEdit.FillRect(rcEdit, m_editBkNormalBrush);
 				m_bTransparent = FALSE;
 			}
 			else 
@@ -129,12 +118,12 @@ LRESULT CMyComboBox::OnCommand(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bH
 				m_bTransparent = TRUE;
 			}
 			m_bFocus = FALSE;
-			tolog(_T("CBN_KILLFOCUS"));
+			//tolog(_T("CBN_KILLFOCUS"));
 			break;
 		case CBN_EDITUPDATE:
 			
 			dc.FillSolidRect(rcCombo, RGB(255, 255, 255));
-			m_imgDropDown.Draw(dc, m_rcDropDown);
+			m_imgDropDown.Draw(dc, rcCombo.right - m_imgDropDown.GetWidth(), rcCombo.top);
 			
 			if (strEdit.IsEmpty())
 			{
@@ -144,10 +133,33 @@ LRESULT CMyComboBox::OnCommand(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bH
 			{
 				m_bTransparent = FALSE;
 			}
-			tolog(_T("CBN_EDITUPDATE"));
+			//tolog(_T("CBN_EDITUPDATE"));
 		}
 	}
 	
+	return 0;
+}
+LRESULT CMyComboBox::OnSetFocus(WORD wCode, WORD wID, HWND hWndCombo, BOOL& bHandled)
+{
+	if (m_edit.IsWindow())
+	{
+		CDC dc = ::GetDC(hWndCombo);
+		CRect rcCombo;
+		GetClientRect(rcCombo);
+		//
+		CDC dcEdit = m_edit.GetDC();
+		CRect rcEdit;
+		m_edit.GetRect(rcEdit);
+		//
+		dcEdit.FillRect(rcEdit, m_editBkFocusBrush);
+		//
+		dc.FillSolidRect(rcCombo, RGB(255, 255, 255));
+		//
+		m_bFocus = TRUE;
+		m_bTransparent = TRUE;
+		tolog(_T("CBN_SETFOCUS"));
+	}
+
 	return 0;
 }
 void CMyComboBox::SetListBoxPos()
@@ -162,7 +174,7 @@ void CMyComboBox::SetListBoxPos()
 	m_list.SetWindowPos(0, pt.x, pt.y, 0, 0, SWP_NOACTIVATE | SWP_NOZORDER | SWP_NOSIZE);
 	
 }
-void CMyComboBox::ModifyListBoxProperty()
+void CMyComboBox::ModifyListBox()
 {
 	if (m_list.IsWindow())
 	{
@@ -170,7 +182,7 @@ void CMyComboBox::ModifyListBoxProperty()
 		m_list.ModifyStyle(WS_BORDER, 0);
 	}
 }
-void CMyComboBox::ModifyEditProperty()
+void CMyComboBox::ModifyEdit()
 {
 	m_edit.SetFont(m_font);
 	m_edit.SetWindowPos(0, 3, 8, 215, 20, SWP_NOACTIVATE | SWP_NOZORDER);

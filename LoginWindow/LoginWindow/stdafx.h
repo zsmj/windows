@@ -26,27 +26,6 @@ extern CAppModule _Module;
 
 #include "misc.h"
 
-typedef CWinTraits<WS_CHILD | WS_VISIBLE > CMyEditTraits;
-
-class CWizEditBase
-	: public CWindowImpl<CWizEditBase, CEdit, CMyEditTraits>
-{
-public:
-	DECLARE_WND_CLASS(_T("Wiz Edit"));
-
-	BEGIN_MSG_MAP(CWizEditBase)
-	END_MSG_MAP()
-	
-};
-class CTestEdit
-	: public CWindowImpl<CTestEdit, CEdit>
-{
-public:
-
-};
-
-
-
 
 
 //#if defined _M_IX86

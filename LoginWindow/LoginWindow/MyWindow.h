@@ -12,6 +12,7 @@ const UINT WM_SWITCH_FOCUS = ::RegisterWindowMessage(_T("WM_SWITCH_FOCUS"));
 #include "MyDBufferHyperLink.h"
 #include "MyComboBox.h"
 #include "ShadowWindow.h"
+#include "MyEdit.h"
 
 
 typedef CWinTraits<WS_POPUPWINDOW> CMyWinTraits;
@@ -70,7 +71,7 @@ public:
 		m_rcComboUserName.left = 36;
 		m_rcComboUserName.top = 120;
 		m_rcComboUserName.right = 275;
-		m_rcComboUserName.bottom = 400;
+		m_rcComboUserName.bottom = 200;
 
 		m_rcPassword.left = 40;
 		m_rcPassword.top = 200;
@@ -140,16 +141,16 @@ public:
 		//MESSAGE_HANDLER(WM_KEYUP, OnKeyUp);
 		MESSAGE_HANDLER(WM_LBUTTONUP, OnLButtonUp)
 		MESSAGE_HANDLER(WM_LBUTTONDBLCLK, OnLButtonDblClk)
-		//MESSAGE_HANDLER(WM_SIZE, OnSize)
-		//MESSAGE_HANDLER(WM_SIZING, OnSizing)
-		//MESSAGE_HANDLER(WM_MOVE, OnMove)
-		//MESSAGE_HANDLER(WM_MOVING, OnMoving)
+		MESSAGE_HANDLER(WM_SIZE, OnSize)
+		MESSAGE_HANDLER(WM_SIZING, OnSizing)
+		MESSAGE_HANDLER(WM_MOVE, OnMove)
+		MESSAGE_HANDLER(WM_MOVING, OnMoving)
 		MESSAGE_HANDLER(WM_ERASEBKGND, OnEraseBkgnd)
 		MESSAGE_HANDLER(WM_NCHITTEST, OnNcHitTest)
 		MESSAGE_HANDLER(WM_CTLCOLOREDIT, OnCtlColorEdit)
-		MESSAGE_HANDLER(WM_CTLCOLORSTATIC, OnCtlColorStatic)
-		MESSAGE_HANDLER(WM_CTLCOLORBTN, OnCtlColorBtn)
-		MESSAGE_HANDLER(WM_CTLCOLORBTN, OnCtlColorBtn)
+		//MESSAGE_HANDLER(WM_CTLCOLORSTATIC, OnCtlColorStatic)
+		//MESSAGE_HANDLER(WM_CTLCOLORBTN, OnCtlColorBtn)
+		//MESSAGE_HANDLER(WM_CTLCOLORBTN, OnCtlColorBtn)
 		//MESSAGE_HANDLER(WM_DRAWITEM, OnDrawItem);
 		MESSAGE_HANDLER(WM_DBUFFER_PARENT_DRAWBACKGRAND, OnParentDraw)
 		MESSAGE_HANDLER(WM_SHOWWINDOW, OnShowWindow)
@@ -351,11 +352,13 @@ private:
 	CRect m_rcCaption;
 	//
 	CEdit m_editUserName;
+	//
 	CRect m_rcUserName;
 	BOOL m_bDropDownShow;
 
 	CRect m_rcPassword;
-	CEdit m_editPassword;
+	//CEdit m_editPassword;
+	CMyEdit m_editPassword;
 	CRect m_rcEditBk;
 	CRect m_rcDropDown;
 	CRect m_rcDropDownList;
@@ -376,6 +379,8 @@ private:
 	//
 	CImageList m_editil;
 	CImage m_editbkimg;
+	//
+	
 	
 
 	CMyDBufferHyperLink m_linkReg;

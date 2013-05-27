@@ -281,6 +281,9 @@ void CMyWindow::DrawEdit(CEdit& edit, CRect rc, UINT nID, DWORD dwStyle = 0)
 
 	DWORD dwComStyle = WS_CHILD | WS_VISIBLE | ES_AUTOHSCROLL;
 	dwComStyle |= dwStyle;
+	//
+
+
 	edit.Create(m_hWnd, rc, NULL, dwComStyle, 0, nID);
 	edit.SetFont(m_font);
 
@@ -290,10 +293,19 @@ void CMyWindow::DrawEdit(CEdit& edit, CRect rc, UINT nID, DWORD dwStyle = 0)
 }
 void CMyWindow::DrawAllEdit()
 {
-	
 	//DrawEdit(m_editUserName, m_rcUserName, IDC_EDIT_USERNAME);
 
-	DrawEdit(m_editPassword, m_rcPassword, IDC_EDIT_PASSWORD, ES_PASSWORD);
+	//DrawEdit(m_editPassword, m_rcPassword, IDC_EDIT_PASSWORD, ES_PASSWORD);
+	//m_editPassword.SetPasswordChar(_T('*'));
+
+	m_editPassword.SetBkgndNormalBrush(::CreatePatternBrush(m_imgLoginPass));
+	//
+	m_editPassword.SetBkgndFocusBrush(::CreatePatternBrush(m_imgLoginPassFocus));
+	//
+	m_editPassword.SetHaveTextBrush(::CreateSolidBrush(RGB(239, 247, 253)));
+	//
+	DWORD dwStyle = WS_CHILD | WS_VISIBLE | ES_AUTOHSCROLL | ES_PASSWORD;
+	m_editPassword.Create(m_hWnd, m_rcPassword, NULL, dwStyle, 0, IDC_EDIT_USERNAME);
 	m_editPassword.SetPasswordChar(_T('*'));
 
 	m_queChildTab.push(&m_editPassword);
@@ -331,6 +343,7 @@ LRESULT CMyWindow::OnCommand(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHan
 	//	SetEditState(TRUE);
 	//	Invalidate();
 	//}
+#if 0
 	if (wID == IDC_EDIT_PASSWORD)
 	{
 		CDC dc = GetDC();
@@ -387,6 +400,7 @@ LRESULT CMyWindow::OnCommand(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHan
 			break;
 		}
 	}
+#endif 
 	CString strUserName;
 	int nSelIndex = -1;
 	if (wID == IDC_LIST_USERNAME)
@@ -410,19 +424,19 @@ LRESULT CMyWindow::OnCommand(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHan
 			break;
 		}
 	}
-	if (wID == IDC_COMBO_USERNAME)
-	{
-		if (wCode == CBN_DROPDOWN)
-		{
-			tolog(_T("cbn_dropdown in parent."));
-			//::SendMessage((HWND)lParam, OCM__BASE + uMsg, wParam, lParam);
-		}
-		if (wCode == CBN_SELENDOK)
-		{
-			tolog(_T("parent CBN_SELENDOK"));
-		}
-		
-	}
+	//if (wID == IDC_COMBO_USERNAME)
+	//{
+	//	if (wCode == CBN_DROPDOWN)
+	//	{
+	//		tolog(_T("cbn_dropdown in parent."));
+	//		//::SendMessage((HWND)lParam, OCM__BASE + uMsg, wParam, lParam);
+	//	}
+	//	if (wCode == CBN_SELENDOK)
+	//	{
+	//		tolog(_T("parent CBN_SELENDOK"));
+	//	}
+	//	
+	//}
 	bHandled = FALSE;
 	return 0;
 }
@@ -435,6 +449,7 @@ LRESULT CMyWindow::OnCtlColorEdit(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL&
 	{
 		dc.SetBkMode(TRANSPARENT);
 	}
+#if 0
 	if ((HWND)lParam == GetDlgItem(IDC_EDIT_PASSWORD))
 	{
 		tolog(_T("on edit IDC_EDIT_PASSWORD ctl color."));
@@ -455,12 +470,12 @@ LRESULT CMyWindow::OnCtlColorEdit(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL&
 		}
 		else 
 		{
-			if (m_bEditInit)
-			{
-				hbr = ::CreatePatternBrush(m_imgLoginPass);
-				m_bEditInit = FALSE;
-			}
-			else 
+			//if (m_bEditInit)
+			//{
+			//	hbr = ::CreatePatternBrush(m_imgLoginPass);
+			//	m_bEditInit = FALSE;
+			//}
+			//else 
 			{
 				if (strText.IsEmpty())
 				{
@@ -473,6 +488,7 @@ LRESULT CMyWindow::OnCtlColorEdit(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL&
 			}
 		}
 	}
+#endif 
 	if ((HWND)lParam == GetDlgItem(IDC_EDIT_USERNAME))
 	{
 		//hbr = ::CreatePatternBrush(m_editbkimg);
@@ -483,7 +499,7 @@ LRESULT CMyWindow::OnCtlColorEdit(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL&
 		tolog(_T("on edit IDC_COMBO_USERNAME color."));
 		hbr = ::CreateSolidBrush(RGB(255, 255, 255));
 	}
-	
+	bHandled = FALSE;
 	return (LRESULT)hbr;
 }
 void CMyWindow::DrawListBox()
@@ -604,7 +620,7 @@ LRESULT CMyWindow::OnListBeginDrag(int nID, LPNMHDR lpnm, BOOL& bHandled)
 }
 void CMyWindow::DrawComboBoxDrowDownImg(CDCHandle dc)
 {
-	m_imgDropDown.Draw(dc, m_rcComboDropDown);
+	//m_imgDropDown.Draw(dc, m_rcComboDropDown);
 }
 LRESULT CMyWindow::OnDrawItem(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
@@ -623,7 +639,7 @@ void CMyWindow::DrawComboBox()
 
 	m_comboUserName.Create(m_hWnd, rc, 0, dwStyle, 0, IDC_COMBO_USERNAME);
 
-	m_comboUserName.SetFont(m_font);
+	//m_comboUserName.SetFont(m_font);
 	m_comboUserName.AddString(_T("example@wiz.cn"));
 	m_comboUserName.AddString(_T("example@qq.cn"));
 	m_comboUserName.AddString(_T("example@gmail.com"));

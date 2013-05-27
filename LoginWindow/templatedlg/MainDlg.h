@@ -4,16 +4,24 @@
 
 #pragma once
 
-class CMainDlg : public CAxDialogImpl<CMainDlg>
+class CMainDlg
+	: public CAxDialogImpl<CMainDlg>
+	, public CWinDataExchange<CMainDlg>
 {
 public:
 	enum { IDD = IDD_MAINDLG };
 
+	BEGIN_DDX_MAP(CMainDlg)
+		DDX_TEXT(IDC_USERNAME_TEST, m_strUserName)
+	END_DDX_MAP()
+	//
 	BEGIN_MSG_MAP(CMainDlg)
 		MESSAGE_HANDLER(WM_INITDIALOG, OnInitDialog)
+		
 		COMMAND_ID_HANDLER(ID_APP_ABOUT, OnAppAbout)
 		COMMAND_ID_HANDLER(IDOK, OnOK)
 		COMMAND_ID_HANDLER(IDCANCEL, OnCancel)
+		COMMAND_ID_HANDLER(IDC_TEST, OnTest)
 	END_MSG_MAP()
 
 // Handler prototypes (uncomment arguments if needed):
@@ -25,6 +33,12 @@ public:
 	LRESULT OnAppAbout(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
 	LRESULT OnOK(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
 	LRESULT OnCancel(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
+	LRESULT OnTest(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
+	{
+		DoDataExchange(true);
+		MessageBox(m_strUserName);
+		return 0;
+	}
 private:
 	static HGLOBAL CreateDlgTemplate()
 	{
@@ -34,7 +48,7 @@ private:
 		//
 		LPDLGTEMPLATE lpdt = (LPDLGTEMPLATE)GlobalLock(hgbl);
 		// Define a dialog box.
-		lpdt->style = DS_SETFONT | DS_FIXEDSYS | WS_POPUP | WS_THICKFRAME;
+		lpdt->style = DS_SETFONT | DS_FIXEDSYS | WS_POPUP;
 		lpdt->cdit = 0;         // Number of controls
 		lpdt->x  = 0;  lpdt->y  = 0;
 		lpdt->cx = 100; lpdt->cy = 100;
@@ -82,5 +96,9 @@ public:
 		//
 		return ret; 
 	}
+private:
+	CButton m_btnTest;
+	CEdit m_editUser;
 
+	CString m_strUserName;
 };

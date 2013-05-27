@@ -136,7 +136,7 @@ public:
 
 		//dcMem.FillSolidRect(rc, RGB(255, 255, 255));
 		//m_imgTest.Draw(dcMem, rc);
-		img.Draw(dcMem, rc);
+		//img.Draw(dcMem, rc);
 		
 		int nWidth = m_imgTest.GetWidth();
 		int nHeight = m_imgTest.GetHeight();

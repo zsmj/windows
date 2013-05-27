@@ -50,6 +50,9 @@ public:
 			IMAGE_ICON, ::GetSystemMetrics(SM_CXSMICON), ::GetSystemMetrics(SM_CYSMICON), LR_DEFAULTCOLOR);
 		SetIcon(hIconSmall, FALSE);
 
+
+		
+
 		// register object for message filtering and idle updates
 		CMessageLoop* pLoop = _Module.GetMessageLoop();
 		ATLASSERT(pLoop != NULL);

@@ -8,6 +8,8 @@
 #define IDR_MAINFRAME				128
 //#define IDR_TEMPLATEDLGTYPE	129
 #define IDD_MAINDLG				129
+#define IDC_TEST                    130
+#define IDC_USERNAME_TEST           131	
 
 // Next default values for new objects
 // 

@@ -20,6 +20,25 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 		IMAGE_ICON, ::GetSystemMetrics(SM_CXSMICON), ::GetSystemMetrics(SM_CYSMICON), LR_DEFAULTCOLOR);
 	SetIcon(hIconSmall, FALSE);
 
+	CRect rc;
+	rc.left = 10;
+	rc.top = 10;
+	rc.right = 50;
+	rc.bottom = 50;
+
+	DWORD dwStyle = WS_CHILD | WS_VISIBLE;
+
+	m_btnTest.Create(m_hWnd, rc, NULL, dwStyle, 0, IDC_TEST);
+	m_btnTest.SetWindowText(_T("test"));
+
+	CRect rcUser;
+	rcUser.left = 10;
+	rcUser.top = 70;
+	rcUser.right = 100;
+	rcUser.bottom = 100;
+
+	m_editUser.Create(m_hWnd, rcUser, NULL, dwStyle, 0, IDC_USERNAME_TEST);
+
 	return TRUE;
 }
 
