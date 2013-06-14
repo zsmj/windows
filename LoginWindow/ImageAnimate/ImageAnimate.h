@@ -1,0 +1,1 @@
+// ImageAnimate.h

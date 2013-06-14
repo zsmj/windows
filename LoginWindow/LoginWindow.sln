@@ -19,6 +19,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "templatedlg", "templatedlg\
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "testtab", "testtab\testtab.vcproj", "{ADDC1CEE-CC2A-4C2B-8B40-CA9CCA9F90C0}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ImageAnimate", "ImageAnimate\ImageAnimate.vcproj", "{3D25B2FE-A17E-4F0C-B4D5-B64FA4740D88}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -61,6 +63,10 @@ Global
 		{ADDC1CEE-CC2A-4C2B-8B40-CA9CCA9F90C0}.Debug|Win32.Build.0 = Debug|Win32
 		{ADDC1CEE-CC2A-4C2B-8B40-CA9CCA9F90C0}.Release|Win32.ActiveCfg = Release|Win32
 		{ADDC1CEE-CC2A-4C2B-8B40-CA9CCA9F90C0}.Release|Win32.Build.0 = Release|Win32
+		{3D25B2FE-A17E-4F0C-B4D5-B64FA4740D88}.Debug|Win32.ActiveCfg = Debug|Win32
+		{3D25B2FE-A17E-4F0C-B4D5-B64FA4740D88}.Debug|Win32.Build.0 = Debug|Win32
+		{3D25B2FE-A17E-4F0C-B4D5-B64FA4740D88}.Release|Win32.ActiveCfg = Release|Win32
+		{3D25B2FE-A17E-4F0C-B4D5-B64FA4740D88}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
