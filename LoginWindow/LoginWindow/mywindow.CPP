@@ -81,7 +81,6 @@ LRESULT CMyWindow::OnCreate(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHand
 	lStyle |= WS_CLIPCHILDREN;
 	lStyle &= ~WS_BORDER;
 	SetWindowLong(GWL_STYLE, lStyle);
-	
 	//
 	CRect rect;
 	GetClientRect(&rect);
@@ -106,6 +105,8 @@ LRESULT CMyWindow::OnCreate(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHand
 	DrawMinBox();
 	//
 	DrawMaxBox();
+	//
+	DrawContentButton();
 
 	//
 	DrawAllLink();
@@ -118,9 +119,9 @@ LRESULT CMyWindow::OnCreate(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHand
 	DrawAllEdit();
 
 	
-	ResetWindowRgn();
+	//ResetWindowRgn();
 	
-	m_shadow.Create(m_hWnd, 40);
+	//m_shadow.Create(m_hWnd, 40);
 
 	//DrawUI();
 
@@ -275,6 +276,36 @@ void CMyWindow::DrawMaxBox()
 	m_btnMaxBox.SetImageList(il);
 	m_btnMaxBox.SetImages(0, 2, 1);
 	//m_btnMaxBox.SetBackground(RGB(72, 169, 220));
+}
+void CMyWindow::DrawContentButton()
+{
+	CImage img;
+	CString strSkinPath = GetAppPath() + _T("/image/");
+	img.Load(strSkinPath + _T("btn_content.png"));
+	int nWidth = img.GetWidth() / 3;
+	int nHeight = img.GetHeight();
+	CImageList il;
+	il.Create(nWidth, nHeight, ILC_COLOR32 | ILC_MASK, 0, 0);
+	il.Add(img);
+
+	CRect rc;
+	rc.left = 340;
+	rc.top = 20;
+	rc.right = 360;
+	rc.bottom = 40;
+
+	rc.right = rc.left + img.GetWidth() / 3;
+	rc.bottom = rc.top + img.GetHeight();
+
+	m_btnText.Create(m_hWnd, rc, 0, 0, 0, IDC_CLOSE);
+	m_btnText.SetToolTip(_T("close"));
+	m_btnText.SetBitmapButtonExtendedStyle(BMPBTN_HOVER);
+	m_btnText.SetImageList(il);
+	m_btnText.SetImages(0, 2, 1);
+	//
+	m_btnText.SetWindowText(_T("µÇÂ¼"));
+
+	
 }
 void CMyWindow::DrawEdit(CEdit& edit, CRect rc, UINT nID, DWORD dwStyle = 0)
 {
@@ -690,7 +721,6 @@ LRESULT CMyWindow::OnMouseMove(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bH
 	{
 		m_QQState = HOVER;
 		InvalidateRect(m_rcQQLogin);
-
 	}
 	if (HitTestInSinaWbLogin(pt))
 	{
@@ -707,8 +737,8 @@ LRESULT CMyWindow::OnMouseMove(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bH
 	{
 		m_LoginState = HOVER;
 		InvalidateRect(m_rcLogin);
-
 	}
+
 	return 1;
 }
 LRESULT CMyWindow::OnMouseLeave(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)

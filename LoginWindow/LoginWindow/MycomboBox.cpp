@@ -39,7 +39,14 @@ LRESULT CMyComboBox::OnCtlColorEdit(UINT uMsg, WPARAM wParam, LPARAM lParam, BOO
 	GetWindowText(strEdit);
 	if (!strEdit.IsEmpty())
 	{
-		return (LRESULT)(HBRUSH)m_haveTextBrush;
+		if (m_bFocus)
+		{
+			return (LRESULT)(HBRUSH)::GetStockObject(WHITE_BRUSH);
+		}
+		else
+		{
+			return (LRESULT)(HBRUSH)m_haveTextBrush;
+		}
 	}
 
 	if (m_bTransparent)

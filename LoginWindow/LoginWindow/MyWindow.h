@@ -135,7 +135,7 @@ public:
 		MESSAGE_HANDLER(WM_CREATE, OnCreate)
 		MESSAGE_HANDLER(WM_DESTROY, OnDestroyWindow)
 		MESSAGE_HANDLER(WM_MOUSEMOVE, OnMouseMove)
-		MESSAGE_HANDLER(WM_MOUSEMOVE, OnMouseLeave)
+		MESSAGE_HANDLER(WM_MOUSELEAVE, OnMouseLeave)
 		MESSAGE_HANDLER(WM_LBUTTONDOWN, OnLButtonDown)
 		//MESSAGE_HANDLER(WM_NCLBUTTONUP, OnLButtonUp)
 		//MESSAGE_HANDLER(WM_KEYUP, OnKeyUp);
@@ -287,6 +287,7 @@ public:
 protected:
 	void DrawMinBox();
 	void DrawMaxBox();
+	void DrawContentButton();
 	void InitButton()
 	{
 		CString strSkinPath = GetAppPath() + _T("/image/");
@@ -417,6 +418,8 @@ private:
 	std::queue<CWindow* > m_queChildTab;
 	//
 	CImage m_icon;
+	//
+	CMyDBufferBitmapButton m_btnText;
 public:
 
 };

@@ -2,29 +2,39 @@
 //
 
 #include "stdafx.h"
+#include "uibase.h"
+#include <vector>
 
-class TEST
+class CBase
 {
 public:
-	~TEST()
+	void display()
 	{
-		printf("in ~Test\n");
+		printf("in cbase\n");
 	}
-public:
-	int m_nValue;
+	void test()
+	{
+		display();
+	}
 };
-void display(const TEST& t)
+class CDerived
+	: public CBase
 {
-	printf("in display, value: %d\n", t.m_nValue);
-}
+public:
+	void display()
+	{
+		printf("in derived\n");
+	}
+	void t()
+	{
+		CBase::test();
+	}
+};
+
 int _tmain(int argc, _TCHAR* argv[])
 {
-	TEST test;
-	test.m_nValue = 100;
-	display(test);
-
-
-
+	CDerived t;
+	t.t();
 	return 0;
 }
 

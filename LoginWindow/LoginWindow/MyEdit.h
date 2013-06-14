@@ -10,7 +10,7 @@ public:
 		m_bBkgndTransparent = FALSE;
 	}
 	BEGIN_MSG_MAP(CMyEdit)
-		MESSAGE_HANDLER(WM_CTLCOLOREDIT, OnClrColorEdit)
+		//MESSAGE_HANDLER(WM_CTLCOLOREDIT, OnClrColorEdit)
 		MESSAGE_HANDLER(OCM_CTLCOLOREDIT, OnClrColorEdit)
 		COMMAND_CODE_HANDLER(EN_SETFOCUS, OnSetFocus)
 		REFLECTED_COMMAND_CODE_HANDLER(EN_SETFOCUS, OnSetFocus)
@@ -28,8 +28,7 @@ public:
 		return CWindowImpl<CMyEdit, CEdit>::Create(hParent, rc, lpszWindowName, dwStyle, dwExStyle, nMenuOrID);
 	}
 	LRESULT OnClrColorEdit(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
-	{
-		
+	{	
 		tolog(_T("on edit IDC_EDIT_PASSWORD ctl color."));
 		CString strText;
 		CWindow wnd = (HWND)lParam;

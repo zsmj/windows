@@ -174,14 +174,8 @@ public:
 	{
 		m_rfBackground = rfBkgnd;
 	}
-	void ParentDrawBk(CDCHandle dc)
+	virtual void ParentDrawBk(CDCHandle dc)
 	{
-		CRect rc;
-		GetWindowRect(rc);
-		CWindow parent = GetParent();
-		parent.ScreenToClient(rc);
-
-		::SendMessage(parent, WM_DBUFFER_PARENT_DRAWBACKGRAND, (WPARAM)dc.m_hDC, (LPARAM)&rc);
 	}
 // Overrideables
 	void DoPaint(CDCHandle dc)
@@ -232,6 +226,13 @@ public:
 				dc.DrawFocusRect(&rect);
 			}
 		}
+		//
+		CRect rcClient;
+		GetClientRect(&rcClient);
+		CString strText;
+		GetWindowText(strText);
+		dc.SetBkMode(TRANSPARENT);
+		dc.DrawText(strText, strText.GetLength(), &rcClient, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 	}
 
 // Message map and handlers
@@ -577,4 +578,18 @@ public:
 	CMyDBufferBitmapButton(DWORD dwExtendedStyle = BMPBTN_AUTOSIZE, HIMAGELIST hImageList = NULL) : 
 		CMyDBufferBitmapButtonImpl<CMyDBufferBitmapButton>(dwExtendedStyle, hImageList)
 	{ }
+public:
+	void ParentDrawBk(CDCHandle dc)
+	{
+		int nState = dc.SaveDC();
+		//
+		CRect rc;
+		GetWindowRect(rc);
+		CWindow parent = GetParent();
+		parent.ScreenToClient(rc);
+
+		::SendMessage(parent, WM_DBUFFER_PARENT_DRAWBACKGRAND, (WPARAM)dc.m_hDC, (LPARAM)&rc);
+		//
+		dc.RestoreDC(nState);
+	}
 };

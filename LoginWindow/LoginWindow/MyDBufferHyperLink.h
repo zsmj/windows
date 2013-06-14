@@ -342,14 +342,8 @@ public:
 		hParent.InvalidateRect(rc);
 		hParent.UpdateWindow();
 	}
-	void ParentDrawBk(CDCHandle dc)
+	virtual void ParentDrawBk(CDCHandle dc)
 	{
-		CRect rc;
-		GetWindowRect(rc);
-		CWindow parent = GetParent();
-		parent.ScreenToClient(rc);
-
-		::SendMessage(GetParent(), WM_DBUFFER_PARENT_DRAWBACKGRAND, (WPARAM)dc.m_hDC, (LPARAM)&rc);
 	}
 // Message map and handlers
 	BEGIN_MSG_MAP(CMyHyperLinkImpl)
@@ -638,7 +632,8 @@ public:
 		if(m_bPaintLabel)
 		{
 			ATL::CWindow wnd = GetParent();
-			m_hFontNormal = wnd.GetFont();
+			if (m_hFontNormal == NULL)
+				m_hFontNormal = wnd.GetFont();
 			if(m_hFontNormal == NULL)
 				m_hFontNormal = (HFONT)::GetStockObject(SYSTEM_FONT);
 			if(m_hFontNormal != NULL && m_hFont == NULL)
@@ -713,8 +708,8 @@ public:
 				{
 					COLORREF clr = pT->_ParseColorString(szValue);
 					ATLASSERT(clr != CLR_INVALID);
-					if(clr != CLR_INVALID)
-						m_clrLink = clr;
+					//if(clr != CLR_INVALID)
+						//m_clrLink = clr;
 				}
 
 #if (_ATL_VER >= 0x0700)
@@ -728,8 +723,8 @@ public:
 				{
 					COLORREF clr = pT->_ParseColorString(szValue);
 					ATLASSERT(clr != CLR_INVALID);
-					if(clr != CLR_INVALID)
-						m_clrVisited = clr;
+					//if(clr != CLR_INVALID)
+						//m_clrVisited = clr;
 				}
 			}
 		}
@@ -1055,16 +1050,17 @@ public:
 class CMyDBufferHyperLink : public CMyDBufferHyperLinkImpl<CMyDBufferHyperLink>
 {
 public:
-	DECLARE_WND_SUPERCLASS(_T("WTL_HyperLink"), _T("static"));
+	//DECLARE_WND_SUPERCLASS(_T("WTL_HyperLink"), _T("static"));
 
 	void Init()
 	{
-		CMyDBufferHyperLinkImpl<CMyDBufferHyperLink>::Init();
 		m_clrLink = m_clrVisited = RGB(0, 255, 255);
-		
-		CreateFont(m_hFont, TRUE);
+		//CreateFont(m_hFont, TRUE);
 		CreateFont(m_hFontNormal, FALSE);
-
+		//
+		CMyDBufferHyperLinkImpl<CMyDBufferHyperLink>::Init();
+		//
+		
 	}
 	void CreateFont(HFONT& font, BOOL bUnderLine)
 	{
@@ -1086,5 +1082,14 @@ public:
 		}
 
 		font = ::CreateFontIndirectW(&ncm.lfMenuFont);
+	}
+	void ParentDrawBk(CDCHandle dc)
+	{
+		CRect rc;
+		GetWindowRect(rc);
+		CWindow parent = GetParent();
+		parent.ScreenToClient(rc);
+
+		::SendMessage(GetParent(), WM_DBUFFER_PARENT_DRAWBACKGRAND, (WPARAM)dc.m_hDC, (LPARAM)&rc);
 	}
 };
