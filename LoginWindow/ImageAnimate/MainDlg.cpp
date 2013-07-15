@@ -99,7 +99,15 @@ LRESULT CMainDlg::OnBnClickedRadio0(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*h
 	// TODO: Add your control notification handler code here
 	m_nShowIndex = 0;
 
-	Invalidate();
+	CSize szBmp;
+	m_arrayShow[0]->GetSize(szBmp);
+
+	CRect rc;
+	rc.left = 0;
+	rc.top = 0;
+	rc.right = szBmp.cx;
+	rc.bottom = szBmp.cy;
+	InvalidateRect(rc);
 	//UpdateWindow();
 
 	return 0;
@@ -110,7 +118,15 @@ LRESULT CMainDlg::OnBnClickedRadio1(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*h
 	// TODO: Add your control notification handler code here
 	m_nShowIndex = 1;
 	
-	Invalidate();
+	CSize szBmp;
+	m_arrayShow[0]->GetSize(szBmp);
+
+	CRect rc;
+	rc.left = 0;
+	rc.top = 0;
+	rc.right = szBmp.cx;
+	rc.bottom = szBmp.cy;
+	InvalidateRect(rc);
 	//UpdateWindow();
 
 	return 0;
@@ -121,7 +137,15 @@ LRESULT CMainDlg::OnBnClickedRadio2(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*h
 	// TODO: Add your control notification handler code here
 	m_nShowIndex = 2;
 
-	Invalidate();
+	CSize szBmp;
+	m_arrayShow[0]->GetSize(szBmp);
+
+	CRect rc;
+	rc.left = 0;
+	rc.top = 0;
+	rc.right = szBmp.cx;
+	rc.bottom = szBmp.cy;
+	InvalidateRect(rc);
 	//UpdateWindow();
 
 	return 0;

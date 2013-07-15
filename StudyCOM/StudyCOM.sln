@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "StudyCOM", "StudyCOM\StudyCOM.vcproj", "{172E2686-1429-4C71-BBE6-C3EFA5215677}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DictComp", "DictComp\DictComp.vcproj", "{EC9B51ED-6156-4C04-8FC4-C4EA02774115}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{172E2686-1429-4C71-BBE6-C3EFA5215677}.Debug|Win32.ActiveCfg = Debug|Win32
+		{172E2686-1429-4C71-BBE6-C3EFA5215677}.Debug|Win32.Build.0 = Debug|Win32
+		{172E2686-1429-4C71-BBE6-C3EFA5215677}.Release|Win32.ActiveCfg = Release|Win32
+		{172E2686-1429-4C71-BBE6-C3EFA5215677}.Release|Win32.Build.0 = Release|Win32
+		{EC9B51ED-6156-4C04-8FC4-C4EA02774115}.Debug|Win32.ActiveCfg = Debug|Win32
+		{EC9B51ED-6156-4C04-8FC4-C4EA02774115}.Debug|Win32.Build.0 = Debug|Win32
+		{EC9B51ED-6156-4C04-8FC4-C4EA02774115}.Release|Win32.ActiveCfg = Release|Win32
+		{EC9B51ED-6156-4C04-8FC4-C4EA02774115}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

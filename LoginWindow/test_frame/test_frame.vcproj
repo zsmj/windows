@@ -2,17 +2,13 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="testtab"
-	ProjectGUID="{ADDC1CEE-CC2A-4C2B-8B40-CA9CCA9F90C0}"
-	RootNamespace="testtab"
+	Name="test_frame"
+	ProjectGUID="{FFC9E088-57D1-4F1D-8EEC-F7E6C373815E}"
 	TargetFrameworkVersion="196613"
 	>
 	<Platforms>
 		<Platform
 			Name="Win32"
-		/>
-		<Platform
-			Name="x64"
 		/>
 	</Platforms>
 	<ToolFiles>
@@ -44,11 +40,11 @@
 				MkTypLibCompatible="false"
 				TargetEnvironment="1"
 				GenerateStublessProxies="true"
-				TypeLibraryName="$(IntDir)/testtab.tlb"
-				HeaderFileName="testtab.h"
+				TypeLibraryName="$(IntDir)/test_frame.tlb"
+				HeaderFileName="test_frame.h"
 				DLLDataFileName=""
-				InterfaceIdentifierFileName="testtab_i.c"
-				ProxyFileName="testtab_p.c"
+				InterfaceIdentifierFileName="test_frame_i.c"
+				ProxyFileName="test_frame_p.c"
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
@@ -128,11 +124,11 @@
 				MkTypLibCompatible="false"
 				TargetEnvironment="1"
 				GenerateStublessProxies="true"
-				TypeLibraryName="$(IntDir)/testtab.tlb"
-				HeaderFileName="testtab.h"
+				TypeLibraryName="$(IntDir)/test_frame.tlb"
+				HeaderFileName="test_frame.h"
 				DLLDataFileName=""
-				InterfaceIdentifierFileName="testtab_i.c"
-				ProxyFileName="testtab_p.c"
+				InterfaceIdentifierFileName="test_frame_i.c"
+				ProxyFileName="test_frame_p.c"
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
@@ -160,171 +156,6 @@
 				LinkIncremental="1"
 				SubSystem="2"
 				TargetMachine="1"
-			/>
-			<Tool
-				Name="VCALinkTool"
-			/>
-			<Tool
-				Name="VCManifestTool"
-			/>
-			<Tool
-				Name="VCXDCMakeTool"
-			/>
-			<Tool
-				Name="VCBscMakeTool"
-			/>
-			<Tool
-				Name="VCFxCopTool"
-			/>
-			<Tool
-				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCPostBuildEventTool"
-			/>
-		</Configuration>
-		<Configuration
-			Name="Debug|x64"
-			OutputDirectory="$(PlatformName)\$(ConfigurationName)"
-			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
-			ConfigurationType="1"
-			ATLMinimizesCRunTimeLibraryUsage="false"
-			CharacterSet="1"
-			>
-			<Tool
-				Name="VCPreBuildEventTool"
-			/>
-			<Tool
-				Name="VCCustomBuildTool"
-			/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"
-			/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
-			<Tool
-				Name="VCMIDLTool"
-				PreprocessorDefinitions="_DEBUG"
-				MkTypLibCompatible="false"
-				TargetEnvironment="3"
-				GenerateStublessProxies="true"
-				TypeLibraryName="$(IntDir)/testtab.tlb"
-				HeaderFileName="testtab.h"
-				DLLDataFileName=""
-				InterfaceIdentifierFileName="testtab_i.c"
-				ProxyFileName="testtab_p.c"
-			/>
-			<Tool
-				Name="VCCLCompilerTool"
-				Optimization="0"
-				PreprocessorDefinitions="WIN32;_WINDOWS;STRICT;_DEBUG"
-				MinimalRebuild="true"
-				BasicRuntimeChecks="3"
-				RuntimeLibrary="1"
-				UsePrecompiledHeader="2"
-				WarningLevel="3"
-				DebugInformationFormat="3"
-			/>
-			<Tool
-				Name="VCManagedResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="_DEBUG"
-				Culture="1033"
-				AdditionalIncludeDirectories="$(IntDir)"
-			/>
-			<Tool
-				Name="VCPreLinkEventTool"
-			/>
-			<Tool
-				Name="VCLinkerTool"
-				LinkIncremental="2"
-				GenerateDebugInformation="true"
-				SubSystem="2"
-				TargetMachine="17"
-			/>
-			<Tool
-				Name="VCALinkTool"
-			/>
-			<Tool
-				Name="VCManifestTool"
-			/>
-			<Tool
-				Name="VCXDCMakeTool"
-			/>
-			<Tool
-				Name="VCBscMakeTool"
-			/>
-			<Tool
-				Name="VCFxCopTool"
-			/>
-			<Tool
-				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCPostBuildEventTool"
-			/>
-		</Configuration>
-		<Configuration
-			Name="Release|x64"
-			OutputDirectory="$(PlatformName)\$(ConfigurationName)"
-			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
-			ConfigurationType="1"
-			ATLMinimizesCRunTimeLibraryUsage="true"
-			CharacterSet="1"
-			>
-			<Tool
-				Name="VCPreBuildEventTool"
-			/>
-			<Tool
-				Name="VCCustomBuildTool"
-			/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"
-			/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
-			<Tool
-				Name="VCMIDLTool"
-				PreprocessorDefinitions="NDEBUG"
-				MkTypLibCompatible="false"
-				TargetEnvironment="3"
-				GenerateStublessProxies="true"
-				TypeLibraryName="$(IntDir)/testtab.tlb"
-				HeaderFileName="testtab.h"
-				DLLDataFileName=""
-				InterfaceIdentifierFileName="testtab_i.c"
-				ProxyFileName="testtab_p.c"
-			/>
-			<Tool
-				Name="VCCLCompilerTool"
-				PreprocessorDefinitions="WIN32;_WINDOWS;STRICT;NDEBUG"
-				ExceptionHandling="0"
-				RuntimeLibrary="0"
-				UsePrecompiledHeader="2"
-				WarningLevel="3"
-				DebugInformationFormat="0"
-			/>
-			<Tool
-				Name="VCManagedResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="NDEBUG"
-				Culture="1033"
-				AdditionalIncludeDirectories="$(IntDir)"
-			/>
-			<Tool
-				Name="VCPreLinkEventTool"
-			/>
-			<Tool
-				Name="VCLinkerTool"
-				LinkIncremental="1"
-				SubSystem="2"
-				TargetMachine="17"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -383,29 +214,13 @@
 						UsePrecompiledHeader="1"
 					/>
 				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|x64"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="1"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|x64"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="1"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\testtab.cpp"
+				RelativePath=".\test_frame.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\testtabView.cpp"
+				RelativePath=".\test_frameView.cpp"
 				>
 			</File>
 		</Filter>
@@ -418,11 +233,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\MainFrm.h"
+				RelativePath=".\AppBar.h"
 				>
 			</File>
 			<File
-				RelativePath=".\MyTabCtrl.h"
+				RelativePath=".\MainFrm.h"
 				>
 			</File>
 			<File
@@ -434,7 +249,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\testtabView.h"
+				RelativePath=".\test_frameView.h"
 				>
 			</File>
 		</Filter>
@@ -443,11 +258,11 @@
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;jpg;jpeg;jpe;manifest"
 			>
 			<File
-				RelativePath=".\res\testtab.ico"
+				RelativePath=".\res\test_frame.ico"
 				>
 			</File>
 			<File
-				RelativePath=".\testtab.rc"
+				RelativePath=".\test_frame.rc"
 				>
 			</File>
 			<File

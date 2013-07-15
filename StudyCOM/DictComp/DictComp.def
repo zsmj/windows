@@ -1,0 +1,5 @@
+LIBRARY	"DictComp"
+
+EXPORTS
+	CreateObject @1
+	DllGetClassObject @2

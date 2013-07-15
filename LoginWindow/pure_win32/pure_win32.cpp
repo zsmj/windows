@@ -4,6 +4,7 @@
 #include "stdafx.h"
 #include "pure_win32.h"
 #include <commctrl.h>
+#include <stdio.h>
 
 #pragma comment(lib, "comctl32.lib")
 
@@ -48,6 +49,10 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 	// Main message loop:
 	while (GetMessage(&msg, NULL, 0, 0))
 	{
+		TCHAR szOutput[100] = {0};
+		swprintf_s(szOutput, 100, _T("GetMessage: %d"), msg.message);
+		OutputDebugString(szOutput);
+
 		if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
 		{
 			TranslateMessage(&msg);
@@ -198,7 +203,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		}
 		break;
 	case WM_MOUSEMOVE:
-		OutputDebugString(_T("WM_MOUSEMOVE"));
+		//OutputDebugString(_T("WM_MOUSEMOVE"));
 		break;
 	case WM_LBUTTONDOWN:
 		OutputDebugString(_T("WM_LBUTTONDOWN"));
